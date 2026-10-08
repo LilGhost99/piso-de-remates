@@ -375,6 +375,62 @@ button.chico[aria-pressed="true"] { background: color-mix(in srgb, var(--rosa) 1
 #fondo:empty, #retiradas:empty { display: none; }
 #fondo .grafica-caja { max-width: 860px; }
 
+/* ¿cuánto hemos ganado? */
+.ganancias { gap: 16px; }
+.gan-hero { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 18px; align-items: stretch; }
+.gan-principal { display: grid; gap: 8px; align-content: start; padding: 18px 20px; border-radius: 14px; background: linear-gradient(135deg, color-mix(in srgb, var(--jade) 9%, var(--sala-2)), var(--sala-2)); border: 1px solid var(--linea); }
+.gan-principal p { font-size: 1.02rem; max-width: 60ch; }
+.gan-titular { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; }
+.gan-monto { font: 700 clamp(2.3rem, 6vw, 3.6rem)/1 var(--f-disp); letter-spacing: .01em; color: var(--tinta); }
+.gan-monto small { font-size: .38em; color: var(--tinta-2); letter-spacing: .04em; text-transform: uppercase; }
+.gan-pct { font: 600 1.15rem var(--f-dato); padding: 3px 10px; border-radius: 999px; background: color-mix(in srgb, var(--tinta-2) 12%, transparent); }
+.gan-monto.pos, .gan-cifra.pos, b.pos { color: var(--jade); } .gan-monto.neg, .gan-cifra.neg, b.neg { color: var(--rojo); }
+.gan-pct.pos { color: var(--jade); background: color-mix(in srgb, var(--jade) 14%, transparent); } .gan-pct.neg { color: var(--rojo); background: color-mix(in srgb, var(--rojo) 14%, transparent); }
+.gan-analogia { color: var(--tinta-2); }
+.gan-datos { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; align-content: start; }
+.gan-datos li, .gan-compara, .gan-vacio { display: grid; grid-template-columns: 34px 1fr; gap: 10px; align-items: center; padding: 11px 14px; border-radius: 12px; background: var(--sala-2); border: 1px solid var(--linea); font-size: .95rem; }
+.gan-ico { font-size: 1.45rem; text-align: center; line-height: 1; }
+.gan-compara { background: color-mix(in srgb, var(--azul) 7%, var(--sala-2)); }
+.gan-compara p { max-width: 95ch; }
+.gan-vacio { padding: 18px; }
+.gan-grafica { margin: 0; display: grid; gap: 6px; }
+.gan-grafica figcaption { font-size: .85rem; color: var(--tinta-2); }
+.gan-grafica svg { width: 100%; height: auto; display: block; max-height: 300px; }
+.gan-grafica text { font: 500 11px var(--f-dato); fill: var(--tinta-2); }
+.gan-grafica .eje { stroke: var(--linea); stroke-dasharray: 2 4; }
+.gan-grafica .cero { stroke: var(--tinta-2); stroke-width: 1.2; }
+.gan-area.pos { fill: color-mix(in srgb, var(--jade) 22%, transparent); } .gan-area.neg { fill: color-mix(in srgb, var(--rojo) 22%, transparent); }
+.gan-linea { fill: none; stroke: var(--tinta); stroke-width: 2.2; stroke-linejoin: round; }
+.gan-punto { stroke: var(--sala); stroke-width: 2; } .gan-punto.pos { fill: var(--jade); } .gan-punto.neg { fill: var(--rojo); }
+.gan-sin-grafica { padding: 10px 0; }
+.gan-sub { margin-top: 4px; }
+.gan-lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.gan-lista li { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(90px, 1fr) minmax(110px, auto); gap: 14px; align-items: center; padding: 10px 14px; border-radius: 12px; background: var(--sala-2); border: 1px solid var(--linea); }
+.gan-nom { display: grid; gap: 1px; min-width: 0; }
+.gan-nom b { font-size: 1rem; }
+.gan-nom small { font-size: .78rem; color: var(--tinta-2); }
+.gan-est { display: flex; flex-wrap: wrap; gap: 4px 6px; align-items: center; }
+.gan-chip { font: 600 .68rem var(--f-disp); text-transform: uppercase; letter-spacing: .06em; padding: 1px 8px; border-radius: 999px; color: var(--jade); border: 1px solid currentColor; }
+.gan-chip.retirada { color: var(--tinta-2); }
+.gan-barra { position: relative; height: 12px; border-radius: 6px; background: color-mix(in srgb, var(--linea) 60%, transparent); }
+.gan-barra::after { content: ""; position: absolute; left: 50%; top: -3px; bottom: -3px; width: 1.5px; background: var(--tinta-2); opacity: .6; }
+.gan-barra i { position: absolute; top: 0; bottom: 0; border-radius: 6px; }
+.gan-barra i.pos { background: var(--jade); } .gan-barra i.neg { background: var(--rojo); }
+.gan-cifra { font: 700 1.05rem var(--f-dato); text-align: right; display: grid; justify-items: end; }
+.gan-cifra small { font: 500 .75rem var(--f-dato); color: var(--tinta-2); }
+.glosario { border-radius: 12px; border: 1px solid var(--linea); background: var(--sala-2); padding: 12px 16px; }
+.glosario summary { cursor: pointer; font: 700 1rem var(--f-disp); text-transform: uppercase; letter-spacing: .05em; color: color-mix(in srgb, var(--rosa) 75%, var(--tinta)); }
+.glosario dl { display: grid; grid-template-columns: minmax(150px, auto) 1fr; gap: 8px 18px; margin: 14px 0 4px; font-size: .92rem; }
+.glosario dt { font-weight: 700; }
+.glosario dd { margin: 0; color: var(--tinta); max-width: 80ch; }
+.gan-aviso { font-size: .8rem; }
+@media (max-width: 800px) {
+  .gan-hero { grid-template-columns: 1fr; }
+  .gan-lista li { grid-template-columns: 1fr auto; } .gan-barra { grid-column: 1 / -1; grid-row: 2; }
+  .glosario dl { grid-template-columns: 1fr; } .glosario dd { margin-bottom: 6px; }
+  .ganancias > header .segmentos { flex-wrap: wrap; }
+}
+
 /* biblioteca */
 .dos { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 20px; align-items: start; }
 .tabla-caja { overflow-x: auto; border: 1px solid var(--linea); border-radius: 12px; background: var(--sala); max-height: 520px; overflow-y: auto; }
@@ -486,6 +542,14 @@ tbody tr[aria-selected="true"] td:first-child { box-shadow: inset 3px 0 0 var(--
   </section>
 
   <section class="bloque mientras tarjeta" id="mientras" hidden></section>
+
+  <section class="bloque tarjeta ganancias" id="ganancias" aria-labelledby="gan-titulo">
+    <header><h2 id="gan-titulo">¿Cuánto hemos ganado?</h2>
+      <div class="segmentos" role="group" aria-label="Periodo" id="seg-periodo">
+        <button type="button" data-v="1" aria-pressed="false">Último día</button><button type="button" data-v="7" aria-pressed="false">7 días</button><button type="button" data-v="30" aria-pressed="false">30 días</button><button type="button" data-v="0" aria-pressed="true">Desde el inicio</button>
+      </div></header>
+    <div id="gan-cuerpo"><p class="nota-sala">Calculando…</p></div>
+  </section>
 
   <section class="piso">
     <div class="escenario tarjeta">
@@ -1323,7 +1387,7 @@ if (typeof module !== "undefined") module.exports = Personal;
         SERIES.set(S.key, S); VIVO.cot[S.key] = t.cot;
       }
       VIVO.mercado = p.mercados || {}; VIVO.actualizado = { rapido: p.generado, bmv: p.generado };
-      Object.assign(PILOTO, { activo: true, estado: E, generado: p.generado });
+      Object.assign(PILOTO, { activo: true, estado: E, generado: p.generado, tc: p.tipoCambio ? p.tipoCambio.usdmxn : null });
       return SERIES.size > 0;
     } catch (e) { return false; }
   }
@@ -2247,8 +2311,8 @@ if (typeof module !== "undefined") module.exports = Personal;
   }
   function pintarCartera() {
     const tb = $("#tabla-cartera"), nota = $("#cartera-nota"), caja = $("#cartera-caja");
-    if (PILOTO.activo) return pintarCarteraPiloto(tb, nota, caja);
-    if (!VIVO.activo) { caja.hidden = true; $("#cartera-total").textContent = ""; nota.textContent = "La operación en papel se enciende cuando la sala tiene precios reales: la alimenta el piloto automático tres veces cada día hábil."; return; }
+    if (PILOTO.activo) { pintarCarteraPiloto(tb, nota, caja); return pintarGanancias(); }
+    if (!VIVO.activo) { pintarGanancias(); caja.hidden = true; $("#cartera-total").textContent = ""; nota.textContent = "La operación en papel se enciende cuando la sala tiene precios reales: la alimenta el piloto automático tres veces cada día hábil."; return; }
     caja.hidden = !CARTERA.length;
     nota.textContent = CARTERA.length
       ? "Cada estrategia decide con el precio de cierre y Renata ejecuta en cuanto abre la bolsa al día siguiente. Cobra 0.25% de comisión más IVA en cada operación. Todo es dinero ficticio."
@@ -2263,7 +2327,7 @@ if (typeof module !== "undefined") module.exports = Personal;
       return `<tr data-k="${it.key}" tabindex="0"><td>${it.etiqueta}</td><td>${it.emisora}</td><td>${posicion}</td><td>${it.precio ? fmt(it.precio) : "—"}</td><td>${dinero(valor, it.moneda)}</td><td class="${clase(res)}">${pct(res)}</td><td>${prov}</td><td>${orden}</td><td><button type="button" class="chico" data-quitar="${it.key}">Quitar</button></td></tr>`;
     }).join("");
     $("#cartera-total").textContent = Object.entries(tot).map(([mon, t]) => `${dinero(t.val, mon)} (${pct(t.val / t.cap - 1)})`).join(" · ");
-    pintarPizarra();
+    pintarPizarra(); pintarGanancias();
   }
   $("#tabla-cartera").addEventListener("click", e => {
     const b = e.target.closest("[data-quitar]");
@@ -2322,6 +2386,199 @@ if (typeof module !== "undefined") module.exports = Personal;
       } catch (e) { VIVO.error[modo] = "se perdió la conexión con el servidor de precios."; }
     }
     pintarCinta(); actualizarCartera(); pintarPizarra();
+  }
+
+  /* ---------- ¿cuánto hemos ganado? Lo mismo que «Operación en papel», explicado para cualquiera ---------- */
+  const GAN = { dias: 0 };
+  const TACO = 20; // pesos por taco al pastor, para darse una idea
+  const pesos = x => (x < 0 ? "−" : "") + "$" + Math.round(Math.abs(x)).toLocaleString("es-MX");
+  const conSigno = x => (x > 0 ? "+" : "") + pesos(x);
+  const fechaDM = f => f ? `${+f.slice(8, 10)}/${+f.slice(5, 7)}` : "";
+  segmentos("#seg-periodo", v => { GAN.dias = v; pintarGanancias(); });
+  let anchoGan = 0, esperaGan = null;
+  new ResizeObserver(() => {
+    const w = $("#gan-cuerpo").clientWidth; if (Math.abs(w - anchoGan) < 40) return;
+    anchoGan = w; clearTimeout(esperaGan); esperaGan = setTimeout(pintarGanancias, 200);
+  }).observe($("#gan-cuerpo"));
+  function datosGanancia() {
+    if (PILOTO.activo) return { items: PILOTO.estado.cartera, hist: PILOTO.estado.historial || [], tc: PILOTO.tc || null };
+    if (VIVO.activo && CARTERA.length) return { items: CARTERA.map(it => ({ ...it, estado: "activa", alta: (it.alta || "").slice(0, 10) })), hist: [], tc: null };
+    return null;
+  }
+  /* convierte a pesos; si no hay tipo de cambio, los dólares quedan aparte (null) */
+  const aPesos = (m, x, tc) => (m === "USD" ? (tc ? x * tc : null) : x);
+  /* ¿y si solo hubiéramos comprado las mismas acciones y esperado? */
+  function comprarYEsperar(it) {
+    const S = SERIES.get(it.serie); if (!S || !it.alta) return null;
+    const i0 = S.fechas.findIndex(f => f > it.alta), p0 = i0 >= 0 ? S.o[i0] : null; // se habría comprado en la apertura siguiente, como la estrategia
+    if (!p0) return null;
+    let p1;
+    if (it.estado === "retirada" && it.retiro) { const j = S.fechas.findLastIndex(f => f <= it.retiro.fecha); p1 = j >= 0 ? S.c[j] : null; }
+    else p1 = (VIVO.cot[it.serie] && VIVO.cot[it.serie].precio) || S.c[S.c.length - 1];
+    return p1 ? it.capital * p1 / p0 : null;
+  }
+  function pintarGanancias() {
+    const caja = $("#gan-cuerpo"); if (!caja) return;
+    const d = datosGanancia();
+    if (!d || !d.items.length) {
+      caja.innerHTML = `<div class="gan-vacio"><span class="gan-ico">🌱</span><div><b>Todavía no hay dinero trabajando.</b><p class="nota-sala">${PILOTO.activo ? "El comité manda a operar las mejores estrategias en el cierre de las 15:40. Desde ese momento aquí verás cuánto van ganando o perdiendo, en pesos y en palabras sencillas." : "Aquí verás las ganancias cuando la sala esté conectada al piloto automático (en la página publicada en GitHub)."}</p></div></div>`;
+      return;
+    }
+    const tc = d.tc, mon = {};
+    for (const it of d.items) { const f = (mon[it.moneda] ??= { cap: 0, val: 0 }); f.cap += it.capital; f.val += it.valor ?? it.capital; }
+    const hayUSD = !!mon.USD, unaSuma = !hayUSD || !!tc || !mon.MXN;
+    const monedaSola = !unaSuma ? null : !mon.MXN && !tc ? "USD" : "MXN"; // si todo es en dólares y no hay tipo de cambio, se cuenta en dólares
+    const conv = (m, x) => monedaSola === "USD" ? x : aPesos(m, x, tc);
+    const unidad = monedaSola === "USD" ? "dólares" : "pesos";
+    // ganancia guardada en un cierre del historial (con el tipo de cambio de ese día si lo hay)
+    const gananciaDe = e => {
+      let g = 0;
+      for (const m of monedaSola === "USD" ? ["USD"] : ["MXN", "USD"]) {
+        const f = e[m]; if (!f) continue;
+        const gp = monedaSola === "USD" ? f.val - f.cap : aPesos(m, f.val - f.cap, e.tc || tc);
+        if (gp == null) return null;
+        g += gp;
+      }
+      return { g };
+    };
+    const cap = unaSuma ? Object.entries(mon).reduce((s, [m, f]) => s + conv(m, f.cap), 0) : null;
+    const val = unaSuma ? Object.entries(mon).reduce((s, [m, f]) => s + conv(m, f.val), 0) : null;
+    const total = unaSuma ? val - cap : null;
+
+    // ganancia del periodo elegido, con el historial de cierres
+    const hist = d.hist.filter(x => x.MXN || x.USD);
+    let gPeriodo = total, refTxt = "desde que empezó", corto = false;
+    if (GAN.dias && unaSuma) {
+      const ult = hist.length ? hist[hist.length - 1].fecha : new Date().toISOString().slice(0, 10);
+      const limite = new Date(Date.parse(ult) - GAN.dias * 864e5).toISOString().slice(0, 10);
+      const ref = hist.filter(x => x.fecha <= limite).pop();
+      const gRef = ref ? gananciaDe(ref) : null;
+      if (ref && gRef) { gPeriodo = total - gRef.g; refTxt = GAN.dias === 1 ? `desde el cierre del ${fechaDM(ref.fecha)}` : `en los últimos ${GAN.dias} días`; }
+      else { corto = true; refTxt = "desde que empezó"; }
+    }
+
+    // cada estrategia
+    const filas = d.items.map(it => {
+      const v = it.valor ?? it.capital, g = conv(it.moneda, v - it.capital), bh = comprarYEsperar(it);
+      return { it, g, gOrig: v - it.capital, r: v / it.capital - 1, bh: bh == null ? null : conv(it.moneda, bh - it.capital) };
+    }).sort((a, b) => (b.g ?? b.gOrig) - (a.g ?? a.gOrig));
+    const ganando = filas.filter(f => f.r > 0.0005).length, perdiendo = filas.filter(f => f.r < -0.0005).length;
+    const ventas = d.items.flatMap(it => (it.ops || []).filter(o => o.tipo === "venta" && o.resultado != null));
+    const buenas = ventas.filter(o => o.resultado > 0).length;
+    const diasHist = [];
+    for (let i = 1; i < hist.length; i++) { const a = gananciaDe(hist[i - 1]), b = gananciaDe(hist[i]); if (a && b) diasHist.push(b.g - a.g); }
+    const verdes = diasHist.filter(x => x > 0.5).length, rojos = diasHist.filter(x => x < -0.5).length;
+    const sinMover = filas.every(f => Math.abs(f.r) < 0.0005);
+    // comparación con «comprar y esperar», solo con las estrategias que tienen precios
+    const conBH = unaSuma ? filas.filter(f => f.bh != null && f.g != null) : [];
+    const bhTotal = conBH.length ? conBH.reduce((s, f) => s + f.bh, 0) : null, gBH = conBH.reduce((s, f) => s + f.g, 0);
+    const faltanBH = filas.length - conBH.length;
+
+    // titular
+    const signo = x => x > 0.5 ? "pos" : x < -0.5 ? "neg" : "";
+    let titular, frase, analogia = "";
+    if (unaSuma) {
+      const g = gPeriodo, pctP = cap ? g / cap : 0;
+      titular = `<span class="gan-monto ${signo(g)}">${conSigno(g)}<small> ${unidad}</small></span><span class="gan-pct ${signo(g)}">${pct(pctP)}</span>`;
+      frase = GAN.dias && !corto
+        ? `${g > 0.5 ? "Ganamos" : g < -0.5 ? "Perdimos" : "No ganamos ni perdimos"} ${Math.abs(g) > 0.5 ? `<b>${pesos(Math.abs(g))} ${unidad}</b> ` : ""}${refTxt}.`
+        : `Pusimos a trabajar <b>${pesos(cap)} ${unidad}</b> de mentiras en ${d.items.length} ${d.items.length === 1 ? "estrategia" : "estrategias"}. Hoy ese dinero vale <b>${pesos(val)}</b>.${corto ? ` <span class="nota-sala">(El fondo todavía no cumple ${GAN.dias === 1 ? "un día" : GAN.dias + " días"}; esto es todo lo que lleva.)</span>` : ""}`;
+      const tacos = unidad === "pesos" ? Math.floor(Math.abs(g) / TACO) : 0;
+      analogia = sinMover && !GAN.dias ? "Las estrategias todavía esperan su señal para comprar; mientras tanto el dinero está guardado y no gana ni pierde."
+        : tacos >= 1 ? (g > 0 ? `Eso alcanza para unos <b>${tacos.toLocaleString("es-MX")} tacos al pastor</b> 🌮` : `Es como si se nos hubieran caído <b>${tacos.toLocaleString("es-MX")} tacos al pastor</b> 🌮`)
+        : "Por ahora va casi parejo: ni gana ni pierde.";
+    } else {
+      // sin tipo de cambio: cada moneda por su lado
+      titular = Object.entries(mon).map(([m, f]) => `<span class="gan-monto ${signo(f.val - f.cap)}">${conSigno(f.val - f.cap)}<small> ${m === "USD" ? "dólares" : "pesos"}</small></span>`).join("");
+      frase = `Las estrategias en pesos recibieron <b>${pesos(mon.MXN.cap)} pesos</b> y las de Nueva York <b>${pesos(mon.USD.cap)} dólares</b>, todo de mentiras. Se muestran por separado porque hoy no llegó el precio del dólar.`;
+      if (sinMover) analogia = "Las estrategias todavía esperan su señal para comprar; mientras tanto el dinero está guardado y no gana ni pierde.";
+    }
+    const comparacion = !GAN.dias && bhTotal != null && !sinMover ? `<div class="gan-compara">
+        <span class="gan-ico">🤔</span>
+        <p><b>¿Y si no hubiéramos hecho nada?</b> Si el día que empezó cada estrategia solo hubiéramos comprado esas mismas acciones y las dejáramos quietas, hoy ${bhTotal >= 0 ? "ganaríamos" : "perderíamos"} <b>${pesos(Math.abs(bhTotal))} ${unidad}</b>.
+        ${Math.abs(gBH - bhTotal) < 1 ? "Las estrategias van igual que no hacer nada." : gBH > bhTotal ? `Las estrategias van <b class="pos">${pesos(gBH - bhTotal)} mejor</b> que no hacer nada. 👏` : `No hacer nada habría dado <b class="neg">${pesos(bhTotal - gBH)} más</b>. Pasa seguido: muchas veces la paciencia le gana a comprar y vender.`}
+        ${faltanBH ? `<span class="nota-sala">(Sin contar ${faltanBH} ${faltanBH === 1 ? "estrategia" : "estrategias"} cuyos precios no llegaron hoy.)</span>` : ""}</p></div>` : "";
+
+    // gráfica de la ganancia acumulada
+    let serie = hist.map(x => ({ f: x.fecha, r: gananciaDe(x) })).filter(x => x.r).map(x => ({ f: x.f, g: x.r.g }));
+    if (unaSuma && serie.length && Math.abs(serie[serie.length - 1].g - total) > 0.5) serie.push({ f: "hoy", g: total });
+    if (GAN.dias && serie.length > 2) {
+      const ult = hist.length ? hist[hist.length - 1].fecha : "";
+      const lim = new Date(Date.parse(ult) - GAN.dias * 864e5).toISOString().slice(0, 10);
+      const k = serie.findIndex(x => x.f === "hoy" || x.f >= lim); if (k > 0) serie = serie.slice(k - 1);
+    }
+    const grafica = unaSuma && serie.length >= 2 ? graficaGanancia(serie, unidad, caja.clientWidth)
+      : `<p class="nota-sala gan-sin-grafica">📈 La gráfica de cómo va el dinero aparece después de dos cierres del piloto.</p>`;
+
+    // lista por estrategia
+    const max = Math.max(1, ...filas.map(f => Math.abs(f.g ?? 0)));
+    const lista = filas.map(({ it, g, gOrig, r }) => {
+      const S = SERIES.get(it.serie), F = Motor.FAMILIAS[it.fam];
+      const empresa = S && S.nombre && S.nombre !== it.emisora ? S.nombre : it.emisora;
+      const est = it.estado === "retirada"
+        ? `<span class="gan-chip retirada">Retirada el ${fechaDM(it.retiro && it.retiro.fecha)}</span> ${it.retiro ? it.retiro.motivo : ""}`
+        : `<span class="gan-chip">${it.titulos ? "Tiene acciones" : "Esperando señal"}</span> desde el ${fechaDM(it.alta)}`;
+      const monto = g == null ? `${conSigno(gOrig)} <small>dólares</small>` : `${conSigno(g)}${it.moneda === "USD" && monedaSola !== "USD" ? ` <small>(${conSigno(gOrig)} dólares)</small>` : ""}`;
+      const w = g == null ? 0 : Math.abs(g) / max * 50;
+      return `<li><div class="gan-nom"><b>${empresa}</b><small>${F ? F.nombre : ""} · ${it.etiqueta}</small><small class="gan-est">${est}</small></div>
+        <div class="gan-barra" aria-hidden="true"><i class="${signo(g ?? gOrig)}" style="width:${w.toFixed(1)}%;${(g ?? 0) >= 0 ? "left:50%" : `left:${(50 - w).toFixed(1)}%`}"></i></div>
+        <div class="gan-cifra ${signo(g ?? gOrig)}">${monto}<small>${pct(r)}</small></div></li>`;
+    }).join("");
+
+    caja.innerHTML = `
+      <div class="gan-hero">
+        <div class="gan-principal">
+          <span class="eti">${GAN.dias ? (corto ? "Desde que empezó" : GAN.dias === 1 ? "Último día" : `Últimos ${GAN.dias} días`) : "Ganancia total desde que empezó"}</span>
+          <div class="gan-titular">${titular}</div>
+          <p>${frase}</p>
+          <p class="gan-analogia">${analogia}</p>
+        </div>
+        <ul class="gan-datos">
+          <li><span class="gan-ico">📊</span><span><b>${ganando} de ${filas.length}</b> estrategias van ganando${perdiendo ? `; ${perdiendo} ${perdiendo === 1 ? "va" : "van"} perdiendo` : ""}.</span></li>
+          <li><span class="gan-ico">🤝</span><span>${ventas.length ? `<b>${buenas} de ${ventas.length}</b> ventas terminaron con ganancia.` : "Todavía no se cierra ninguna operación (comprar y luego vender)."}</span></li>
+          <li><span class="gan-ico">📅</span><span>${diasHist.length ? `<b>${verdes} ${verdes === 1 ? "día" : "días"} en verde</b> y ${rojos} en rojo desde que empezó.` : "Aún no hay días completos para comparar."}</span></li>
+          ${hayUSD && tc ? `<li><span class="gan-ico">💵</span><span>Los dólares se cuentan a <b>$${tc.toFixed(2)} pesos</b> por dólar.</span></li>` : ""}
+        </ul>
+      </div>
+      ${comparacion}
+      ${grafica}
+      <h3 class="gan-sub">Así le va a cada estrategia</h3>
+      <ul class="gan-lista">${lista}</ul>
+      <details class="glosario"><summary>¿Qué significa todo esto? Explicación sencilla</summary>
+        <dl>
+          <dt>Dinero de mentiras</dt><dd>Nadie pone dinero real. Los precios sí son reales (de la Bolsa Mexicana y de Nueva York), pero las compras y ventas son de práctica, para ver qué habría pasado.</dd>
+          <dt>Dinero puesto a trabajar</dt><dd>Cada estrategia que aprueba el comité recibe $100,000 pesos (o $5,000 dólares si opera en Nueva York) para comprar y vender.</dd>
+          <dt>Ganancia o pérdida</dt><dd>Lo que vale hoy ese dinero menos lo que se puso. En verde si ganó, en rojo si perdió. Ya incluye las comisiones.</dd>
+          <dt>Porcentaje</dt><dd>Cuánto se ganó por cada $100. Un +2% quiere decir que por cada $100 ahora hay $102.</dd>
+          <dt>Estrategia</dt><dd>Una regla fija para decidir cuándo comprar y cuándo vender, por ejemplo «compra cuando el precio supera su máximo de 20 días». No adivina: solo sigue su regla.</dd>
+          <dt>Esperando señal</dt><dd>La estrategia no tiene acciones; su dinero está guardado y no gana ni pierde hasta que su regla diga «compra».</dd>
+          <dt>Retirada</dt><dd>El comité la quita si pierde 12% o si después de 30 días va perdiendo más de 4%. Lo que ganó o perdió se queda en la cuenta.</dd>
+          <dt>Comisión</dt><dd>Lo que cobraría la casa de bolsa en cada compra o venta: 0.25% más IVA. Ya está descontada de todo lo que ves aquí.</dd>
+        </dl>
+      </details>
+      <p class="nota-sala gan-aviso">Es una simulación para aprender: precios reales, dinero de mentiras. Lo que pasó antes no asegura lo que pasará después y nada de esto es una recomendación para invertir.</p>`;
+  }
+  function graficaGanancia(serie, unidad, ancho) {
+    const W = Math.round(Math.max(340, Math.min(760, ancho || 720))), H = W < 500 ? 200 : 220, ml = 70, mr = 14, mt = 16, mb = 26; // se dibuja al tamaño real para que el texto se lea en el celular
+    const vals = serie.map(x => x.g), mn = Math.min(0, ...vals), mx = Math.max(0, ...vals), r = (mx - mn) || 1;
+    const X = i => ml + (serie.length === 1 ? 0 : i / (serie.length - 1)) * (W - ml - mr), Y = v => mt + (1 - (v - mn) / r) * (H - mt - mb);
+    const linea = serie.map((x, i) => `${i ? "L" : "M"}${X(i).toFixed(1)} ${Y(x.g).toFixed(1)}`).join("");
+    const area = `${linea}L${X(serie.length - 1).toFixed(1)} ${Y(0).toFixed(1)}L${X(0).toFixed(1)} ${Y(0).toFixed(1)}Z`;
+    const paso = [1, 2, 5].flatMap(b => [1, 10, 100, 1000, 10000, 100000].map(e => b * e)).sort((a, b) => a - b).find(p => r / p <= 4) || 1e6;
+    let ejes = "";
+    for (let v = Math.ceil(mn / paso) * paso; v <= mx + 1e-9; v += paso) ejes += `<line class="eje" x1="${ml}" x2="${W - mr}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}"/><text x="${ml - 8}" y="${(Y(v) + 3.5).toFixed(1)}" text-anchor="end">${conSigno(v)}</text>`;
+    const marcas = [...new Set([0, Math.floor((serie.length - 1) / 2), serie.length - 1])].map(i => `<text x="${X(i).toFixed(1)}" y="${H - 7}" text-anchor="middle">${serie[i].f === "hoy" ? "hoy" : fechaDM(serie[i].f)}</text>`).join("");
+    const u = serie[serie.length - 1];
+    return `<figure class="gan-grafica"><figcaption>Cómo ha ido la ganancia (en ${unidad}). Arriba de la línea es ganancia; abajo, pérdida.</figcaption>
+      <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Ganancia acumulada: hoy ${conSigno(u.g)} ${unidad}">
+        <defs><clipPath id="gan-arriba"><rect x="0" y="0" width="${W}" height="${Y(0).toFixed(1)}"/></clipPath><clipPath id="gan-abajo"><rect x="0" y="${Y(0).toFixed(1)}" width="${W}" height="${H}"/></clipPath></defs>
+        ${ejes}
+        <path d="${area}" class="gan-area pos" clip-path="url(#gan-arriba)"/><path d="${area}" class="gan-area neg" clip-path="url(#gan-abajo)"/>
+        <line class="cero" x1="${ml}" x2="${W - mr}" y1="${Y(0).toFixed(1)}" y2="${Y(0).toFixed(1)}"/>
+        <path d="${linea}" class="gan-linea"/>
+        <circle cx="${X(serie.length - 1).toFixed(1)}" cy="${Y(u.g).toFixed(1)}" r="4.5" class="gan-punto ${u.g >= 0 ? "pos" : "neg"}"/>
+        ${marcas}
+      </svg></figure>`;
   }
 
   /* ---------- modo piloto automático ---------- */
@@ -2384,7 +2641,7 @@ if (typeof module !== "undefined") module.exports = Personal;
     const corridas = E.corridas.filter(c => c.t > desde);
     const ops = nuevos.filter(b => b.tipo === "operacion" && /compró|vendió/.test(b.txt)).length, com = nuevos.filter(b => b.tipo === "comite");
     const h = E.historial, ult = h.at(-1), ant = h.filter(x => x.fecha < (desde.slice(0, 10))).at(-1) || h[0];
-    const cambio = ult && ant ? Object.keys(ult).filter(k => k !== "fecha" && ult[k] && ant[k]).map(m => `${m} ${pct(ult[m].val / ult[m].cap - (ant[m].val / ant[m].cap))}`).join(" · ") : "";
+    const cambio = ult && ant ? Object.keys(ult).filter(k => k !== "fecha" && k !== "tc" && ult[k] && ant[k]).map(m => `${m} ${pct(ult[m].val / ult[m].cap - (ant[m].val / ant[m].cap))}`).join(" · ") : "";
     const destacadas = charlas.slice().sort((a, b) => Math.abs(b.calidad) - Math.abs(a.calidad)).slice(0, 3);
     caja.hidden = false;
     caja.innerHTML = `<header><h2>${ultima ? "Mientras no estabas" : "Las últimas 24 horas"}</h2><span class="eti">${corridas.length} ${corridas.length === 1 ? "revisión" : "revisiones"} del piloto</span></header>

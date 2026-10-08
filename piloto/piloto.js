@@ -248,8 +248,9 @@ function cierre() {
   for (const it of E.cartera) { const f = (fondo[it.moneda] ??= { cap: 0, val: 0 }); f.cap += it.capital; f.val += it.valor ?? it.capital; }
   const previo = E.historial.at(-1);
   if (previo && previo.fecha === T.fecha) E.historial.pop();
-  E.historial.push({ fecha: T.fecha, ...Object.fromEntries(Object.entries(fondo).map(([m, f]) => [m, { cap: Math.round(f.cap), val: Math.round(f.val) }])) });
-  E.historial.length = Math.min(E.historial.length, 520);
+  const tc = PRECIOS.tipoCambio && PRECIOS.tipoCambio.usdmxn;
+  E.historial.push({ fecha: T.fecha, ...(tc ? { tc } : {}), ...Object.fromEntries(Object.entries(fondo).map(([m, f]) => [m, { cap: Math.round(f.cap), val: Math.round(f.val) }])) });
+  if (E.historial.length > 520) E.historial.splice(0, E.historial.length - 520); // se guardan los últimos ~2 años
   if (previo) {
     for (const m of Object.keys(fondo)) {
       if (!previo[m] || !previo[m].val) continue;
