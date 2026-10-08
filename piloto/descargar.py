@@ -77,6 +77,29 @@ def bajar(claves, intentos=4, **kw):
     return None
 
 
+def noticias(emisoras):
+    """Titulares reales de Yahoo Finance de cada emisora (los usa Diego, de Noticias). Si Yahoo no responde, no pasa nada."""
+    out = []
+    for ident, clave, *_ in emisoras:
+        if clave.startswith("^"):
+            continue
+        try:
+            for n in (yf.Ticker(clave).news or [])[:3]:
+                c = n.get("content") or n
+                titulo = c.get("title")
+                if not titulo:
+                    continue
+                fuente = (c.get("provider") or {}).get("displayName") or n.get("publisher") or ""
+                link = (c.get("canonicalUrl") or {}).get("url") or (c.get("clickThroughUrl") or {}).get("url") or n.get("link") or ""
+                fecha = c.get("pubDate") or ""
+                if not fecha and n.get("providerPublishTime"):
+                    fecha = datetime.fromtimestamp(n["providerPublishTime"], ZoneInfo("UTC")).isoformat()
+                out.append({"id": ident, "titulo": titulo.strip(), "fuente": fuente, "link": link, "fecha": fecha})
+        except Exception as e:
+            print(f"Sin noticias de {ident}: {e}")
+    return out
+
+
 def estado(m):
     ahora = datetime.now(ZoneInfo(m["zona"]))
     hm = (ahora.hour, ahora.minute)
@@ -116,6 +139,8 @@ def main():
             cot["cierreAnt"] = c[anteriores[-1]] if anteriores else cot["precio"]
             salida["series"].append({"modo": modo, "id": ident, "nombre": nombre, "sector": sector, "moneda": moneda,
                                      "fechas": fechas, "o": o, "c": c, "cot": cot})
+    salida["noticias"] = noticias([e for m in MERCADOS.values() for e in m["emisoras"]])
+    print(f"Noticias: {len(salida['noticias'])} titulares")
     # tipo de cambio para poder sumar en pesos lo que se opera en dólares (si no llega, la sala muestra cada moneda aparte)
     fx = tabla(bajar("MXN=X", intentos=2, period="5d", interval="1d", auto_adjust=False), "MXN=X", False)
     if fx is not None and len(fx):

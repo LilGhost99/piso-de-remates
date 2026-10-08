@@ -38,6 +38,40 @@ const Personal = (() => {
   ];
   LISTA.forEach((p, i) => { p.i = i; p.hogar = Math.floor(i / 3); p.sexo = p.g; });
   const POR_ID = Object.fromEntries(LISTA.map(p => [p.id, p]));
+  /* ---------- el trabajo real de cada quien en el piloto ---------- */
+  const ESPECIALIDAD = { lupita: ["rsi", "bollinger"], beto: ["momentum"], tono: ["cruce"], karla: ["canal"] };
+  const TRABAJO = {
+    lupita: "Busca estrategias de rebote (RSI y Bollinger). Recibe más pruebas al día si las que encontró ganan dinero en la operación en papel.",
+    beto: "Busca estrategias de momentum: comprar lo que viene subiendo fuerte. Su cupo de pruebas depende de cómo le va a lo que encontró.",
+    tono: "Busca cruces de medias móviles, estrategias pacientes que siguen la tendencia. Su cupo depende de sus resultados reales.",
+    karla: "Busca rupturas de canal: comprar cuando el precio rompe su máximo. Su cupo depende de sus resultados reales.",
+    mariana: "Análisis: revisa en el histórico que cada estrategia tenga Sharpe de 0.5 o más y al menos 5 operaciones.",
+    rodrigo: "Análisis: revisa Sharpe y número de operaciones de cada estrategia en el histórico.",
+    ximena: "Análisis: revisa Sharpe y número de operaciones de cada estrategia en el histórico.",
+    chema: "Riesgos: rechaza lo que cayó más de 25%. En cada corrida vigila la cartera, avisa si algo se acerca al límite y retira a mediodía lo que pierda 12%.",
+    fer: "Riesgos: mide cuánto del fondo está invertido y en qué empresas, y avisa si hay demasiada concentración.",
+    paco: "Lee el IPC real en cada cierre (tendencia y caída desde su máximo) y le dice al comité cuántas estrategias nuevas puede meter.",
+    ale: "Compara la volatilidad de 20 días del IPC contra la del año para saber si el mercado está agitado.",
+    diego: "Trae los titulares reales de Yahoo Finance de las empresas que operamos.",
+    vale: "Avisa de los movimientos fuertes del día (más de 3%) en las 16 emisoras.",
+    ivan: "Mesa de pruebas I: examina cada estrategia con el 30% de los datos que no vio.",
+    dani: "Mesa de pruebas I: examina cada estrategia con el 30% de los datos que no vio.",
+    sofia: "Mesa de pruebas II: mueve un poco los parámetros para descartar estrategias de pura suerte.",
+    emilio: "Mesa de pruebas II: mueve un poco los parámetros para descartar estrategias de pura suerte.",
+    elena: "Preside el comité: propone las mejores estrategias de la biblioteca y vota que su Sharpe en datos nuevos sea de 0.5 o más.",
+    robles: "Vota en el comité: rechaza lo que no sea robusto (menos de 70% de variantes cercanas que funcionan).",
+    paredes: "Vota en el comité: rechaza lo que haya caído más de 15% en los datos nuevos.",
+    mendez: "Audita cada corrida: que se respeten los límites del comité y que las cuentas de cada estrategia cuadren.",
+    andrea: "Suma las comisiones que se pagaron en el día y revisa que cada operación las haya pagado.",
+    memo: "Vuelve a probar cada semana las estrategias de la biblioteca con los datos más nuevos y saca las que ya no pasan.",
+    renata: "Opera en la apertura las estrategias de la Bolsa Mexicana (en pesos).",
+    hugo: "Opera en la apertura las estrategias de Nueva York (en dólares).",
+    charly: "Revisa que lleguen los precios de las 16 emisoras y el dólar, y avisa cuando Yahoo falla.",
+    ingrid: "Revisa que los precios estén al día; los que vienen viejos se apartan para no operar con ellos.",
+    fermin: "Lleva la estadística del archivo: qué tipo de estrategia se aprueba y cuál no. Con eso Lupita reparte sus pruebas.",
+    lucha: "Escribe el resumen del día con lo que de verdad pasó.",
+    ramon: "En la apertura revisa los brincos de precio de la noche a la mañana en las empresas donde tenemos acciones."
+  };
   const RIVALES = [["América", "Chivas"], ["América", "Pumas"], ["América", "Cruz Azul"], ["Tigres", "Rayados"], ["Pachuca", "América"]];
   const sonRivales = (x, y) => RIVALES.some(([a, b]) => (a === x && b === y) || (a === y && b === x));
 
@@ -76,6 +110,7 @@ const Personal = (() => {
     return { nivel: n, desde: acum, hasta: acum + necesita(n), progreso: (xp - acum) / necesita(n) };
   }
   const rangoDe = n => RANGOS[Math.min(n, RANGOS.length) - 1];
+  const xpDeNivel = n => { let acum = 0; for (let i = 1; i < n; i++) acum += necesita(i); return acum; };
   const tierDe = n => (n >= 9 ? "leyenda" : n >= 7 ? "oro" : n >= 5 ? "plata" : n >= 3 ? "bronce" : "base");
   const LOGROS = [
     { id: "primera", icono: "⭐", nombre: "Primera estrategia", desc: "Le aprobaron su primera estrategia.", ok: c => c.aprobadas >= 1 },
@@ -112,7 +147,8 @@ const Personal = (() => {
   function ganar(e, p, xp, cuenta = {}, fecha = "") {
     const k = asegurar(e), eventos = [];
     for (const c in cuenta) if (cuenta[c]) k.c[c] = (k.c[c] || 0) + cuenta[c];
-    k.xp = Math.round((k.xp + xp) * 10) / 10;
+    // se puede perder experiencia (cuando lo suyo pierde dinero), pero nunca se baja de nivel
+    k.xp = Math.max(xpDeNivel(k.nivel), Math.round((k.xp + xp) * 10) / 10);
     const n = nivelDe(k.xp).nivel;
     while (k.nivel < n) {
       k.nivel++;
@@ -228,7 +264,8 @@ const Personal = (() => {
       efecto: { rel: k, a: { animo: q * 3.5, estres: q < 0 ? -q * 6 : -q * 2.5 }, b: { animo: q * 3.5 + (tema === "apoyo" && q > 0 ? 3 : 0), estres: q < 0 ? -q * 6 : -q * 2.5 - (tema === "apoyo" && q > 0 ? 6 : 0) } }
     };
   }
-  /* Aplica la plática: emociones, amistad, experiencia y un poquito de personalidad. Devuelve los eventos de carrera. */
+  /* Aplica la plática: emociones, amistad y un poquito de personalidad (platicar no da experiencia; solo cuenta para logros).
+     Devuelve los eventos de carrera. */
   function aplicarPlatica(est, a, b, res, fecha = "") {
     const ea = est[a.id], eb = est[b.id];
     sentir(ea, a, res.efecto.a); sentir(eb, b, res.efecto.b);
@@ -242,8 +279,8 @@ const Personal = (() => {
     if (res.tema === "pleito") derivar(ea, "competitivo", 0.003);
     const cuenta = { buenas: buena ? 1 : 0, malas: mala ? 1 : 0 };
     return [
-      ...ganar(ea, a, buena ? 4 : 2, { ...cuenta, apoyos: res.tema === "apoyo" && q > 0 ? 1 : 0 }, fecha).map(x => ({ ...x, quien: a })),
-      ...ganar(eb, b, buena ? 4 : 2, cuenta, fecha).map(x => ({ ...x, quien: b }))
+      ...ganar(ea, a, 0, { ...cuenta, apoyos: res.tema === "apoyo" && q > 0 ? 1 : 0 }, fecha).map(x => ({ ...x, quien: a })),
+      ...ganar(eb, b, 0, cuenta, fecha).map(x => ({ ...x, quien: b }))
     ];
   }
   const NOMBRE_TEMA = { saludo: "se saludaron", cafe: "fueron por café", trafico: "se quejaron del tráfico", futbolMismo: "platicaron de su equipo", futbolRival: "se picaron con el futbol", mercado: "comentaron el mercado", felicitar: "hubo felicitaciones", apoyo: "se echaron la mano", pleito: "discutieron", chisme: "chismearon", comida: "platicaron de la comida", horasExtra: "se quejaron de las horas extra", casa: "platicaron en casa", viernes: "hicieron planes de fin de semana", noche: "platicaron de noche", frase: "bromearon" };
@@ -254,7 +291,8 @@ const Personal = (() => {
 
   return {
     LISTA, POR_ID, estadoInicial, sentir, volverABase, humor, conversar, aplicarPlatica, resumen, rng, semillaDe, base, sonRivales,
-    RANGOS, LOGROS, nivelDe, rangoDe, tierDe, carreraInicial, asegurar, derivar, evolucionar, ganar, textoEvento
+    RANGOS, LOGROS, nivelDe, rangoDe, tierDe, carreraInicial, asegurar, derivar, evolucionar, ganar, textoEvento, xpDeNivel,
+    ESPECIALIDAD, TRABAJO
   };
 })();
 if (typeof module !== "undefined") module.exports = Personal;
