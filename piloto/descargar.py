@@ -64,9 +64,9 @@ def tabla(datos, clave, varias):
     return df.dropna(subset=["Close"])
 
 
-def bajar(claves, **kw):
+def bajar(claves, intentos=4, **kw):
     """Yahoo a veces rechaza peticiones desde la nube; se reintenta con pausas."""
-    for intento in range(4):
+    for intento in range(intentos):
         try:
             datos = yf.download(claves, group_by="ticker", progress=False, threads=True, **kw)
             if datos is not None and not datos.empty:
@@ -116,6 +116,10 @@ def main():
             cot["cierreAnt"] = c[anteriores[-1]] if anteriores else cot["precio"]
             salida["series"].append({"modo": modo, "id": ident, "nombre": nombre, "sector": sector, "moneda": moneda,
                                      "fechas": fechas, "o": o, "c": c, "cot": cot})
+    # tipo de cambio para poder sumar en pesos lo que se opera en dólares (si no llega, la sala muestra cada moneda aparte)
+    fx = tabla(bajar("MXN=X", intentos=2, period="5d", interval="1d", auto_adjust=False), "MXN=X", False)
+    if fx is not None and len(fx):
+        salida["tipoCambio"] = {"usdmxn": round(float(fx["Close"].iloc[-1]), 4), "fecha": fx.index[-1].strftime("%Y-%m-%d")}
     if not salida["series"]:
         print("No llegó ningún precio de Yahoo; el piloto no corre esta vez.")
         sys.exit(1)

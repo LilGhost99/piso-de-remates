@@ -31,6 +31,10 @@ La página abre la oficina en 3D: las salas, los escritorios, la pizarra de trad
 - Toca a alguien para seguirlo y abrir su ficha; toca el piso para soltarlo.
 - **Plano** regresa al dibujo en 2D (también se usa solo si el navegador no puede mostrar 3D).
 
+## ¿Cuánto hemos ganado?
+
+Arriba de la sala hay una sección que explica, sin tecnicismos, cuánto van ganando o perdiendo las estrategias con su dinero de mentiras: el total en pesos (los dólares se convierten con el tipo de cambio del día), el último día, 7 días, 30 días, una gráfica, cómo le va a cada estrategia, la comparación con «comprar y esperar» y un glosario.
+
 ## Los agentes evolucionan
 
 Cada agente junta experiencia (XP) revisando expedientes, consiguiendo estrategias aprobadas, operando y platicando, y sube de nivel: Novato, Aprendiz, Competente, Sólido, Senior, Experto, Mentor, Maestro y Leyenda.
