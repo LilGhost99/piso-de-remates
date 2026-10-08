@@ -431,6 +431,36 @@ button.chico[aria-pressed="true"] { background: color-mix(in srgb, var(--rosa) 1
   .ganancias > header .segmentos { flex-wrap: wrap; }
 }
 
+/* el trabajo real de cada quien */
+.tr-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 12px; }
+.tr-card { display: grid; gap: 8px; align-content: start; padding: 14px 16px; border-radius: 14px; background: var(--sala-2); border: 1px solid var(--linea); min-width: 0; }
+.tr-card.ancha { grid-column: 1 / -1; }
+.tr-card > header { display: flex; align-items: center; gap: 8px; }
+.tr-card h3 { font-size: 1.05rem; }
+.tr-ico { font-size: 1.3rem; }
+.tr-hora { margin-left: auto; font: 500 .72rem var(--f-dato); color: var(--tinta-2); }
+.tr-card p { font-size: .9rem; }
+.tr-gente { display: flex; flex-wrap: wrap; gap: 5px; }
+.tr-quien { display: inline-flex; align-items: center; gap: 6px; min-height: 0; padding: 2px 10px 2px 2px; border-radius: 999px; font: 700 .78rem var(--f-txt); background: var(--sala); }
+.tr-quien .nv-chip { width: 22px; height: 22px; font-size: .7rem; }
+.tr-quien[data-tier="bronce"] .nv-chip { background: linear-gradient(135deg, #D79A5E, #8C5326); } .tr-quien[data-tier="plata"] .nv-chip { background: linear-gradient(135deg, #E3E9F5, #8391AE); color: #1D2333; }
+.tr-quien[data-tier="oro"] .nv-chip { background: linear-gradient(135deg, #FFE38A, #C08A0C); color: #2A1D00; } .tr-quien[data-tier="leyenda"] .nv-chip { background: linear-gradient(135deg, #C38BFF, #FF4F9A); }
+.tr-tabla { max-height: none; }
+.tr-tabla td:first-child { font-family: var(--f-txt); }
+.tr-lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; font-size: .86rem; }
+.tr-lista li { display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: start; }
+.tr-lista.tr-simple li { display: block; }
+.tr-lista small { display: block; color: var(--tinta-2); font-size: .74rem; }
+.tr-lista a { color: var(--tinta); text-decoration-color: color-mix(in srgb, var(--rosa) 50%, transparent); }
+.tr-voto { font: 700 .9rem var(--f-dato); letter-spacing: .1em; white-space: nowrap; }
+.tr-em { font: 700 .72rem var(--f-dato); padding: 2px 6px; border-radius: 6px; background: var(--sala); border: 1px solid var(--linea); }
+.tr-movs { display: flex; flex-wrap: wrap; gap: 4px; }
+.tr-medidor { display: grid; grid-template-columns: auto 1fr auto; gap: 8px; align-items: center; font-size: .82rem; }
+.tr-medidor .barra { height: 8px; border-radius: 8px; background: color-mix(in srgb, var(--linea) 70%, transparent); overflow: hidden; }
+.tr-medidor .barra i { display: block; height: 100%; background: var(--azul); }
+.su-trabajo { display: grid; gap: 4px; padding: 12px 14px; border-radius: 12px; border: 1px dashed color-mix(in srgb, var(--azul) 45%, var(--linea)); background: color-mix(in srgb, var(--azul) 6%, var(--sala)); }
+.su-trabajo .ultimo { font-size: .9rem; color: var(--tinta); }
+
 /* biblioteca */
 .dos { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 20px; align-items: start; }
 .tabla-caja { overflow-x: auto; border: 1px solid var(--linea); border-radius: 12px; background: var(--sala); max-height: 520px; overflow-y: auto; }
@@ -596,6 +626,12 @@ tbody tr[aria-selected="true"] td:first-child { box-shadow: inset 3px 0 0 var(--
         <ul class="bitacora" id="bitacora"><li class="vacio">La sala está en silencio. Abre una jornada.</li></ul>
       </div>
     </aside>
+  </section>
+
+  <section class="bloque tarjeta trabajo-real" id="trabajo-real" aria-labelledby="tr-titulo">
+    <header><h2 id="tr-titulo">El trabajo real de cada quien</h2><span class="eti" id="tr-cuando"></span></header>
+    <p class="nota-sala">Cada departamento hace una parte de verdad: precios, noticias, pruebas, votaciones, vigilancia y auditoría. Esto es lo último que hizo cada quien, con datos reales. Toca un nombre para ver su ficha.</p>
+    <div class="tr-grid" id="tr-grid"></div>
   </section>
 
   <section class="bloque tarjeta" id="sec-cartera">
@@ -996,6 +1032,40 @@ const Personal = (() => {
   ];
   LISTA.forEach((p, i) => { p.i = i; p.hogar = Math.floor(i / 3); p.sexo = p.g; });
   const POR_ID = Object.fromEntries(LISTA.map(p => [p.id, p]));
+  /* ---------- el trabajo real de cada quien en el piloto ---------- */
+  const ESPECIALIDAD = { lupita: ["rsi", "bollinger"], beto: ["momentum"], tono: ["cruce"], karla: ["canal"] };
+  const TRABAJO = {
+    lupita: "Busca estrategias de rebote (RSI y Bollinger). Recibe más pruebas al día si las que encontró ganan dinero en la operación en papel.",
+    beto: "Busca estrategias de momentum: comprar lo que viene subiendo fuerte. Su cupo de pruebas depende de cómo le va a lo que encontró.",
+    tono: "Busca cruces de medias móviles, estrategias pacientes que siguen la tendencia. Su cupo depende de sus resultados reales.",
+    karla: "Busca rupturas de canal: comprar cuando el precio rompe su máximo. Su cupo depende de sus resultados reales.",
+    mariana: "Análisis: revisa en el histórico que cada estrategia tenga Sharpe de 0.5 o más y al menos 5 operaciones.",
+    rodrigo: "Análisis: revisa Sharpe y número de operaciones de cada estrategia en el histórico.",
+    ximena: "Análisis: revisa Sharpe y número de operaciones de cada estrategia en el histórico.",
+    chema: "Riesgos: rechaza lo que cayó más de 25%. En cada corrida vigila la cartera, avisa si algo se acerca al límite y retira a mediodía lo que pierda 12%.",
+    fer: "Riesgos: mide cuánto del fondo está invertido y en qué empresas, y avisa si hay demasiada concentración.",
+    paco: "Lee el IPC real en cada cierre (tendencia y caída desde su máximo) y le dice al comité cuántas estrategias nuevas puede meter.",
+    ale: "Compara la volatilidad de 20 días del IPC contra la del año para saber si el mercado está agitado.",
+    diego: "Trae los titulares reales de Yahoo Finance de las empresas que operamos.",
+    vale: "Avisa de los movimientos fuertes del día (más de 3%) en las 16 emisoras.",
+    ivan: "Mesa de pruebas I: examina cada estrategia con el 30% de los datos que no vio.",
+    dani: "Mesa de pruebas I: examina cada estrategia con el 30% de los datos que no vio.",
+    sofia: "Mesa de pruebas II: mueve un poco los parámetros para descartar estrategias de pura suerte.",
+    emilio: "Mesa de pruebas II: mueve un poco los parámetros para descartar estrategias de pura suerte.",
+    elena: "Preside el comité: propone las mejores estrategias de la biblioteca y vota que su Sharpe en datos nuevos sea de 0.5 o más.",
+    robles: "Vota en el comité: rechaza lo que no sea robusto (menos de 70% de variantes cercanas que funcionan).",
+    paredes: "Vota en el comité: rechaza lo que haya caído más de 15% en los datos nuevos.",
+    mendez: "Audita cada corrida: que se respeten los límites del comité y que las cuentas de cada estrategia cuadren.",
+    andrea: "Suma las comisiones que se pagaron en el día y revisa que cada operación las haya pagado.",
+    memo: "Vuelve a probar cada semana las estrategias de la biblioteca con los datos más nuevos y saca las que ya no pasan.",
+    renata: "Opera en la apertura las estrategias de la Bolsa Mexicana (en pesos).",
+    hugo: "Opera en la apertura las estrategias de Nueva York (en dólares).",
+    charly: "Revisa que lleguen los precios de las 16 emisoras y el dólar, y avisa cuando Yahoo falla.",
+    ingrid: "Revisa que los precios estén al día; los que vienen viejos se apartan para no operar con ellos.",
+    fermin: "Lleva la estadística del archivo: qué tipo de estrategia se aprueba y cuál no. Con eso Lupita reparte sus pruebas.",
+    lucha: "Escribe el resumen del día con lo que de verdad pasó.",
+    ramon: "En la apertura revisa los brincos de precio de la noche a la mañana en las empresas donde tenemos acciones."
+  };
   const RIVALES = [["América", "Chivas"], ["América", "Pumas"], ["América", "Cruz Azul"], ["Tigres", "Rayados"], ["Pachuca", "América"]];
   const sonRivales = (x, y) => RIVALES.some(([a, b]) => (a === x && b === y) || (a === y && b === x));
 
@@ -1034,6 +1104,7 @@ const Personal = (() => {
     return { nivel: n, desde: acum, hasta: acum + necesita(n), progreso: (xp - acum) / necesita(n) };
   }
   const rangoDe = n => RANGOS[Math.min(n, RANGOS.length) - 1];
+  const xpDeNivel = n => { let acum = 0; for (let i = 1; i < n; i++) acum += necesita(i); return acum; };
   const tierDe = n => (n >= 9 ? "leyenda" : n >= 7 ? "oro" : n >= 5 ? "plata" : n >= 3 ? "bronce" : "base");
   const LOGROS = [
     { id: "primera", icono: "⭐", nombre: "Primera estrategia", desc: "Le aprobaron su primera estrategia.", ok: c => c.aprobadas >= 1 },
@@ -1070,7 +1141,8 @@ const Personal = (() => {
   function ganar(e, p, xp, cuenta = {}, fecha = "") {
     const k = asegurar(e), eventos = [];
     for (const c in cuenta) if (cuenta[c]) k.c[c] = (k.c[c] || 0) + cuenta[c];
-    k.xp = Math.round((k.xp + xp) * 10) / 10;
+    // se puede perder experiencia (cuando lo suyo pierde dinero), pero nunca se baja de nivel
+    k.xp = Math.max(xpDeNivel(k.nivel), Math.round((k.xp + xp) * 10) / 10);
     const n = nivelDe(k.xp).nivel;
     while (k.nivel < n) {
       k.nivel++;
@@ -1186,7 +1258,8 @@ const Personal = (() => {
       efecto: { rel: k, a: { animo: q * 3.5, estres: q < 0 ? -q * 6 : -q * 2.5 }, b: { animo: q * 3.5 + (tema === "apoyo" && q > 0 ? 3 : 0), estres: q < 0 ? -q * 6 : -q * 2.5 - (tema === "apoyo" && q > 0 ? 6 : 0) } }
     };
   }
-  /* Aplica la plática: emociones, amistad, experiencia y un poquito de personalidad. Devuelve los eventos de carrera. */
+  /* Aplica la plática: emociones, amistad y un poquito de personalidad (platicar no da experiencia; solo cuenta para logros).
+     Devuelve los eventos de carrera. */
   function aplicarPlatica(est, a, b, res, fecha = "") {
     const ea = est[a.id], eb = est[b.id];
     sentir(ea, a, res.efecto.a); sentir(eb, b, res.efecto.b);
@@ -1200,8 +1273,8 @@ const Personal = (() => {
     if (res.tema === "pleito") derivar(ea, "competitivo", 0.003);
     const cuenta = { buenas: buena ? 1 : 0, malas: mala ? 1 : 0 };
     return [
-      ...ganar(ea, a, buena ? 4 : 2, { ...cuenta, apoyos: res.tema === "apoyo" && q > 0 ? 1 : 0 }, fecha).map(x => ({ ...x, quien: a })),
-      ...ganar(eb, b, buena ? 4 : 2, cuenta, fecha).map(x => ({ ...x, quien: b }))
+      ...ganar(ea, a, 0, { ...cuenta, apoyos: res.tema === "apoyo" && q > 0 ? 1 : 0 }, fecha).map(x => ({ ...x, quien: a })),
+      ...ganar(eb, b, 0, cuenta, fecha).map(x => ({ ...x, quien: b }))
     ];
   }
   const NOMBRE_TEMA = { saludo: "se saludaron", cafe: "fueron por café", trafico: "se quejaron del tráfico", futbolMismo: "platicaron de su equipo", futbolRival: "se picaron con el futbol", mercado: "comentaron el mercado", felicitar: "hubo felicitaciones", apoyo: "se echaron la mano", pleito: "discutieron", chisme: "chismearon", comida: "platicaron de la comida", horasExtra: "se quejaron de las horas extra", casa: "platicaron en casa", viernes: "hicieron planes de fin de semana", noche: "platicaron de noche", frase: "bromearon" };
@@ -1212,7 +1285,8 @@ const Personal = (() => {
 
   return {
     LISTA, POR_ID, estadoInicial, sentir, volverABase, humor, conversar, aplicarPlatica, resumen, rng, semillaDe, base, sonRivales,
-    RANGOS, LOGROS, nivelDe, rangoDe, tierDe, carreraInicial, asegurar, derivar, evolucionar, ganar, textoEvento
+    RANGOS, LOGROS, nivelDe, rangoDe, tierDe, carreraInicial, asegurar, derivar, evolucionar, ganar, textoEvento, xpDeNivel,
+    ESPECIALIDAD, TRABAJO
   };
 })();
 if (typeof module !== "undefined") module.exports = Personal;
@@ -1225,6 +1299,9 @@ if (typeof module !== "undefined") module.exports = Personal;
   const pct = (x, signo = true) => (signo && x > 0 ? "+" : "") + (x * 100).toFixed(1) + "%";
   const num = x => x.toFixed(2);
   const clase = x => (x > 0 ? "pos" : x < 0 ? "neg" : "");
+  // texto que viene de fuera (titulares de Yahoo, estado del piloto): se escapa antes de ponerlo en la página
+  const esc = x => String(x ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const ligaSegura = u => (/^https?:\/\//i.test(u || "") ? esc(u) : null);
 
   /* ---------- planta de la oficina ---------- */
   const SALAS = {
@@ -1586,13 +1663,13 @@ if (typeof module !== "undefined") module.exports = Personal;
   }
 
   function emitir(instantaneo) {
-    const { S, c } = st.cola.shift();
+    const { S, c, minero: quien } = st.cola.shift();
     st.evaluadas.add(S.key + "|" + clave(c));
     const exp = Motor.evaluar(S, c); exp.serie = S.key; exp.id = st.expedientes.length;
     st.expedientes.push(exp); st.emitidos++;
     const salas = ORDEN.slice(0, ORDEN.indexOf(exp.llego === "comite" ? "com" : DEPTO_SALA[exp.llego]) + 1);
     salas.push(exp.estado === "aprobada" ? "bib" : "arc");
-    const minero = quienAtiende("min"); exp.minero = minero.id; exp.key = S.key + "|" + clave(c);
+    const minero = (quien && AG[quien]) || quienAtiende("min"); exp.minero = minero.id; exp.key = S.key + "|" + clave(c);
     if (instantaneo || st.fichas.length > 80) { salas.forEach((s, i) => llegar(exp, s, salas[i - 1], true, s === "min" ? minero : null)); return; }
     const f = { exp, salas, i: 0, pos: [...minero.pos], camino: null, espera: 0.25, el: el("rect", { width: 9, height: 7, x: -4.5, y: -3.5, class: "token" }, capaFichas) };
     st.fichas.push(f);
@@ -1820,7 +1897,12 @@ if (typeof module !== "undefined") module.exports = Personal;
     d[0] = Math.max(S.x + 18, Math.min(S.x + S.w - 18, d[0])); d[1] = Math.max(S.y + 46, Math.min(S.y + S.h - 34, d[1]));
     caminar(a, a.depto, d, "trabajo", null);
     a.camino.vel = 0.4;
-    if (!ocupado && performance.now() - (a.ultimo || 0) > 8000) a.estado = r.extra ? "Horas extra por la jornada" : (TAREAS[a.depto] || "Trabajando en su escritorio");
+    if (!ocupado && performance.now() - (a.ultimo || 0) > 8000) a.estado = r.extra ? "Horas extra por la jornada" : tareaDe(a);
+  }
+  /* con el piloto, cada quien muestra lo último que hizo de verdad; sin piloto, una tarea genérica de su sala */
+  function tareaDe(a) {
+    const w = PILOTO.activo && PILOTO.estado.trabajo && PILOTO.estado.trabajo[a.id];
+    return w ? w.txt : TAREAS[a.depto] || "Trabajando en su escritorio";
   }
   function regresarGuardia(a) { caminar(a, "rec", [...a.escritorio], "guardia", () => { a.modo = "guardia"; a.estado = "Cuidando el edificio"; }); }
   const TAREAS = {
@@ -1875,7 +1957,7 @@ if (typeof module !== "undefined") module.exports = Personal;
     for (const a of AGENTES) {
       const r = agenda(a, t);
       a.lugar = r.lugar; a.meta = r.k; a.modo = r.k; a.pos = puntoPara(a, r); a.camino = null;
-      a.estado = r.txt || TAREAS[a.depto] || "Trabajando en su escritorio";
+      a.estado = r.txt || tareaDe(a);
     }
   }
   /* ---------- pintar textos ---------- */
@@ -2085,6 +2167,7 @@ if (typeof module !== "undefined") module.exports = Personal;
         <div><span class="eti">${a.puesto} · ${SALAS[a.depto].nombre}</span><h3>${a.nombre}</h3><span class="chip-humor" data-tono="${hu.tono}">${hu.txt}</span> <span class="chip-act">${a.camino && a.modo === "viaje" ? "En camino" : ETIQUETA_MODO[a.modo] || "En casa"}</span></div>
         <button type="button" class="chico" id="cerrar-ficha">Cerrar</button></header>
       <p>${a.descripcion} <i>«${a.frase}»</i></p>
+      <div class="su-trabajo"><span class="eti">Su trabajo de verdad</span><p>${esc(Personal.TRABAJO[id] || "")}</p>${PILOTO.activo && PILOTO.estado.trabajo && PILOTO.estado.trabajo[id] ? `<p class="ultimo"><b>Lo último que hizo (${cuando(PILOTO.estado.trabajo[id].t)}):</b> ${esc(PILOTO.estado.trabajo[id].txt)}</p>` : ""}</div>
       <div class="carrera" data-tier="${tier}">
         <div class="nivel-anillo" style="--p:${(nv.progreso * 100).toFixed(1)}"><span class="dato">${k.nivel}</span><small>nivel</small></div>
         <div class="carrera-txt"><span class="eti">Carrera</span><h3>${Personal.rangoDe(k.nivel)}</h3>
@@ -2581,6 +2664,59 @@ if (typeof module !== "undefined") module.exports = Personal;
       </svg></figure>`;
   }
 
+  /* ---------- el trabajo real de cada quien (lo que produjo el piloto en cada departamento) ---------- */
+  const quien = id => { const a = AG[id]; if (!a) return ""; const n = a.emo.carrera.nivel; return `<button type="button" class="tr-quien" data-ficha="${id}" data-tier="${Personal.tierDe(n)}"><span class="nv-chip">${n}</span>${a.corto}</button>`; };
+  const hechoDe = id => { const w = PILOTO.estado.trabajo && PILOTO.estado.trabajo[id]; return w ? `<p>${esc(w.txt)}</p>` : `<p class="nota-sala">Todavía no tiene una revisión registrada.</p>`; };
+  const cuandoDe = ids => { const ts = ids.map(id => PILOTO.estado.trabajo?.[id]?.t).filter(Boolean).sort(); return ts.length ? `<span class="tr-hora">${cuando(ts[ts.length - 1])}</span>` : ""; };
+  const tarjetaTR = (ico, titulo, ids, cuerpo, ancha = false) => `<article class="tr-card${ancha ? " ancha" : ""}"><header><span class="tr-ico">${ico}</span><h3>${titulo}</h3>${cuandoDe(ids)}</header><div class="tr-gente">${ids.map(quien).join("")}</div>${cuerpo}</article>`;
+  const REGIMEN = { normal: ["Normal", "pos"], agitado: ["Agitado", "ambar"], bajista: ["A la baja", "neg"], tormenta: ["A la baja y agitado", "neg"] };
+  function pintarTrabajoReal() {
+    const grid = $("#tr-grid"); if (!grid) return;
+    if (!PILOTO.activo) { grid.innerHTML = `<p class="nota-sala">Esto lo hace el piloto automático en GitHub tres veces al día. Aparece aquí en la página publicada.</p>`; return; }
+    const E = PILOTO.estado, j = E.jornadas[0];
+    $("#tr-cuando").textContent = E.ultimaCorrida ? `revisión de ${cuando(E.ultimaCorrida.t)}` : "";
+    const t = id => (E.trabajo && E.trabajo[id]) || {};
+    // mineros
+    const mineros = STAFF.min.map(a => {
+      const d = t(a.id).datos || {}, esp = (Personal.ESPECIALIDAD[a.id] || []).map(f => Motor.FAMILIAS[f].nombre).join(" y ");
+      return `<tr><td>${quien(a.id)}</td><td>${esp}</td><td class="dato">${d.pruebas ?? "—"}</td><td class="dato">${d.aprobadas ?? "—"}</td><td class="dato">${d.enCartera ?? 0}</td><td class="dato ${clase(d.promedio || 0)}">${d.enCartera ? pct(d.promedio) : "—"}</td></tr>`;
+    }).join("");
+    const minerosHTML = `<div class="tabla-caja tr-tabla"><table><thead><tr><th>Minero</th><th>Busca</th><th>Pruebas hoy</th><th>Aprobadas</th><th>Operando o retiradas</th><th>Les va</th></tr></thead><tbody>${mineros}</tbody></table></div>
+      <p class="nota-sala">Las 160 pruebas del día se reparten según cómo le va <b>de verdad</b> a lo que encontró cada quien en la operación en papel. Si a alguien se le acaban las combinaciones de su especialidad, ayuda con otras.</p>`;
+    // filtros de calidad
+    const L = j && j.llegaron, SIG = { ana: "rie", rie: "me1", me1: "me2", me2: "com" };
+    const filtros = [["ana", "Análisis", "Sharpe y número de operaciones"], ["rie", "Riesgos", "caída máxima"], ["me1", "Mesa de pruebas I", "datos que no vio"], ["me2", "Mesa de pruebas II", "variantes cercanas"]]
+      .map(([k, n, que]) => `<li><b>${n}</b> (${que}): ${L ? `revisó ${L[k]} y pasaron ${L[SIG[k]]}.` : esc(t(STAFF[k][0].id).txt || "—")}</li>`).join("");
+    // comité
+    const votoIco = v => v ? `<span class="pos">✓</span>` : `<span class="neg">✕</span>`;
+    const decisiones = (E.comite || []).slice(0, 5).map(d => `<li><span class="tr-voto">${votoIco(d.votos.elena)}${votoIco(d.votos.robles)}${votoIco(d.votos.paredes)}</span><span><b>${esc(d.etiqueta)}</b> en ${esc(d.emisora)} · ${d.decision === "si" ? `<span class="pos">entró a operar</span>` : `<span class="neg">rechazada</span>`} <small>${fechaDM(d.fecha)}${d.porque.length ? " · " + esc(d.porque.join("; ")) : ""}</small></span></li>`).join("");
+    // macro
+    const M = E.macro, reg = M ? REGIMEN[M.regimen] : null;
+    // riesgos
+    const Rg = E.riesgo;
+    // noticias
+    const titulares = (E.noticias || []).slice(0, 6).map(n => { const u = ligaSegura(n.link); return `<li><span class="tr-em">${esc(n.id)}</span><span>${u ? `<a href="${u}" target="_blank" rel="noopener noreferrer">${esc(n.titulo)}</a>` : esc(n.titulo)}<small>${esc([n.fuente, n.fecha ? cuando(n.fecha) : ""].filter(Boolean).join(" · "))}</small></span></li>`; }).join("");
+    const movs = E.movimientos && E.movimientos.lista.length ? `<p class="tr-movs">${E.movimientos.lista.map(x => `<span class="chip ${x.ch > 0 ? "compra" : "venta"}">${x.id} ${pct(x.ch)}</span>`).join(" ")}</p>` : "";
+    // archivo
+    const fams = (t("fermin").datos || {}).familias || {}, maxF = Math.max(0.0001, ...Object.values(fams));
+    const famHTML = Object.keys(fams).length ? `<ul class="motivos">${Object.entries(fams).sort((a, b) => b[1] - a[1]).map(([f, v]) => `<li><span>${Motor.FAMILIAS[f].nombre}</span><span class="dato">${(v * 100).toFixed(1)}%</span><span class="barra"><i style="width:${(v / maxF * 100).toFixed(1)}%;background:var(--jade)"></i></span></li>`).join("")}</ul>` : "";
+    const salen = (t("memo").datos || {}).salen || [];
+    grid.innerHTML = [
+      tarjetaTR("⛏️", "Minería", STAFF.min.map(a => a.id), minerosHTML, true),
+      tarjetaTR("🧭", "Macroeconomía", ["paco", "ale"], M ? `<p class="tr-regimen"><span class="chip ${reg[1] === "pos" ? "compra" : reg[1] === "neg" ? "venta" : "mantener"}">Mercado: ${reg[0]}</span></p>${hechoDe("paco")}${hechoDe("ale")}` : hechoDe("paco")),
+      tarjetaTR("⚖️", "Comité", ["elena", "robles", "paredes"], `${hechoDe("elena")}${decisiones ? `<p class="nota-sala">Votos en orden: Lic. Cervantes · Ing. Robles · Dra. Paredes. Se necesitan 2 de 3.</p><ul class="tr-lista">${decisiones}</ul>` : ""}`),
+      tarjetaTR("🛡️", "Riesgos", ["chema", "fer"], `${Rg ? `<div class="tr-medidor"><span>Invertido en acciones</span><span class="barra"><i style="width:${(Rg.invertido * 100).toFixed(0)}%"></i></span><span class="dato">${(Rg.invertido * 100).toFixed(0)}%</span></div>` : ""}${hechoDe("chema")}${hechoDe("fer")}`),
+      tarjetaTR("📰", "Noticias", ["diego", "vale"], `${titulares ? `<ul class="tr-lista tr-noticias">${titulares}</ul>` : hechoDe("diego")}${movs}${hechoDe("vale")}`),
+      tarjetaTR("🔬", "Filtros de calidad", [...STAFF.ana, ...STAFF.rie, ...STAFF.me1, ...STAFF.me2].map(a => a.id), `<ul class="tr-lista tr-simple">${filtros}</ul>`),
+      tarjetaTR("💱", "Sala de trading", ["renata", "hugo"], `${hechoDe("renata")}${hechoDe("hugo")}`),
+      tarjetaTR("📚", "Biblioteca", ["memo"], `${hechoDe("memo")}${salen.length ? `<ul class="tr-lista tr-simple">${salen.map(b => `<li>Salió <b>${esc(b.etiqueta)}</b> en ${esc(b.emisora)}: ${esc(b.motivo.toLowerCase())}</li>`).join("")}</ul>` : ""}`),
+      tarjetaTR("✅", "Cumplimiento", ["mendez", "andrea"], `${hechoDe("mendez")}${hechoDe("andrea")}`),
+      tarjetaTR("🖥️", "Sistemas", ["charly", "ingrid"], `${hechoDe("charly")}${hechoDe("ingrid")}`),
+      tarjetaTR("🗄️", "Archivo", ["fermin"], `${hechoDe("fermin")}${famHTML}`),
+      tarjetaTR("🌙", "Vigilancia", ["ramon"], hechoDe("ramon")),
+      tarjetaTR("📝", "Recepción", ["lucha"], `${hechoDe("lucha")}${(E.resumenes || []).slice(1, 4).length ? `<ul class="tr-lista tr-simple">${E.resumenes.slice(1, 4).map(r => `<li><small>${fechaDM(r.fecha)}</small> ${esc(r.txt)}</li>`).join("")}</ul>` : ""}`)
+    ].join("");
+  }
   /* ---------- modo piloto automático ---------- */
   const cuando = iso => { if (!iso) return ""; const d = new Date(iso), hoy = new Date(); const mismo = d.toDateString() === hoy.toDateString(); return (mismo ? "hoy " : d.toLocaleDateString("es-MX", { day: "numeric", month: "short" }) + " ") + d.toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "America/Mexico_City" }); };
   function pintarCarteraPiloto(tb, nota, caja) {
@@ -2601,7 +2737,7 @@ if (typeof module !== "undefined") module.exports = Personal;
     $("#cartera-total").textContent = Object.entries(tot).map(([mon, t]) => `${dinero(t.val, mon)} (${pct(t.val / t.cap - 1)})`).join(" · ");
     const h = E.historial;
     $("#fondo").innerHTML = h.length > 1 ? `<h3>Resultado acumulado del fondo</h3>${graficaFondo(h)}` : "";
-    $("#retiradas").innerHTML = retiradas.length ? `<h3>Retiradas por el comité</h3><ul class="notas">${retiradas.map(i => `<li>${i.etiqueta} en ${i.emisora}: ${i.retiro.motivo} (${pct(i.retiro.resultado)}), el ${i.retiro.fecha.slice(8, 10)}/${i.retiro.fecha.slice(5, 7)}.</li>`).join("")}</ul>` : "";
+    $("#retiradas").innerHTML = retiradas.length ? `<h3>Retiradas por el comité</h3><ul class="notas">${retiradas.map(i => `<li>${esc(i.etiqueta)} en ${esc(i.emisora)}: ${esc(i.retiro.motivo)} (${pct(i.retiro.resultado)}), el ${i.retiro.fecha.slice(8, 10)}/${i.retiro.fecha.slice(5, 7)}.</li>`).join("")}</ul>` : "";
     pintarPizarra();
   }
   function graficaFondo(h) {
@@ -2625,7 +2761,7 @@ if (typeof module !== "undefined") module.exports = Personal;
   function verJornadaPiloto() {
     const j = PILOTO.estado.jornadas[0];
     if (!j) { registrar(null, `<b>Lic. Cervantes:</b> todavía no hay jornadas del piloto; la primera es hoy a las 15:40.`); return; }
-    st.cola = j.candidatas.map(([serie, fam, p]) => ({ S: SERIES.get(serie), c: { fam, p } })).filter(x => x.S);
+    st.cola = j.candidatas.map(([serie, fam, p, minero]) => ({ S: SERIES.get(serie), c: { fam, p }, minero })).filter(x => x.S);
     st.totalJornada = st.cola.length; st.emitidos = 0; st.corriendo = true; st.pausa = false; st.repeticion = true;
     for (const k in st.llegadas) st.llegadas[k] = 0; st.motivos = {};
     registrar(null, `<b>Repetición de la jornada del ${j.fecha.slice(8, 10)}/${j.fecha.slice(5, 7)}:</b> ${st.totalJornada} expedientes. Nadie hace horas extra; es solo para verla.`);
@@ -2652,16 +2788,19 @@ if (typeof module !== "undefined") module.exports = Personal;
           <li><span class="dato">${charlas.length}</span><span>pláticas entre agentes</span></li>
           ${cambio ? `<li><span class="dato">${cambio}</span><span>cambio del fondo</span></li>` : ""}
         </ul>
-        <ul class="notas">${(com.length ? com : nuevos).slice(0, 5).map(b => `<li>${b.txt}</li>`).join("") || "<li>Nada nuevo desde tu última visita.</li>"}</ul>
+        <ul class="notas">${E.resumenes && E.resumenes[0] ? `<li><b>📝 Resumen de Doña Lucha:</b> ${esc(E.resumenes[0].txt)}</li>` : ""}${(com.length ? com : nuevos).slice(0, 5).map(b => `<li>${esc(b.txt)}</li>`).join("") || "<li>Nada nuevo desde tu última visita.</li>"}</ul>
         <ul class="charlas">${destacadas.map(c => `<li><span class="eti">${fechaCorta(c.t)} ${c.hora} · ${c.lugar === "casa" ? "en casa" : c.lugar === "cafeteria" ? "en la cafetería" : c.lugar === "noche" ? "de noche" : "en la oficina"}</span><span>${c.lineas.map(([q, t]) => `<b>${AG[q].corto}:</b> ${t}`).join("<br>")}</span></li>`).join("")}</ul>
       </div>`;
     try { localStorage.setItem("piso-ultima-visita", new Date().toISOString()); } catch (e) { /* sin almacenamiento */ }
   }
+  const ICONO_TIPO = { macro: "🧭", riesgo: "🛡️", noticias: "📰", auditoria: "✅", sistemas: "🖥️", biblioteca: "📚", resumen: "📝", comite: "⚖️", operacion: "💱" };
   function cargarBitacoraPiloto() {
     const E = PILOTO.estado;
     bit.innerHTML = "";
     E.bitacora.slice(0, 80).forEach(b => {
-      const html = b.tipo === "social" ? `<span class="soc">${b.txt}</span>` : b.tipo === "carrera" ? `<span class="carrera-ev">${/subió a nivel/.test(b.txt) ? "▲ " : ""}${b.txt}</span>` : b.txt.replace(/^(Lic\. Cervantes|Renata|Hugo|Lupita|El comité)/, "<b>$1</b>");
+      const txt = esc(b.txt), ico = ICONO_TIPO[b.tipo] ? ICONO_TIPO[b.tipo] + " " : "";
+      const html = b.tipo === "social" ? `<span class="soc">${txt}</span>` : b.tipo === "carrera" ? `<span class="carrera-ev">${/subió a nivel/.test(b.txt) ? "▲ " : ""}${txt}</span>`
+        : ico + txt.replace(/^(Lic\. Cervantes|Renata|Hugo|Lupita|El comité|Paco|Alejandra|Diego|Valeria|Don Chema|Fernanda|Memo|Lic\. Méndez|Andrea|Charly|Ingrid|Don Fermín|Don Ramón|Doña Lucha)/, "<b>$1</b>");
       registrar(null, html, b.tipo, cuando(b.t).replace("hoy ", ""), true);
     });
   }
@@ -2709,18 +2848,19 @@ if (typeof module !== "undefined") module.exports = Personal;
     llenarSelect(); pintarSello(); actualizarLectura(); pintarConteos(); pintarCinta(); pintarCartera();
     if (PILOTO.activo) {
       const E = PILOTO.estado, j = E.jornadas[0];
-      if (j) { st.cola = j.candidatas.map(([serie, fam, p]) => ({ S: SERIES.get(serie), c: { fam, p } })).filter(x => x.S); st.totalJornada = st.cola.length; st.sinXP = true; procesarLote(); st.sinXP = false; }
+      if (j) { st.cola = j.candidatas.map(([serie, fam, p, minero]) => ({ S: SERIES.get(serie), c: { fam, p }, minero })).filter(x => x.S); st.totalJornada = st.cola.length; st.sinXP = true; procesarLote(); st.sinXP = false; }
       for (const b of E.biblioteca) {
         const S = SERIES.get(b.serie); if (!S || st.aprobadas.some(x => x.key === b.key)) continue;
         const exp = Motor.evaluar(S, { fam: b.fam, p: b.p }); if (exp.estado !== "aprobada") continue;
         Object.assign(exp, { serie: b.serie, id: st.expedientes.length, key: b.key, minero: b.minero });
         st.expedientes.push(exp); st.aprobadas.push(exp);
       }
-      pintarBiblioteca(); pintarConteos(); cargarBitacoraPiloto(); pintarMientras();
+      pintarBiblioteca(); pintarConteos(); cargarBitacoraPiloto(); pintarMientras(); pintarTrabajoReal();
       $("#sello").className = "sello real";
       $("#sello-txt").textContent = `Piloto automático · última revisión ${cuando(E.ultimaCorrida && E.ultimaCorrida.t)}`;
       botonJornada();
     } else {
+      pintarTrabajoReal();
       st.cola = armarCola(); st.totalJornada = st.cola.length;
       st.sinXP = true; procesarLote(); st.sinXP = false;
       registrar(null, `<b>Resumen de ayer:</b> ${st.totalJornada} expedientes revisados, ${st.aprobadas.length} en la biblioteca. Abre una jornada para seguir minando.`);
@@ -2738,6 +2878,7 @@ if (typeof module !== "undefined") module.exports = Personal;
   const Sala = window.Sala = {
     AGENTES, AG, SALAS, CASAS, PASILLO, AUTOS, ESCRITORIOS, faroles, st, GLOBOS, Personal, sinMovimiento,
     horaMX, nocheDe, cama, pizLineas, rotCuenta, abrirFicha, render3D: null,
+    noticias: () => (PILOTO.activo && PILOTO.estado.noticias) || [],
     get fichaAbierta() { return fichaAbierta; }
   };
   let pref3d = null; try { pref3d = localStorage.getItem("piso-vista"); } catch (e) { /* sin almacenamiento */ }
@@ -2968,15 +3109,25 @@ function montar(THREE, OrbitControls, mergeGeometries) {
     lineas.forEach(([txt, cls], i) => { x.fillStyle = cls.includes("compra") ? "#5BF0B4" : cls.includes("venta") ? "#FF8A7A" : "#DCE4F7"; x.fillText(txt, 18, 14 + i * 36); });
     t.needsUpdate = true;
   }
+  /* pantalla de Noticias: los titulares reales que trae Diego (Yahoo Finance); sin titulares, lo dice */
   const notic = lienzo(512, 288);
-  (() => {
-    const { x, c } = notic, g = x.createLinearGradient(0, 0, c.width, c.height);
+  let noticHash = null;
+  function pintarNoticias3D() {
+    const lista = Sala.noticias().slice(0, 3), h = lista.map(n => n.titulo).join("|");
+    if (h === noticHash) return; noticHash = h;
+    const { x, c, t } = notic, g = x.createLinearGradient(0, 0, c.width, c.height);
     g.addColorStop(0, "#0B1E5A"); g.addColorStop(1, "#5A0B3A"); x.fillStyle = g; x.fillRect(0, 0, c.width, c.height);
-    x.fillStyle = "#fff"; x.font = "700 54px 'Saira Condensed', sans-serif"; x.fillText("NOTICIAS", 28, 80);
-    x.font = "500 26px 'Atkinson Hyperlegible', sans-serif"; x.fillStyle = "rgba(255,255,255,.85)";
-    ["Banxico mantiene la tasa", "El peso abre estable", "IPC: jornada de cifras mixtas"].forEach((l, i) => x.fillText("• " + l, 28, 140 + i * 40));
-    x.fillStyle = "#FF4F9A"; x.fillRect(0, c.height - 26, c.width, 26); x.fillStyle = "#fff"; x.font = "700 18px 'Saira Condensed', sans-serif"; x.fillText("EN VIVO · BMV · NYSE", 18, c.height - 7);
-  })();
+    x.fillStyle = "#fff"; x.font = "700 46px 'Saira Condensed', sans-serif"; x.fillText("NOTICIAS", 24, 58);
+    const corta = (txt, w) => { if (x.measureText(txt).width <= w) return txt; let s = txt; while (s.length > 4 && x.measureText(s + "…").width > w) s = s.slice(0, -1); return s + "…"; };
+    if (!lista.length) { x.font = "500 24px 'Atkinson Hyperlegible', sans-serif"; x.fillStyle = "rgba(255,255,255,.8)"; x.fillText("Sin titulares nuevos por ahora", 24, 130); }
+    lista.forEach((n, i) => {
+      x.font = "700 18px 'JetBrains Mono', monospace"; x.fillStyle = "#FF8CC0"; x.fillText(String(n.id || ""), 24, 104 + i * 54);
+      x.font = "500 22px 'Atkinson Hyperlegible', sans-serif"; x.fillStyle = "rgba(255,255,255,.92)"; x.fillText(corta(String(n.titulo || ""), c.width - 48), 24, 130 + i * 54);
+    });
+    x.fillStyle = "#FF4F9A"; x.fillRect(0, c.height - 26, c.width, 26); x.fillStyle = "#fff"; x.font = "700 17px 'Saira Condensed', sans-serif"; x.fillText("TITULARES REALES · YAHOO FINANCE", 18, c.height - 7);
+    t.needsUpdate = true;
+  }
+  pintarNoticias3D();
   const pantalla = new THREE.Mesh(new THREE.PlaneGeometry(54, 30), new THREE.MeshStandardMaterial({ color: 0x000000, emissive: 0xffffff, emissiveMap: notic.t, emissiveIntensity: 0.95 }));
   pantalla.position.set(X(932), 19, Z(23)); scene.add(pantalla);
 
@@ -3240,7 +3391,7 @@ function montar(THREE, OrbitControls, mergeGeometries) {
         else if (a.modo !== "dormir") casasDespiertas[a.lugar.i] = true;
       }
       ocupadas.rec = true;
-      pintarPizarra3D(); pintarPilas();
+      pintarPizarra3D(); pintarPilas(); pintarNoticias3D();
       for (const k in rotulos) { const txt = Sala.rotCuenta[k] ? Sala.rotCuenta[k].textContent : ""; if (txt !== rotulos[k].txt) { rotulos[k].txt = txt; rotulos[k].s.textContent = txt; } }
       for (const { a, mon } of monitores) {
         const frente = a.lugar.tipo === "sala" && a.lugar.k === a.depto && !a.camino && Math.hypot(a.pos[0] - a.escritorio[0], a.pos[1] - a.escritorio[1]) < 40;

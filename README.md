@@ -46,10 +46,32 @@ Cada agente junta experiencia (XP) revisando expedientes, consiguiendo estrategi
 
 La carrera de cada quien se guarda en `sitio/datos/estado.json` junto con sus emociones, así que sigue creciendo día con día aunque nadie tenga la página abierta.
 
+## El trabajo real de cada quien
+
+Cada agente hace una parte de verdad. La página lo muestra en la sección «El trabajo real de cada quien» y en la ficha de cada uno.
+
+| Quién | Qué hace de verdad |
+|---|---|
+| Mineros (Lupita, Beto, Toño, Karla) | Cada uno busca en su especialidad. Las 160 pruebas del día se reparten según cómo le va **en la operación en papel** a lo que encontró cada quien |
+| Análisis, Riesgos, Mesas de pruebas | Los filtros del motor: Sharpe, caída máxima, datos que no vio y variantes cercanas |
+| Paco y Alejandra (Macroeconomía) | Leen el IPC real en cada cierre. Con el mercado agitado o a la baja, el comité mete menos estrategias nuevas (o ninguna) y solo las que siguen la tendencia |
+| Comité (Lic. Cervantes, Ing. Robles, Dra. Paredes) | Votan cada propuesta; se necesitan 2 de 3 |
+| Don Chema y Fernanda (Riesgos) | Vigilan la cartera en cada revisión, avisan qué está cerca del límite y retiran a mediodía lo que pierda 12% |
+| Diego y Valeria (Noticias) | Titulares reales de Yahoo Finance y movimientos de 3% o más |
+| Memo (Biblioteca) | Vuelve a probar cada semana lo guardado con datos nuevos y saca lo que ya no pasa |
+| Lic. Méndez y Andrea (Cumplimiento) | Auditan límites y cuentas, y suman las comisiones pagadas |
+| Charly e Ingrid (Sistemas) | Revisan que los precios lleguen completos y al día; lo viejo no se opera |
+| Renata y Hugo (Trading) | Operan en la apertura: Renata la Bolsa Mexicana y Hugo Nueva York |
+| Don Fermín (Archivo) | Mide qué tipo de estrategia se aprueba; con eso Lupita reparte sus pruebas |
+| Don Ramón (Vigilancia) | En la apertura revisa los brincos de precio de la noche en lo que tenemos |
+| Doña Lucha (Recepción) | Escribe el resumen del día |
+
+Su experiencia sale de su trabajo y de resultados reales: quien encontró una estrategia gana o pierde experiencia según lo que esa estrategia gana o pierde cada día. Las pláticas y emociones son el ambiente de la sala; no deciden nada.
+
 ## Qué decide el piloto solo
 
 - **Jornada:** cada cierre revisa 160 combinaciones nuevas de estrategias sobre 16 emisoras (8 en pesos de la BMV y 8 empresas mexicanas que cotizan en EE.UU.).
-- **Comité:** manda a operar las mejores de la biblioteca, máximo 8 a la vez, 2 por emisora y 2 nuevas por día. Cada una arranca con $100,000 MXN o $5,000 USD ficticios.
+- **Comité:** propone las mejores de la biblioteca y las vota (2 de 3). Máximo 8 a la vez, 2 por emisora y hasta 2 nuevas por día (menos si Paco ve el mercado agitado o a la baja). Cada una arranca con $100,000 MXN o $5,000 USD ficticios.
 - **Retiro:** quita una estrategia si pierde 12% o si después de 30 días va perdiendo más de 4%.
 - **Operación:** la señal se decide con el precio de cierre y se ejecuta en la apertura del día siguiente, con 0.25% de comisión más IVA.
 
