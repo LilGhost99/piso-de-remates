@@ -1,0 +1,2163 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style></head><body><title>Piso de Remates</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;600;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Plano arquitectónico del antiguo piso de remates de la BMV: papel de dibujo, tinta, y rosa mexicano solo para los expedientes en movimiento. */
+:root {
+  --papel: #E6EBE6; --sala: #F7F8F4; --tinta: #1C2A28; --tinta-2: #556560; --linea: #B3BFB9; --muro: #2B3B38;
+  --rosa: #C3125F; --jade: #0B7553; --ambar: #A2650E; --rojo: #B02F28; --azul: #2D5C9A;
+  --f-disp: "Saira Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --f-txt: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-dato: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --noche: #0A1730;
+  --g-inv: var(--azul); --g-ope: var(--ambar); --g-val: var(--jade); --g-gob: var(--tinta); --g-arc: var(--tinta-2);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --papel: #0B1720; --sala: #11222C; --tinta: #DCE7EA; --tinta-2: #8FA4AC; --linea: #284050; --muro: #9BB4BE;
+    --rosa: #FF5C9F; --jade: #3CCF97; --ambar: #E6B04C; --rojo: #F0725E; --azul: #7DA9EE; --noche: #000000; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --papel: #0B1720; --sala: #11222C; --tinta: #DCE7EA; --tinta-2: #8FA4AC; --linea: #284050; --muro: #9BB4BE;
+  --rosa: #FF5C9F; --jade: #3CCF97; --ambar: #E6B04C; --rojo: #F0725E; --azul: #7DA9EE; --noche: #000000; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--papel); color: var(--tinta); font: 15px/1.5 var(--f-txt); }
+.envoltura { max-width: 1320px; margin: 0 auto; padding-inline: 20px; padding-block: 20px 48px; display: grid; gap: 28px; }
+h1, h2, h3 { font-family: var(--f-disp); font-weight: 700; letter-spacing: .01em; text-wrap: balance; margin: 0; line-height: 1.05; }
+h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); text-transform: uppercase; }
+h2 { font-size: 1.6rem; text-transform: uppercase; }
+h3 { font-size: 1.15rem; text-transform: uppercase; letter-spacing: .03em; }
+p { margin: 0; }
+.dato { font-family: var(--f-dato); font-variant-numeric: tabular-nums; }
+.eti { font-family: var(--f-disp); font-weight: 600; text-transform: uppercase; letter-spacing: .08em; font-size: .78rem; color: var(--tinta-2); }
+
+/* cabecera */
+.cabecera { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px 32px; border-bottom: 3px solid var(--muro); padding-bottom: 14px; }
+.cabecera .titulo { display: grid; gap: 6px; max-width: 62ch; }
+.cabecera .lema { color: var(--tinta-2); }
+.sello { display: inline-flex; align-items: center; gap: 8px; border: 1.5px solid currentColor; padding: 4px 10px; font-family: var(--f-disp); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; font-size: .82rem; }
+.sello.ejemplo { color: var(--ambar); }
+.sello.real { color: var(--jade); }
+.sello i { width: 8px; height: 8px; background: currentColor; display: block; }
+
+/* controles */
+.mando { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: flex-end; }
+.campo { display: grid; gap: 4px; min-width: 0; }
+select, button, .boton-archivo { font: 600 .95rem var(--f-txt); color: var(--tinta); background: var(--sala); border: 1.5px solid var(--muro); padding: 8px 12px; border-radius: 0; min-height: 40px; }
+select { padding-right: 28px; max-width: 100%; }
+button, .boton-archivo { cursor: pointer; }
+button:focus-visible, select:focus-visible, .boton-archivo:focus-within, tr:focus-visible, li[tabindex]:focus-visible { outline: 3px solid var(--rosa); outline-offset: 2px; }
+.primario { background: var(--muro); color: var(--papel); border-color: var(--muro); min-width: 150px; }
+.primario:hover { background: var(--tinta); }
+.segmentos { display: inline-flex; }
+.segmentos button { border-right-width: 0; min-width: 44px; padding-inline: 10px; }
+.segmentos button:last-child { border-right-width: 1.5px; }
+.segmentos button[aria-pressed="true"] { background: var(--muro); color: var(--papel); }
+.boton-archivo { display: inline-flex; align-items: center; gap: 8px; border-style: dashed; }
+.boton-archivo input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.reloj { margin-left: auto; text-align: right; }
+.reloj .dato { font-size: 1.5rem; font-weight: 600; }
+
+/* cinta de precios en vivo */
+.cinta-caja { display: grid; gap: 8px; }
+.cinta-estado { display: flex; align-items: center; gap: 8px; font-size: .86rem; color: var(--tinta-2); }
+.punto { width: 9px; height: 9px; border-radius: 50%; background: var(--tinta-2); flex: none; }
+.punto.abierto { background: var(--jade); animation: latido 2s ease-in-out infinite; }
+.punto.cerrado { background: var(--ambar); }
+@keyframes latido { 0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--jade) 45%, transparent); } 50% { box-shadow: 0 0 0 5px color-mix(in srgb, var(--jade) 0%, transparent); } }
+.cinta { display: flex; overflow-x: auto; border-block: 1.5px solid var(--muro); background: var(--sala); }
+.cinta:empty { display: none; }
+.cot { flex: none; display: grid; grid-template-columns: auto auto; gap: 2px 12px; align-items: center; padding: 8px 14px; border: 0; border-right: 1px solid var(--linea); background: none; min-height: 0; text-align: left; font: inherit; color: var(--tinta); }
+.cot:hover, .cot[aria-pressed="true"] { background: color-mix(in srgb, var(--rosa) 8%, var(--sala)); }
+.cot .sim { font: 700 .95rem var(--f-disp); letter-spacing: .05em; }
+.cot .precio { font-size: .9rem; font-weight: 600; text-align: right; }
+.cot .cambio { font-size: .76rem; text-align: right; }
+.cot svg { width: 64px; height: 18px; display: block; }
+.cot.sube .precio { animation: sube 1.4s ease-out; } .cot.baja .precio { animation: baja 1.4s ease-out; }
+@keyframes sube { from { background: color-mix(in srgb, var(--jade) 35%, transparent); } }
+@keyframes baja { from { background: color-mix(in srgb, var(--rojo) 35%, transparent); } }
+button.chico { min-height: 0; padding: 4px 10px; font-size: .8rem; min-width: 0; }
+.nota-sala { color: var(--tinta-2); font-size: .9rem; max-width: 80ch; }
+.modo-piloto #campo-cant, .modo-piloto #btn-limpiar, .modo-piloto .boton-archivo { display: none; }
+/* emociones */
+.emociones { grid-column: 1 / -1; display: grid; gap: 3px; }
+.emo { display: grid; grid-template-columns: 62px 1fr 22px; gap: 8px; align-items: center; font-size: .72rem; color: var(--tinta-2); }
+.emociones.grande .emo { grid-template-columns: 110px 1fr 26px; font-size: .82rem; }
+.emo .riel { height: 5px; background: color-mix(in srgb, var(--linea) 50%, transparent); }
+.emo .riel i { display: block; height: 100%; background: var(--tinta-2); }
+.emo[data-emo="animo"] .riel i { background: var(--jade); } .emo[data-emo="estres"] .riel i { background: var(--rojo); }
+.emo[data-emo="confianza"] .riel i { background: var(--azul); } .emo[data-emo="energia"] .riel i { background: var(--ambar); }
+.emo.alto .dato { color: var(--rojo); font-weight: 600; }
+.emo .dato { text-align: right; }
+.chips { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 4px; }
+.chip-humor { font: 600 .7rem var(--f-disp); text-transform: uppercase; letter-spacing: .07em; padding: 1px 7px; background: color-mix(in srgb, var(--tinta-2) 14%, transparent); color: var(--tinta); }
+.chip-humor[data-tono="bien"] { background: color-mix(in srgb, var(--jade) 20%, transparent); }
+.chip-humor[data-tono="mal"] { background: color-mix(in srgb, var(--azul) 22%, transparent); }
+.chip-humor[data-tono="tenso"] { background: color-mix(in srgb, var(--rojo) 20%, transparent); }
+.ficha { cursor: pointer; }
+.ficha:hover { border-color: var(--muro); }
+.ficha:focus-visible { outline: 3px solid var(--rosa); outline-offset: 2px; }
+.humor { stroke: var(--sala); stroke-width: 1; }
+.humor.bien { fill: var(--jade); } .humor.mal { fill: var(--azul); } .humor.tenso { fill: var(--rojo); } .humor.neutral { fill: var(--linea); }
+.agente { cursor: pointer; }
+.agente:focus-visible .cuerpo { stroke: var(--rosa) !important; }
+.globo-caja { fill: var(--sala); stroke: var(--muro); stroke-width: 1.2; }
+.globo-txt { font: 500 9.5px var(--f-txt); fill: var(--tinta); }
+.globo { pointer-events: none; }
+.soc { color: var(--tinta-2); font-style: italic; }
+.bitacora li[data-tipo="social"] .hora { opacity: .7; }
+.bitacora .hora { white-space: nowrap; }
+.bitacora li { grid-template-columns: minmax(44px, auto) 1fr; }
+.enlace { background: none; border: 0; padding: 0; min-height: 0; font: inherit; font-weight: 700; color: var(--tinta); text-decoration: underline; text-decoration-color: var(--linea); text-underline-offset: 2px; cursor: pointer; }
+.enlace:hover { text-decoration-color: var(--rosa); }
+.clima-txt { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; font-size: .86rem; }
+.embudo.clima li:nth-child(1) .barra i { background: var(--jade); } .embudo.clima li:nth-child(2) .barra i { background: var(--rojo); } .embudo.clima li:nth-child(3) .barra i { background: var(--azul); }
+.ficha-personal { margin-top: 14px; background: var(--sala); border: 1.5px solid var(--muro); padding: 18px; display: grid; gap: 14px; }
+.ficha-cab { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+.ficha-cab > div { flex: 1; min-width: 200px; display: grid; gap: 4px; justify-items: start; }
+.ficha-cab h3 { font-size: 1.5rem; }
+.avatar.grande { width: 56px; height: 56px; border-radius: 50%; border: 4px solid; display: grid; place-items: center; font: 700 1rem var(--f-dato); }
+.ficha-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 18px; }
+.rel { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: .88rem; }
+.rel li { display: flex; justify-content: space-between; gap: 10px; border-bottom: 1px solid var(--linea); padding-bottom: 3px; }
+.charlas { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: .88rem; }
+.charlas li { display: grid; gap: 2px; border-left: 3px solid var(--linea); padding-left: 10px; }
+.mini { display: block; max-width: 100%; height: auto; }
+.mini .eje { stroke: var(--linea); stroke-dasharray: 2 3; }
+.mientras { background: var(--sala); border: 1.5px solid var(--muro); padding: 16px 18px; }
+.mientras-cols { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr) minmax(0, 1.4fr); gap: 20px; align-items: start; }
+.resumen-mientras { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.resumen-mientras li { display: grid; gap: 0; }
+.resumen-mientras .dato { font-size: 1.3rem; font-weight: 600; }
+.resumen-mientras span:last-child { font-size: .82rem; color: var(--tinta-2); }
+.grafica-fondo { width: 100%; min-width: 420px; height: auto; display: block; }
+.grafica-fondo text { font: 500 10px var(--f-dato); fill: var(--tinta-2); }
+.grafica-fondo .eje { stroke: var(--linea); }
+.grafica-fondo .cero { stroke: var(--tinta-2); stroke-width: 1; }
+.lin-mxn { fill: none; stroke: var(--rosa); stroke-width: 2; } .lin-usd { fill: none; stroke: var(--azul); stroke-width: 2; }
+.grafica-fondo .rot-mxn { fill: var(--rosa); font-weight: 600; } .grafica-fondo .rot-usd { fill: var(--azul); font-weight: 600; }
+#fondo:empty, #retiradas:empty { display: none; }
+@media (max-width: 900px) { .mientras-cols { grid-template-columns: 1fr; } }
+
+/* piso */
+.piso { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 20px; align-items: start; }
+.plano-caja { overflow-x: auto; border: 1.5px solid var(--linea); background: var(--papel); }
+#plano { display: block; width: 100%; min-width: 660px; height: auto; }
+.lateral { display: grid; gap: 18px; min-width: 0; }
+.bloque { display: grid; gap: 10px; }
+.bloque > header { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; border-bottom: 1.5px solid var(--muro); padding-bottom: 4px; }
+
+/* plano SVG */
+.cuadricula { stroke: var(--linea); stroke-width: .6; opacity: .55; }
+.muro { fill: var(--sala); stroke: var(--muro); stroke-width: 3.5; transition: fill .35s; }
+.muro.activo { fill: color-mix(in srgb, var(--rosa) 9%, var(--sala)); }
+.corte { stroke: var(--papel); stroke-width: 6; }
+.abatimiento { fill: none; stroke: var(--linea); stroke-width: 1; stroke-dasharray: 2 3; }
+.mueble { fill: none; stroke: var(--tinta-2); stroke-width: 1.2; opacity: .55; }
+.mueble-lleno { fill: var(--linea); opacity: .5; }
+.rot-clave { font: 600 10px var(--f-dato); fill: var(--tinta-2); letter-spacing: .05em; }
+.rot-sala { font: 700 13px var(--f-disp); fill: var(--tinta); text-transform: uppercase; letter-spacing: .05em; }
+.rot-cuenta { font: 500 10.5px var(--f-dato); fill: var(--tinta-2); }
+.rot-pasillo { font: 600 9px var(--f-disp); fill: var(--tinta-2); letter-spacing: .3em; text-transform: uppercase; opacity: .7; }
+.pizarra { fill: var(--muro); }
+.pizarra-txt { font: 500 10px var(--f-dato); fill: var(--papel); white-space: pre; }
+.pizarra-txt.compra { fill: color-mix(in srgb, var(--jade) 55%, var(--papel)); }
+.pizarra-txt.venta { fill: color-mix(in srgb, var(--rojo) 50%, var(--papel)); }
+.agente .cuerpo { fill: var(--sala); stroke-width: 2.6; }
+.agente .ini { font: 700 7.5px var(--f-dato); fill: var(--tinta); text-anchor: middle; dominant-baseline: central; }
+.agente .nom { font: 600 8.5px var(--f-disp); fill: var(--tinta-2); text-anchor: middle; text-transform: uppercase; letter-spacing: .03em; paint-order: stroke; stroke: var(--sala); stroke-width: 2.5px; }
+.agente.dormido { opacity: .6; }
+.agente .zz { font: 700 10px var(--f-dato); fill: var(--azul); }
+.token.detenida { opacity: .55; }
+.edificio { fill: none; stroke: var(--muro); stroke-width: 5; }
+.corte-ext { stroke: var(--papel); stroke-width: 8; }
+.banqueta { fill: color-mix(in srgb, var(--linea) 45%, var(--papel)); }
+.asfalto { fill: color-mix(in srgb, var(--muro) 22%, var(--papel)); }
+.raya { stroke: var(--papel); stroke-width: 1.5; stroke-dasharray: 14 10; opacity: .8; }
+.cebra { fill: var(--papel); opacity: .85; }
+.rot-calle { font: 600 10px var(--f-disp); fill: var(--tinta-2); letter-spacing: .25em; text-transform: uppercase; }
+.farol { fill: var(--tinta-2); }
+.halo { fill: color-mix(in srgb, var(--ambar) 45%, transparent); }
+.auto { stroke: var(--muro); stroke-width: 1; }
+.auto-0 { fill: var(--azul); } .auto-1 { fill: var(--ambar); } .auto-2 { fill: var(--jade); } .auto-3 { fill: var(--tinta-2); }
+.faro { fill: #FFE7A3; }
+.casa { fill: var(--sala); stroke: var(--muro); stroke-width: 3; }
+.cama { fill: color-mix(in srgb, var(--azul) 14%, var(--sala)); stroke: var(--tinta-2); stroke-width: 1; }
+.almohada { fill: var(--sala); stroke: var(--tinta-2); stroke-width: .8; }
+.rot-casa { font: 600 9px var(--f-disp); fill: var(--tinta-2); letter-spacing: .03em; text-transform: uppercase; }
+.sombra { fill: var(--noche); pointer-events: none; }
+.reloj-dia { font-size: .82rem; color: var(--tinta-2); }
+.ahora { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px; font-size: .88rem; }
+.ahora li { display: flex; justify-content: space-between; gap: 8px; border-bottom: 1px solid var(--linea); padding-block: 2px; }
+.chip-act { grid-column: 1 / -1; justify-self: start; font: 600 .7rem var(--f-disp); text-transform: uppercase; letter-spacing: .07em; padding: 1px 7px; border: 1.5px solid var(--tinta-2); color: var(--tinta-2); }
+.chip-act[data-k="Trabajando"], .chip-act[data-k="Llevando expediente"], .chip-act[data-k="En la pizarra"], .chip-act[data-k="Vigilando"] { color: var(--jade); border-color: var(--jade); }
+.chip-act[data-k="Durmiendo"] { color: var(--azul); border-color: var(--azul); }
+.chip-act[data-k="En camino"], .chip-act[data-k="Comiendo"], .chip-act[data-k="Por un café"] { color: var(--ambar); border-color: var(--ambar); }
+.agente .carga { fill: var(--rosa); }
+.token { fill: var(--rosa); }
+.token.rechazo { fill: var(--tinta-2); opacity: .6; }
+.pila { fill: var(--tinta-2); opacity: .35; }
+.pila-ok { fill: var(--jade); opacity: .8; }
+
+/* embudo */
+.embudo { display: grid; gap: 7px; margin: 0; padding: 0; list-style: none; }
+.embudo li { display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; font-size: .88rem; }
+.embudo .barra { grid-column: 1 / -1; height: 6px; background: color-mix(in srgb, var(--linea) 45%, transparent); }
+.embudo .barra i { display: block; height: 100%; background: var(--muro); width: 0; transition: width .3s; }
+.embudo li:last-child .barra i { background: var(--jade); }
+.lectura { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; font-size: .88rem; margin: 0; }
+.lectura dt { color: var(--tinta-2); }
+.lectura dd { margin: 0; text-align: right; font-family: var(--f-dato); }
+
+/* bitácora */
+.bitacora { list-style: none; margin: 0; padding: 0; max-height: 330px; overflow-y: auto; display: grid; gap: 0; align-content: start; border-top: 1px solid var(--linea); }
+.bitacora li { display: grid; grid-template-columns: 44px 1fr; gap: 8px; padding: 6px 2px; border-bottom: 1px solid var(--linea); font-size: .84rem; cursor: pointer; }
+.bitacora li:hover { background: color-mix(in srgb, var(--linea) 25%, transparent); }
+.bitacora .hora { font: 500 .75rem var(--f-dato); color: var(--tinta-2); padding-top: 2px; }
+.bitacora b { font-weight: 700; }
+.bitacora .ok { color: var(--jade); }
+.bitacora .no { color: var(--rojo); }
+.vacio { color: var(--tinta-2); font-style: italic; font-size: .9rem; }
+
+/* plantilla */
+.plantilla { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); gap: 10px; }
+.ficha { display: grid; grid-template-columns: 40px 1fr; gap: 4px 12px; padding: 12px; background: var(--sala); border: 1px solid var(--linea); }
+.ficha .avatar { grid-row: span 3; width: 40px; height: 40px; border-radius: 50%; border: 3px solid; display: grid; place-items: center; font: 700 .8rem var(--f-dato); }
+.ficha .nombre { font-weight: 700; line-height: 1.2; }
+.ficha .puesto { font-size: .8rem; color: var(--tinta-2); }
+.ficha .estado { grid-column: 1 / -1; font-size: .82rem; min-height: 2.5em; }
+.ficha .chip-act { margin-top: 2px; }
+.ficha .energia { grid-column: 1 / -1; display: grid; grid-template-columns: auto 1fr auto; gap: 8px; align-items: center; font-size: .72rem; color: var(--tinta-2); }
+.ficha .energia span:nth-child(2) { height: 4px; background: color-mix(in srgb, var(--linea) 50%, transparent); }
+.ficha .energia span:nth-child(2) i { display: block; height: 100%; background: var(--tinta-2); }
+.leyenda { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: .82rem; color: var(--tinta-2); }
+.leyenda span { display: inline-flex; align-items: center; gap: 6px; }
+.leyenda i { width: 12px; height: 12px; border-radius: 50%; border: 3px solid; display: block; }
+
+/* biblioteca */
+.dos { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+.tabla-caja { overflow-x: auto; border: 1px solid var(--linea); background: var(--sala); max-height: 520px; overflow-y: auto; }
+table { border-collapse: collapse; width: 100%; font-size: .86rem; }
+th, td { padding: 8px 10px; text-align: right; white-space: nowrap; border-bottom: 1px solid var(--linea); }
+th { position: sticky; top: 0; background: var(--sala); font: 600 .74rem var(--f-disp); text-transform: uppercase; letter-spacing: .07em; color: var(--tinta-2); z-index: 1; }
+th:first-child, td:first-child, th:nth-child(2), td:nth-child(2) { text-align: left; }
+td { font-family: var(--f-dato); font-variant-numeric: tabular-nums; font-size: .8rem; }
+td:first-child { font-family: var(--f-txt); font-size: .86rem; font-weight: 700; }
+tbody tr { cursor: pointer; }
+tbody tr:hover, tbody tr[aria-selected="true"] { background: color-mix(in srgb, var(--rosa) 8%, var(--sala)); }
+.pos { color: var(--jade); } .neg { color: var(--rojo); }
+.chip { display: inline-block; padding: 1px 8px; font: 600 .74rem var(--f-disp); text-transform: uppercase; letter-spacing: .05em; border: 1.5px solid currentColor; }
+.chip.compra { color: var(--jade); } .chip.venta { color: var(--rojo); } .chip.mantener { color: var(--azul); } .chip.fuera { color: var(--tinta-2); }
+
+/* expediente */
+.expediente { background: var(--sala); border: 1.5px solid var(--muro); padding: 18px; display: grid; gap: 16px; min-width: 0; }
+.expediente .encabezado { display: grid; gap: 4px; }
+.expediente .estrategia { font: 700 1.5rem var(--f-disp); text-transform: uppercase; }
+.estado-final { display: inline-block; padding: 2px 10px; font: 700 .8rem var(--f-disp); letter-spacing: .08em; text-transform: uppercase; color: var(--sala); }
+.estado-final.aprobada { background: var(--jade); } .estado-final.rechazada { background: var(--rojo); }
+.grafica-caja { overflow-x: auto; }
+#grafica { width: 100%; min-width: 420px; height: auto; display: block; }
+#grafica text { font: 500 10px var(--f-dato); fill: var(--tinta-2); }
+#grafica .eje { stroke: var(--linea); stroke-width: 1; }
+#grafica .lin-est { fill: none; stroke: var(--rosa); stroke-width: 2; }
+#grafica .lin-bh { fill: none; stroke: var(--tinta-2); stroke-width: 1.4; stroke-dasharray: 4 3; }
+#grafica .zona-nueva { fill: color-mix(in srgb, var(--jade) 9%, transparent); }
+#grafica .rot-zona { font: 600 10px var(--f-disp); fill: var(--tinta); letter-spacing: .06em; text-transform: uppercase; }
+.claves { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: .8rem; color: var(--tinta-2); }
+.claves span::before { content: ""; display: inline-block; width: 18px; height: 0; border-top: 2px solid var(--rosa); vertical-align: middle; margin-right: 6px; }
+.claves span.bh::before { border-top: 2px dashed var(--tinta-2); }
+.comparativa { width: 100%; font-size: .84rem; }
+.comparativa th, .comparativa td { position: static; padding: 5px 6px; background: none; }
+.comparativa td { font-size: .8rem; }
+.recorrido { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.recorrido li { display: grid; grid-template-columns: 22px 120px 1fr; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--linea); font-size: .86rem; align-items: start; }
+.recorrido .marca { font: 700 .9rem var(--f-dato); }
+.recorrido .ok .marca { color: var(--jade); } .recorrido .no .marca { color: var(--rojo); }
+.recorrido .pend { color: var(--tinta-2); opacity: .6; }
+.recorrido .depto { font: 600 .8rem var(--f-disp); text-transform: uppercase; letter-spacing: .05em; padding-top: 2px; }
+.notas { margin: 0; padding-left: 18px; display: grid; gap: 4px; font-size: .88rem; }
+
+/* archivo muerto */
+.motivos { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.motivos li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 3px 10px; font-size: .88rem; }
+.motivos .barra { grid-column: 1 / -1; height: 8px; background: color-mix(in srgb, var(--linea) 40%, transparent); }
+.motivos .barra i { display: block; height: 100%; background: var(--rojo); opacity: .75; }
+
+/* academia */
+.academia { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); column-gap: 24px; gap: 0; border-top: 3px solid var(--muro); }
+.academia article { padding: 16px 0 18px; display: grid; gap: 6px; align-content: start; border-bottom: 1px solid var(--linea); }
+.academia p { font-size: .92rem; color: var(--tinta); max-width: 60ch; }
+.pasos { margin: 0; padding-left: 22px; display: grid; gap: 8px; max-width: 70ch; }
+.pasos code { font: 500 .85rem var(--f-dato); background: var(--sala); padding: 1px 5px; border: 1px solid var(--linea); }
+.aviso { border-top: 3px solid var(--muro); padding-top: 12px; color: var(--tinta-2); font-size: .85rem; max-width: 90ch; }
+.error { color: var(--rojo); font-size: .88rem; }
+
+@media (max-width: 1040px) { .piso { grid-template-columns: 1fr; } .dos { grid-template-columns: 1fr; } .lateral { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); } }
+@media (max-width: 560px) { .envoltura { padding-inline: 16px; } .reloj { margin-left: 0; text-align: left; } .recorrido li { grid-template-columns: 22px 1fr; } .recorrido li .nota { grid-column: 2; } }
+@media (prefers-reduced-motion: reduce) { .muro, .embudo .barra i { transition: none; } .punto.abierto { animation: none; } }
+</style>
+
+<div class="envoltura">
+  <header class="cabecera">
+    <div class="titulo">
+      <span class="eti">Bolsa Mexicana de Valores · sala de investigación</span>
+      <h1>Piso de Remates</h1>
+      <p class="lema">Treinta agentes buscan estrategias de trading en acciones de la BMV, las ponen a prueba y archivan las que no sirven. Cada quien tiene su personalidad, sus amistades y sus días buenos y malos. Siguen la hora real de la Ciudad de México: llegan a la oficina en la mañana, comen, platican y en la noche se van a dormir a sus casas. Todo es simulación: nadie compra ni vende de verdad.</p>
+    </div>
+    <span id="sello" class="sello ejemplo"><i></i><span id="sello-txt">Datos de ejemplo simulados</span></span>
+  </header>
+
+  <section class="mando" aria-label="Controles de la jornada">
+    <div class="campo"><label class="eti" for="sel-emisora">Emisora</label><select id="sel-emisora"></select></div>
+    <div class="campo" id="campo-cant"><span class="eti" id="lbl-cant">Expedientes por jornada</span>
+      <div class="segmentos" role="group" aria-labelledby="lbl-cant" id="seg-cant">
+        <button type="button" data-v="120" aria-pressed="true">120</button><button type="button" data-v="300" aria-pressed="false">300</button><button type="button" data-v="9999" aria-pressed="false">Todos</button>
+      </div></div>
+    <div class="campo"><span class="eti" id="lbl-vel">Velocidad</span>
+      <div class="segmentos" role="group" aria-labelledby="lbl-vel" id="seg-vel">
+        <button type="button" data-v="1" aria-pressed="true">1×</button><button type="button" data-v="3" aria-pressed="false">3×</button><button type="button" data-v="10" aria-pressed="false">10×</button><button type="button" data-v="0" aria-pressed="false">Al instante</button>
+      </div></div>
+    <button type="button" class="primario" id="btn-jornada">Abrir jornada</button>
+    <button type="button" id="btn-limpiar">Limpiar sala</button>
+    <label class="boton-archivo" for="in-csv"><input type="file" id="in-csv" accept=".csv,text/csv" multiple>Cargar datos reales (CSV)</label>
+    <div class="campo"><span class="eti" id="lbl-reloj">Reloj</span>
+      <div class="segmentos" role="group" aria-labelledby="lbl-reloj" id="seg-reloj">
+        <button type="button" data-v="0" aria-pressed="true">Hora real</button><button type="button" data-v="1" aria-pressed="false">Día acelerado</button>
+      </div></div>
+    <div class="reloj"><span class="eti">Hora en CDMX</span><div class="dato" id="reloj">--:--</div><div class="reloj-dia" id="reloj-dia"></div></div>
+  </section>
+  <p class="error" id="error-csv" hidden></p>
+
+  <section class="cinta-caja" aria-label="Precios en vivo">
+    <div class="cinta-estado" aria-live="polite"><span class="punto" id="cinta-punto"></span><span id="cinta-txt">Buscando el servidor de la sala…</span></div>
+    <div class="cinta" id="cinta"></div>
+  </section>
+
+  <section class="bloque mientras" id="mientras" hidden></section>
+
+  <section class="piso">
+    <div class="plano-caja"><svg id="plano" viewBox="0 0 1000 1012" role="img" aria-label="Plano de la oficina sobre Reforma y la colonia donde viven los agentes"></svg></div>
+    <aside class="lateral">
+      <div class="bloque">
+        <header><h3>Ahora mismo</h3><span class="eti">30 agentes</span></header>
+        <ul class="ahora" id="ahora"></ul>
+        <p class="nota-sala" id="ahora-nota"></p>
+      </div>
+      <div class="bloque">
+        <header><h3>Clima de la oficina</h3><span class="eti">promedio</span></header>
+        <ul class="embudo clima" id="clima-barras"></ul>
+        <ul class="clima-txt" id="clima-txt"></ul>
+      </div>
+      <div class="bloque">
+        <header><h3>Embudo de la sala</h3><span class="eti" id="emb-total">0 revisados</span></header>
+        <ul class="embudo" id="embudo"></ul>
+      </div>
+      <div class="bloque">
+        <header><h3>Lectura del mercado</h3><span class="eti" id="lec-emisora">IPC</span></header>
+        <dl class="lectura" id="lectura"></dl>
+      </div>
+      <div class="bloque">
+        <header><h3>Bitácora</h3><span class="eti">toca para abrir</span></header>
+        <ul class="bitacora" id="bitacora"><li class="vacio">La sala está en silencio. Abre una jornada.</li></ul>
+      </div>
+    </aside>
+  </section>
+
+  <section class="bloque" id="sec-cartera">
+    <header><h2>Operación en papel</h2><span class="eti dato" id="cartera-total"></span></header>
+    <p class="nota-sala" id="cartera-nota"></p>
+    <div class="tabla-caja" id="cartera-caja" hidden><table>
+      <thead><tr><th>Estrategia</th><th>Emisora</th><th>Posición</th><th>Precio</th><th>Valor</th><th>Resultado</th><th>Si cierra ahora</th><th>Orden</th><th></th></tr></thead>
+      <tbody id="tabla-cartera"></tbody>
+    </table></div>
+    <div id="fondo" class="bloque"></div>
+    <div id="retiradas" class="bloque"></div>
+  </section>
+
+  <section class="bloque">
+    <header><h2>Plantilla</h2><div class="leyenda">
+      <span><i style="border-color:var(--g-inv)"></i>Investigación</span><span><i style="border-color:var(--g-ope)"></i>Operación</span>
+      <span><i style="border-color:var(--g-val)"></i>Validación</span><span><i style="border-color:var(--g-gob)"></i>Gobierno</span><span><i style="border-color:var(--g-arc)"></i>Apoyo</span>
+    </div></header>
+    <div class="plantilla" id="plantilla"></div>
+    <article class="ficha-personal" id="ficha-personal" hidden aria-live="polite"></article>
+  </section>
+
+  <section class="dos">
+    <div class="bloque">
+      <header><h2>Biblioteca</h2><span class="eti" id="bib-cuenta">0 estrategias aprobadas</span></header>
+      <div class="tabla-caja"><table>
+        <thead><tr><th>Estrategia</th><th>Emisora</th><th>Sharpe hist.</th><th>Sharpe nuevos</th><th>Rend. nuevos</th><th>Comprar y mantener</th><th>Caída máx.</th><th>Robustez</th><th>Señal de hoy</th></tr></thead>
+        <tbody id="tabla-bib"><tr><td colspan="9" class="vacio" style="text-align:left;font-family:var(--f-txt)">Todavía no hay estrategias aprobadas.</td></tr></tbody>
+      </table></div>
+      <div class="bloque" style="margin-top:14px">
+        <header><h3>Archivo muerto</h3><span class="eti" id="arc-cuenta">0 expedientes</span></header>
+        <ul class="motivos" id="motivos"><li class="vacio">Sin rechazos todavía.</li></ul>
+      </div>
+    </div>
+    <article class="expediente" id="expediente" aria-live="polite">
+      <p class="vacio">Elige una estrategia de la biblioteca o toca una línea de la bitácora para abrir su expediente.</p>
+    </article>
+  </section>
+
+  <section class="bloque">
+    <header><h2>Academia</h2><span class="eti">lo que hace cada departamento</span></header>
+    <div class="academia">
+      <article><h3>Backtest</h3><p>Probar una regla de compra y venta sobre precios pasados, como si la hubieras seguido día por día. La señal se calcula al cierre y la operación se hace en la apertura del día siguiente, para no usar información del futuro.</p></article>
+      <article><h3>Histórico y datos nuevos</h3><p>La sala usa el primer 70% de los datos para buscar y el último 30% como examen sorpresa. Una estrategia que solo brilla en lo que ya vio no sirve; la Mesa de pruebas I la evalúa en lo que no vio.</p></article>
+      <article><h3>Sobreajuste</h3><p>Si pruebas cientos de reglas, alguna saldrá bien por pura suerte. La Mesa de pruebas II mueve un poco los parámetros: si RSI(7) funciona pero RSI(5) y RSI(10) no, probablemente fue casualidad.</p></article>
+      <article><h3>Sharpe</h3><p>Rendimiento dividido entre lo que se movió para conseguirlo, anualizado. Arriba de 1 es muy bueno, entre 0.5 y 1 es aceptable, y abajo de 0.3 casi no compensa el riesgo.</p></article>
+      <article><h3>Caída máxima</h3><p>La peor bajada desde un punto alto hasta el siguiente punto bajo. Riesgos rechaza todo lo que haya caído más de 25%, porque en la vida real casi nadie aguanta esas caídas sin abandonar la estrategia.</p></article>
+      <article><h3>Costos en México</h3><p>Cada compra o venta paga 0.25% de comisión más 16% de IVA sobre esa comisión, y 0.05% de deslizamiento. Parece poco, pero a una estrategia que opera mucho se le come buena parte de la ganancia.</p></article>
+    </div>
+  </section>
+
+  <section class="bloque">
+    <header><h2>Conectar la sala a la bolsa</h2></header>
+    <p class="nota-sala">Hay dos formas. La principal es el <b>piloto automático en GitHub</b>: corre solo tres veces al día aunque tu compu esté apagada, y esta página lo muestra (la guía viene en <code>LEEME.md</code>). La otra es abrirla en tu compu con precios minuto a minuto:</p>
+    <ol class="pasos">
+      <li>Instala Python desde la Microsoft Store o python.org (en python.org marca la casilla <code>Add Python to PATH</code>).</li>
+      <li>Descomprime la carpeta <code>piso-de-remates</code> y da doble clic a <code>iniciar.bat</code>. La primera vez instala lo necesario y tarda un poco.</li>
+      <li>Se abre la sala en tu navegador en <code>127.0.0.1:8765</code>. Deja abierta la ventana negra mientras la usas; ciérrala para apagarla.</li>
+      <li>Hay dos mercados: <b>En vivo</b>, con las empresas mexicanas que cotizan en EE.UU. en tiempo real (en dólares), y <b>BMV</b>, con las emisoras en pesos con 20 minutos de retraso.</li>
+      <li>Para agregar emisoras, edita la lista <code>MODOS</code> al inicio de <code>servidor.py</code> con su clave de Yahoo (por ejemplo <code>KOFUBL.MX</code>).</li>
+    </ol>
+  </section>
+
+  <p class="aviso">Herramienta educativa. Los resultados pasados, y más los de un backtest, no garantizan resultados futuros. Nada de lo que aparece aquí es una recomendación de inversión. Las señales de hoy solo muestran qué haría cada regla.</p>
+</div>
+
+<script>
+/* ===== Motor de minería y backtesting =====
+   Todo corre en el navegador. Long-only (como opera casi cualquier persona en la BMV).
+   Señal al cierre del día i  ->  se ejecuta en la apertura del día i+1 (sin ver el futuro). */
+const Motor = (() => {
+  const COSTOS = { comision: 0.0025, iva: 0.16, desliz: 0.0005 };
+  const costoLado = () => COSTOS.comision * (1 + COSTOS.iva) + COSTOS.desliz;
+
+  const FILTROS = {
+    analisis: { minOps: 5, minSharpe: 0.5 },
+    riesgos: { maxDD: -0.25, minExpo: 0.08 },
+    mesa1: { minSharpe: 0.3, minOps: 2 },
+    mesa2: { minRobustez: 0.6, sharpeVecino: 0.3 },
+    corte: 0.7
+  };
+
+  /* ---------- datos de ejemplo ---------- */
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = (a + 0x6d2b79f5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function gauss(r) { let u = 0; while (u === 0) u = r(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * r()); }
+  function diasHabiles(fin, n) {
+    const out = []; const d = new Date(fin + "T12:00:00Z");
+    while (out.length < n) {
+      const w = d.getUTCDay();
+      if (w !== 0 && w !== 6) out.push(d.toISOString().slice(0, 10));
+      d.setUTCDate(d.getUTCDate() - 1);
+    }
+    return out.reverse();
+  }
+  function generarSerie(sp) {
+    const r = mulberry32(sp.semilla), n = sp.n || 1260;
+    const fechas = diasHabiles(sp.fin || "2026-10-07", n);
+    const o = new Float64Array(n), c = new Float64Array(n);
+    let p = sp.precio, reg = 0, prev = 0;
+    for (let i = 0; i < n; i++) {
+      if (r() < sp.cambio) { let x = r(), acc = 0; for (let q = 0; q < sp.regimenes.length; q++) { acc += sp.regimenes[q].peso; if (x <= acc) { reg = q; break; } } }
+      const g = sp.regimenes[reg], mu = g.mu / 252, s = g.sigma / Math.sqrt(252);
+      const L = mu - (s * s) / 2 + s * gauss(r) + sp.reversion * prev;
+      const ab = p * Math.exp(L * (0.15 + 0.3 * r()) + s * 0.2 * gauss(r));
+      const ci = p * Math.exp(L);
+      o[i] = ab; c[i] = ci;
+      p = ci; prev = L;
+    }
+    // se escala para que el último cierre quede en el nivel indicado
+    const esc = sp.precio / c[n - 1], dec = sp.precio > 1000 ? 1 : 100;
+    for (let i = 0; i < n; i++) { o[i] = Math.round(o[i] * esc * dec) / dec; c[i] = Math.round(c[i] * esc * dec) / dec; }
+    return { id: sp.id, nombre: sp.nombre, sector: sp.sector, fechas, o, c, ejemplo: true };
+  }
+
+  /* ---------- CSV reales (del script descargar_bmv.py o de Yahoo) ---------- */
+  function leerCSV(texto, id) {
+    const filas = texto.trim().split(/\r?\n/);
+    const cab = filas[0].split(",").map(s => s.trim().toLowerCase().replace(/"/g, ""));
+    const idx = (...ns) => cab.findIndex(h => ns.includes(h));
+    const iF = idx("date", "fecha", "datetime"), iO = idx("open", "apertura"), iC = idx("close", "cierre", "adj close");
+    if (iF < 0 || iC < 0) throw new Error("El archivo " + id + " no tiene columnas de fecha y cierre.");
+    const f = [], o = [], c = [];
+    for (let k = 1; k < filas.length; k++) {
+      const x = filas[k].split(",");
+      const cc = parseFloat(x[iC]); const oo = iO >= 0 ? parseFloat(x[iO]) : cc;
+      if (!isFinite(cc) || cc <= 0) continue;
+      f.push(x[iF].slice(0, 10)); c.push(cc); o.push(isFinite(oo) && oo > 0 ? oo : cc);
+    }
+    if (c.length < 300) throw new Error("El archivo " + id + " trae menos de 300 días; baja al menos 2 años.");
+    return { id, nombre: id, sector: "Datos reales", fechas: f, o: Float64Array.from(o), c: Float64Array.from(c), ejemplo: false };
+  }
+
+  /* ---------- indicadores (con caché por serie) ---------- */
+  function cache(S) { return S._cache || (S._cache = new Map()); }
+  function memo(S, k, fn) { const m = cache(S); if (!m.has(k)) m.set(k, fn()); return m.get(k); }
+  const sma = (S, n) => memo(S, "sma" + n, () => {
+    const c = S.c, out = new Float64Array(c.length).fill(NaN); let s = 0;
+    for (let i = 0; i < c.length; i++) { s += c[i]; if (i >= n) s -= c[i - n]; if (i >= n - 1) out[i] = s / n; }
+    return out;
+  });
+  const desv = (S, n) => memo(S, "sd" + n, () => {
+    const c = S.c, m = sma(S, n), out = new Float64Array(c.length).fill(NaN);
+    for (let i = n - 1; i < c.length; i++) { let q = 0; for (let j = i - n + 1; j <= i; j++) q += (c[j] - m[i]) ** 2; out[i] = Math.sqrt(q / n); }
+    return out;
+  });
+  const rsi = (S, n) => memo(S, "rsi" + n, () => {
+    const c = S.c, out = new Float64Array(c.length).fill(NaN); let g = 0, l = 0;
+    for (let i = 1; i < c.length; i++) {
+      const d = c[i] - c[i - 1], up = Math.max(d, 0), dn = Math.max(-d, 0);
+      if (i <= n) { g += up / n; l += dn / n; if (i < n) continue; }
+      else { g = (g * (n - 1) + up) / n; l = (l * (n - 1) + dn) / n; }
+      out[i] = l === 0 ? 100 : 100 - 100 / (1 + g / l);
+    }
+    return out;
+  });
+  const extremo = (S, n, max) => memo(S, (max ? "mx" : "mn") + n, () => {
+    const c = S.c, out = new Float64Array(c.length).fill(NaN);
+    for (let i = n; i < c.length; i++) { let v = c[i - n]; for (let j = i - n + 1; j < i; j++) v = max ? Math.max(v, c[j]) : Math.min(v, c[j]); out[i] = v; }
+    return out;
+  });
+
+  /* ---------- familias de estrategias ---------- */
+  const FAMILIAS = {
+    cruce: {
+      nombre: "Cruce de medias", corto: "Medias",
+      idea: "Compra cuando el promedio corto está arriba del largo (sigue la tendencia).",
+      params: { rapida: [5, 8, 10, 12, 15, 20, 25, 30], lenta: [30, 40, 50, 60, 80, 100, 120, 150, 200] },
+      valida: p => p.rapida * 2 <= p.lenta,
+      etiqueta: p => `MA ${p.rapida}/${p.lenta}`,
+      señal(S, p) { const f = sma(S, p.rapida), l = sma(S, p.lenta), n = S.c.length, s = new Int8Array(n); for (let i = 0; i < n; i++) s[i] = f[i] > l[i] ? 1 : 0; return s; }
+    },
+    rsi: {
+      nombre: "Rebote RSI", corto: "RSI",
+      idea: "Compra cuando el precio cayó demasiado rápido (RSI bajo) y vende cuando se recupera.",
+      params: { periodo: [2, 3, 5, 7, 10, 14], entrada: [10, 15, 20, 25, 30, 35], salida: [50, 55, 60, 65, 70, 75], filtro: [0, 1] },
+      valida: () => true,
+      etiqueta: p => `RSI(${p.periodo}) <${p.entrada} / >${p.salida}${p.filtro ? " +MA200" : ""}`,
+      señal(S, p) {
+        const r = rsi(S, p.periodo), m = sma(S, 200), c = S.c, n = c.length, s = new Int8Array(n); let h = 0;
+        for (let i = 0; i < n; i++) {
+          if (!h && r[i] < p.entrada && (!p.filtro || c[i] > m[i])) h = 1;
+          else if (h && r[i] > p.salida) h = 0;
+          s[i] = h;
+        }
+        return s;
+      }
+    },
+    canal: {
+      nombre: "Ruptura de canal", corto: "Canal",
+      idea: "Compra cuando el precio rompe su máximo de N días y sale si rompe el mínimo de M días.",
+      params: { entrada: [20, 30, 40, 55, 80, 100], salida: [10, 15, 20, 30, 40] },
+      valida: p => p.salida < p.entrada,
+      etiqueta: p => `Canal ${p.entrada}/${p.salida}`,
+      señal(S, p) {
+        const mx = extremo(S, p.entrada, true), mn = extremo(S, p.salida, false), c = S.c, n = c.length, s = new Int8Array(n); let h = 0;
+        for (let i = 0; i < n; i++) { if (!h && c[i] > mx[i]) h = 1; else if (h && c[i] < mn[i]) h = 0; s[i] = h; }
+        return s;
+      }
+    },
+    momentum: {
+      nombre: "Momentum", corto: "Momentum",
+      idea: "Se queda comprado mientras el rendimiento de los últimos N días supere un umbral.",
+      params: { dias: [20, 40, 60, 90, 120, 180, 250], umbral: [0, 2, 5, 10] },
+      valida: () => true,
+      etiqueta: p => `Mom ${p.dias}d >${p.umbral}%`,
+      señal(S, p) { const c = S.c, n = c.length, s = new Int8Array(n); for (let i = p.dias; i < n; i++) s[i] = c[i] / c[i - p.dias] - 1 > p.umbral / 100 ? 1 : 0; return s; }
+    },
+    bollinger: {
+      nombre: "Rebote Bollinger", corto: "Bollinger",
+      idea: "Compra cuando el precio cae por debajo de su banda inferior y vende al volver al promedio.",
+      params: { dias: [10, 15, 20, 30, 40], k: [1.5, 2, 2.5] },
+      valida: () => true,
+      etiqueta: p => `Boll ${p.dias}, ${p.k}σ`,
+      señal(S, p) {
+        const m = sma(S, p.dias), sd = desv(S, p.dias), c = S.c, n = c.length, s = new Int8Array(n); let h = 0;
+        for (let i = 0; i < n; i++) { if (!h && c[i] < m[i] - p.k * sd[i]) h = 1; else if (h && c[i] > m[i]) h = 0; s[i] = h; }
+        return s;
+      }
+    }
+  };
+
+  function combinaciones(fam) {
+    const F = FAMILIAS[fam], llaves = Object.keys(F.params); let out = [{}];
+    for (const k of llaves) { const nx = []; for (const o of out) for (const v of F.params[k]) nx.push({ ...o, [k]: v }); out = nx; }
+    return out.filter(F.valida).map(p => ({ fam, p }));
+  }
+  function todasLasCandidatas() { return Object.keys(FAMILIAS).flatMap(combinaciones); }
+  function barajar(arr, semilla) { const r = mulberry32(semilla), a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+
+  /* ---------- backtest ---------- */
+  function backtest(S, pos, a, b) {
+    const c = S.c, o = S.o, k = costoLado(), n = b - a;
+    const rets = new Float64Array(n), ops = []; let h = 0, g = 1, ent = 0, dias = 0;
+    for (let i = a; i < b; i++) {
+      const j = i + 1, quiere = pos[i]; let r = 0, enMercado = false;
+      if (h && quiere) { r = c[j] / c[i] - 1; g *= 1 + r; enMercado = true; }
+      else if (!h && quiere) { r = (1 - k) * c[j] / o[j] - 1; h = 1; g = 1 + r; ent = j; enMercado = true; }
+      else if (h && !quiere) { r = (1 - k) * o[j] / c[i] - 1; g *= 1 + r; h = 0; ops.push({ ent, sal: j, ret: g - 1 }); enMercado = true; }
+      rets[i - a] = r;
+      if (enMercado) dias++;
+    }
+    if (h) { rets[n - 1] = (1 + rets[n - 1]) * (1 - k) - 1; g *= 1 - k; ops.push({ ent, sal: b, ret: g - 1, abierta: true }); }
+    return { ...metricas(rets, ops, dias / n), rets };
+  }
+  function metricas(rets, ops, expo) {
+    const n = rets.length; let eq = 1, pico = 1, dd = 0, s = 0, q = 0;
+    for (let i = 0; i < n; i++) { eq *= 1 + rets[i]; pico = Math.max(pico, eq); dd = Math.min(dd, eq / pico - 1); s += rets[i]; }
+    const mu = s / n; for (let i = 0; i < n; i++) q += (rets[i] - mu) ** 2;
+    const sd = Math.sqrt(q / Math.max(1, n - 1));
+    const gan = ops.filter(t => t.ret > 0), per = ops.filter(t => t.ret <= 0);
+    const sg = gan.reduce((a, t) => a + t.ret, 0), sp = -per.reduce((a, t) => a + t.ret, 0);
+    return {
+      total: eq - 1, cagr: Math.pow(eq, 252 / n) - 1, sharpe: sd > 0 ? (mu / sd) * Math.sqrt(252) : 0,
+      dd, ops: ops.length, acierto: ops.length ? gan.length / ops.length : 0,
+      factor: sp > 0 ? sg / sp : gan.length ? 99 : 0, expo, operaciones: ops
+    };
+  }
+  function comprarYMantener(S, a, b) {
+    const k = costoLado(), rets = new Float64Array(b - a);
+    for (let i = a; i < b; i++) rets[i - a] = S.c[i + 1] / S.c[i] - 1;
+    rets[0] = (1 + rets[0]) * (1 - k) - 1; rets[rets.length - 1] = (1 + rets[rets.length - 1]) * (1 - k) - 1;
+    return { ...metricas(rets, [{ ret: S.c[b] / S.c[a] - 1 }], 1), rets };
+  }
+
+  /* ---------- tubería de departamentos ---------- */
+  function vecinos(cand) {
+    const F = FAMILIAS[cand.fam], out = [];
+    for (const k of Object.keys(F.params)) {
+      const lista = F.params[k]; if (lista.length < 3) continue;
+      const i = lista.indexOf(cand.p[k]);
+      for (const d of [-1, 1]) { const v = lista[i + d]; if (v === undefined) continue; const p = { ...cand.p, [k]: v }; if (F.valida(p)) out.push({ fam: cand.fam, p }); }
+    }
+    return out;
+  }
+  function señalHoy(pos) {
+    const n = pos.length, a = pos[n - 2], b = pos[n - 1];
+    if (b && !a) return { txt: "Comprar en la apertura", tipo: "compra" };
+    if (b && a) return { txt: "Mantener", tipo: "mantener" };
+    if (!b && a) return { txt: "Vender en la apertura", tipo: "venta" };
+    return { txt: "Fuera del mercado", tipo: "fuera" };
+  }
+  const pct = x => (x * 100).toFixed(1) + "%";
+
+  /* Devuelve el expediente completo: hasta qué departamento llegó y por qué. */
+  function evaluar(S, cand) {
+    const F = FAMILIAS[cand.fam], N = S.c.length, corte = Math.floor(N * FILTROS.corte);
+    const pos = F.señal(S, cand.p);
+    const exp = { ...cand, emisora: S.id, etiqueta: F.etiqueta(cand.p), familia: F.nombre, corte, pasos: [] };
+    const IS = backtest(S, pos, 0, corte); exp.is = IS;
+    const fa = FILTROS.analisis;
+    if (IS.ops < fa.minOps) return rechazo(exp, "analisis", `Solo ${IS.ops} operaciones en el histórico; muy pocas para confiar`, "Pocas operaciones");
+    if (IS.sharpe < fa.minSharpe) return rechazo(exp, "analisis", `Sharpe de ${IS.sharpe.toFixed(2)} en el histórico (mínimo ${fa.minSharpe})`, "Sharpe bajo");
+    exp.pasos.push({ depto: "analisis", ok: true, nota: `Sharpe ${IS.sharpe.toFixed(2)}, ${IS.ops} operaciones, acierto ${pct(IS.acierto)}` });
+    const fr = FILTROS.riesgos;
+    if (IS.dd < fr.maxDD) return rechazo(exp, "riesgos", `Caída máxima de ${pct(IS.dd)}; el límite es ${pct(fr.maxDD)}`, "Caída excesiva");
+    if (IS.expo < fr.minExpo) return rechazo(exp, "riesgos", `Solo invierte ${pct(IS.expo)} del tiempo; resultado poco representativo`, "Casi no opera");
+    exp.pasos.push({ depto: "riesgos", ok: true, nota: `Caída máxima ${pct(IS.dd)}, invertida ${pct(IS.expo)} del tiempo` });
+    const OOS = backtest(S, pos, corte, N - 1); exp.oos = OOS;
+    exp.bhIS = comprarYMantener(S, 0, corte); exp.bhOOS = comprarYMantener(S, corte, N - 1);
+    const f1 = FILTROS.mesa1;
+    if (OOS.ops < f1.minOps) return rechazo(exp, "mesa1", `En datos nuevos solo hizo ${OOS.ops} operación(es)`, "No opera en datos nuevos");
+    if (OOS.total <= 0) return rechazo(exp, "mesa1", `Perdió ${pct(OOS.total)} en los datos que no había visto`, "Pierde en datos nuevos");
+    if (OOS.sharpe < f1.minSharpe) return rechazo(exp, "mesa1", `Sharpe cae de ${IS.sharpe.toFixed(2)} a ${OOS.sharpe.toFixed(2)} en datos nuevos`, "Se desinfla en datos nuevos");
+    exp.pasos.push({ depto: "mesa1", ok: true, nota: `Datos nuevos: ${pct(OOS.total)}, Sharpe ${OOS.sharpe.toFixed(2)}` });
+    const vs = vecinos(cand), buenos = vs.filter(v => backtest(S, FAMILIAS[v.fam].señal(S, v.p), 0, corte).sharpe > FILTROS.mesa2.sharpeVecino).length;
+    exp.robustez = vs.length ? buenos / vs.length : 1; exp.nVecinos = vs.length;
+    if (exp.robustez < FILTROS.mesa2.minRobustez) return rechazo(exp, "mesa2", `Al mover un poco los parámetros solo ${buenos} de ${vs.length} versiones funcionan; parece suerte`, "Frágil (sobreajuste)");
+    exp.pasos.push({ depto: "mesa2", ok: true, nota: `${buenos} de ${vs.length} variantes cercanas también funcionan` });
+    const degr = IS.sharpe > 0 ? OOS.sharpe / IS.sharpe : 0;
+    exp.puntaje = 0.5 * OOS.sharpe + 0.2 * IS.sharpe + 0.3 * exp.robustez * 2;
+    exp.notas = [];
+    if (degr < 0.5) exp.notas.push("Rinde bastante menos en datos nuevos que en el histórico; vigilar.");
+    if (OOS.total < exp.bhOOS.total) exp.notas.push(`No le gana a comprar y mantener en el periodo de prueba (${pct(exp.bhOOS.total)}).`);
+    else exp.notas.push(`Le gana a comprar y mantener en el periodo de prueba (${pct(exp.bhOOS.total)}).`);
+    if (OOS.dd > exp.bhOOS.dd) exp.notas.push(`Su peor caída (${pct(OOS.dd)}) fue menor que la de comprar y mantener (${pct(exp.bhOOS.dd)}).`);
+    exp.pasos.push({ depto: "comite", ok: true, nota: `Aprobada con puntaje ${exp.puntaje.toFixed(2)}` });
+    exp.estado = "aprobada"; exp.llego = "comite";
+    exp.hoy = señalHoy(pos); exp.pos = pos;
+    return exp;
+  }
+  function rechazo(exp, depto, nota, motivo) {
+    exp.pasos.push({ depto, ok: false, nota }); exp.estado = "rechazada"; exp.llego = depto; exp.motivo = motivo; return exp;
+  }
+
+  function lecturaMercado(S) {
+    const c = S.c, n = c.length, m200 = sma(S, 200)[n - 1], m50 = sma(S, 50)[n - 1];
+    const r = []; for (let i = n - 252; i < n; i++) r.push(Math.log(c[i] / c[i - 1]));
+    const vol = x => { const m = x.reduce((a, b) => a + b, 0) / x.length; return Math.sqrt(x.reduce((a, b) => a + (b - m) ** 2, 0) / x.length * 252); };
+    const v20 = vol(r.slice(-20)), v252 = vol(r);
+    let pico = 0; for (let i = n - 252; i < n; i++) pico = Math.max(pico, c[i]);
+    return {
+      tendencia: c[n - 1] > m200 ? (m50 > m200 ? "Alcista" : "Alcista débil") : (m50 < m200 ? "Bajista" : "Bajista débil"),
+      vol20: v20, vol252: v252, volTxt: v20 > v252 * 1.25 ? "Más agitada de lo normal" : v20 < v252 * 0.75 ? "Más tranquila de lo normal" : "Normal",
+      caida: c[n - 1] / pico - 1, anio: c[n - 1] / c[n - 252] - 1
+    };
+  }
+
+  return { COSTOS, costoLado, FILTROS, FAMILIAS, generarSerie, leerCSV, todasLasCandidatas, barajar, evaluar, comprarYMantener, lecturaMercado, sma };
+})();
+if (typeof module !== "undefined") module.exports = Motor;
+
+/* Emisoras de ejemplo: precios simulados con rasgos parecidos a cada sector.
+   NO son precios reales; para eso se cargan los CSV del script descargar_bmv.py. */
+const EMISORAS_EJEMPLO = [
+  { id: "IPC", nombre: "S&P/BMV IPC", sector: "Índice", precio: 47800, semilla: 11, cambio: 0.008, reversion: -0.06,
+    regimenes: [{ mu: 0.14, sigma: 0.13, peso: 0.55 }, { mu: -0.10, sigma: 0.22, peso: 0.2 }, { mu: 0.05, sigma: 0.11, peso: 0.25 }] },
+  { id: "WALMEX", nombre: "Walmart de México", sector: "Autoservicio", precio: 58, semilla: 23, cambio: 0.007, reversion: -0.10,
+    regimenes: [{ mu: 0.12, sigma: 0.20, peso: 0.55 }, { mu: -0.18, sigma: 0.28, peso: 0.2 }, { mu: 0.02, sigma: 0.17, peso: 0.25 }] },
+  { id: "GFNORTEO", nombre: "Grupo Financiero Banorte", sector: "Banca", precio: 138, semilla: 37, cambio: 0.005, reversion: -0.03,
+    regimenes: [{ mu: 0.22, sigma: 0.24, peso: 0.55 }, { mu: -0.20, sigma: 0.34, peso: 0.2 }, { mu: 0.06, sigma: 0.21, peso: 0.25 }] },
+  { id: "AMXB", nombre: "América Móvil", sector: "Telecom", precio: 16.5, semilla: 41, cambio: 0.008, reversion: -0.12,
+    regimenes: [{ mu: 0.10, sigma: 0.21, peso: 0.55 }, { mu: -0.12, sigma: 0.27, peso: 0.2 }, { mu: 0.0, sigma: 0.16, peso: 0.25 }] },
+  { id: "CEMEXCPO", nombre: "Cemex", sector: "Construcción", precio: 13.2, semilla: 61, cambio: 0.004, reversion: 0.02,
+    regimenes: [{ mu: 0.35, sigma: 0.34, peso: 0.55 }, { mu: -0.30, sigma: 0.45, peso: 0.2 }, { mu: 0.0, sigma: 0.30, peso: 0.25 }] },
+  { id: "GMEXICOB", nombre: "Grupo México", sector: "Minería", precio: 104, semilla: 67, cambio: 0.005, reversion: 0.01,
+    regimenes: [{ mu: 0.30, sigma: 0.28, peso: 0.55 }, { mu: -0.25, sigma: 0.38, peso: 0.2 }, { mu: 0.04, sigma: 0.24, peso: 0.25 }] },
+  { id: "FEMSAUBD", nombre: "FEMSA", sector: "Bebidas y comercio", precio: 176, semilla: 79, cambio: 0.007, reversion: -0.09,
+    regimenes: [{ mu: 0.11, sigma: 0.19, peso: 0.55 }, { mu: -0.14, sigma: 0.26, peso: 0.2 }, { mu: 0.03, sigma: 0.16, peso: 0.25 }] },
+  { id: "BIMBOA", nombre: "Grupo Bimbo", sector: "Alimentos", precio: 66, semilla: 83, cambio: 0.006, reversion: -0.07,
+    regimenes: [{ mu: 0.13, sigma: 0.22, peso: 0.55 }, { mu: -0.17, sigma: 0.30, peso: 0.2 }, { mu: 0.02, sigma: 0.19, peso: 0.25 }] }
+];
+if (typeof module !== "undefined") module.exports = EMISORAS_EJEMPLO;
+
+/* ===== Personal de la sala: personalidad, emociones, relaciones y pláticas =====
+   Se usa igual en el navegador y en el piloto automático (Node). */
+const Personal = (() => {
+  // rasgos de 0 a 1: sociable, nervioso, optimista, competitivo, amable
+  const P = (id, nombre, corto, depto, puesto, g, r, equipo, gusto, descripcion, frase, extra = {}) =>
+    ({ id, nombre, corto, depto, puesto, g, rasgos: { sociable: r[0], nervioso: r[1], optimista: r[2], competitivo: r[3], amable: r[4] }, equipo, gusto, descripcion, frase, ...extra });
+  const LISTA = [
+    P("lupita", "Lupita Reyes", "Lupita", "min", "Minera de estrategias", "f", [.8, .4, .8, .5, .8], "Pumas", "café de olla", "Platicadora y entusiasta; se emociona con cada estrategia nueva.", "¡Esta sí va a pasar!"),
+    P("beto", "Beto Salgado", "Beto", "min", "Minero de estrategias", "m", [.6, .3, .6, .75, .45], "América", "tacos al pastor", "Desvelado y competitivo; presume cuando le aprueban algo.", "Dormí cuatro horas y aquí ando.", { desvelado: true }),
+    P("tono", "Toño Cárdenas", "Toño", "min", "Minero de estrategias", "m", [.4, .5, .4, .4, .7], "Cruz Azul", "torta de tamal", "Callado y paciente; sufre con su equipo cada torneo.", "Este torneo sí, ya verás."),
+    P("karla", "Karla Medina", "Karla", "min", "Minera de estrategias", "f", [.7, .6, .5, .85, .45], "Chivas", "chilaquiles verdes", "Muy competitiva; lleva la cuenta de quién mina más.", "Voy arriba en la tabla, ¿eh?"),
+    P("mariana", "Mariana Ochoa", "Mariana", "ana", "Analista líder", "f", [.6, .5, .6, .6, .7], "Tigres", "café americano", "Líder de análisis; exigente pero justa.", "Los números no mienten."),
+    P("rodrigo", "Rodrigo Pineda", "Rodrigo", "ana", "Analista", "m", [.5, .4, .5, .65, .45], "Rayados", "carne asada", "Regio de corazón; directo y sin rodeos.", "Así no, compa."),
+    P("ximena", "Ximena Vázquez", "Ximena", "ana", "Analista junior", "f", [.7, .75, .7, .4, .8], "Pachuca", "pastes", "Analista junior de Pachuca; nerviosa pero muy trabajadora.", "¿Lo reviso otra vez?"),
+    P("chema", "José Ma. Ibarra", "Don Chema", "rie", "Jefe de riesgos", "m", [.4, .7, .3, .5, .6], "Toluca", "café negro", "Jefe de riesgos; desconfía de todo lo que sube rápido.", "Lo que sube como espuma, baja igual."),
+    P("fer", "Fernanda Luna", "Fernanda", "rie", "Analista de riesgos", "f", [.6, .5, .6, .5, .7], "Pumas", "molletes", "Analista de riesgos; ordenada y tranquila.", "Primero el riesgo, luego la ganancia."),
+    P("paco", "Paco Ruiz", "Paco", "mac", "Economista", "m", [.85, .3, .75, .4, .7], "Cruz Azul", "pozole", "Economista bromista; explica todo con ejemplos de futbol.", "La economía es como el futbol."),
+    P("ale", "Alejandra Ríos", "Alejandra", "mac", "Economista", "f", [.5, .5, .5, .6, .6], "América", "sushi", "Economista analítica; lee los comunicados de Banxico como novela.", "Banxico ya lo había avisado."),
+    P("diego", "Diego Herrera", "Diego", "not", "Editor de noticias", "m", [.7, .6, .5, .5, .6], "Chivas", "café con pan dulce", "Madrugador; se entera de todo antes que nadie.", "¿Ya vieron las noticias?", { madrugador: true }),
+    P("vale", "Valeria Campos", "Valeria", "not", "Monitorista de noticias", "f", [.9, .4, .8, .3, .8], "Pumas", "elotes", "La más sociable de la oficina; conoce a todos.", "¡Les tengo un chismecito!"),
+    P("ivan", "Iván Treviño", "Iván", "me1", "Pruebas con datos nuevos", "m", [.5, .5, .5, .75, .45], "Tigres", "hamburguesa", "Estricto con las pruebas; no le gusta que le discutan.", "Datos nuevos o nada."),
+    P("dani", "Daniela Ortiz", "Daniela", "me1", "Pruebas con datos nuevos", "f", [.6, .4, .6, .5, .75], "Pachuca", "quesadillas", "Tranquila; siempre tiene botana en el escritorio.", "¿Quieren unas papitas?"),
+    P("sofia", "Sofía Garza", "Sofía", "me2", "Pruebas de robustez", "f", [.6, .55, .6, .65, .6], "América", "café frío", "Perfeccionista; odia las estrategias de pura suerte.", "Si mueves un número y se cae, no sirve."),
+    P("emilio", "Emilio Navarro", "Emilio", "me2", "Pruebas de robustez", "m", [.55, .25, .75, .35, .85], "Toluca", "tamales", "Relajado y buena onda; el que calma los pleitos.", "Tranqui, todo tiene arreglo."),
+    P("elena", "Elena Cervantes", "Lic. Cervantes", "com", "Directora del comité", "f", [.5, .6, .5, .8, .5], "Chivas", "café de especialidad", "Directora del comité; seria, exigente y protectora de su equipo.", "Quiero ver la evidencia."),
+    P("robles", "Arturo Robles", "Ing. Robles", "com", "Consejero", "m", [.4, .4, .4, .6, .5], "Rayados", "comida corrida", "Ingeniero veterano; escéptico de todo lo nuevo.", "En mis tiempos esto se hacía a mano."),
+    P("paredes", "Inés Paredes", "Dra. Paredes", "com", "Consejera", "f", [.6, .3, .6, .5, .75], "Pumas", "té verde", "Doctora en finanzas; calmada y buena para explicar.", "Veámoslo con calma."),
+    P("mendez", "Jorge Méndez", "Lic. Méndez", "cum", "Oficial de cumplimiento", "m", [.4, .6, .4, .5, .5], "Cruz Azul", "torta ahogada", "Oficial de cumplimiento; cuida las reglas al pie de la letra.", "¿Eso está en el reglamento?"),
+    P("andrea", "Andrea Solano", "Andrea", "cum", "Analista de cumplimiento", "f", [.7, .5, .6, .4, .8], "América", "licuado de fresa", "Analista de cumplimiento; amable y detallista.", "Lo anoto para que no se nos olvide."),
+    P("memo", "Memo Aguilar", "Memo", "bib", "Bibliotecario", "m", [.5, .3, .6, .2, .8], "Pachuca", "café de olla", "Bibliotecario; habla de libros de inversión a quien se deje.", "¿Ya leíste a Graham?"),
+    P("renata", "Renata Solís", "Renata", "trd", "Operadora en papel", "f", [.6, .6, .6, .7, .5], "Tigres", "chilaquiles rojos", "Operadora; vive pegada a la pantalla de precios.", "Ojo con la apertura."),
+    P("hugo", "Hugo Castañeda", "Hugo", "trd", "Operador en papel", "m", [.7, .5, .75, .6, .6], "América", "tacos de canasta", "Operador optimista y un poco impulsivo.", "Hoy se ve verde."),
+    P("charly", "Charly Domínguez", "Charly", "sis", "Sistemas", "m", [.5, .4, .6, .4, .6], "Pumas", "pizza fría", "De sistemas; desvelado y fan de los videojuegos.", "¿Ya probaron reiniciarlo?", { desvelado: true }),
+    P("ingrid", "Ingrid Bauer", "Ingrid", "sis", "Infraestructura", "f", [.4, .5, .5, .5, .6], "Tigres", "pan de muerto", "Infraestructura; súper puntual y ordenada.", "El servidor está perfecto."),
+    P("fermin", "Fermín Olvera", "Don Fermín", "arc", "Archivista", "m", [.6, .2, .7, .2, .9], "Cruz Azul", "café con canela", "Archivista veterano; se sabe la historia de toda la oficina.", "Eso ya lo vi en el 2008."),
+    P("lucha", "Lucía Pérez", "Doña Lucha", "rec", "Recepcionista", "f", [.9, .3, .8, .2, .9], "América", "atole", "Recepcionista; trata a todos como si fueran sus hijos.", "¿Ya comiste, mijo?"),
+    P("ramon", "Ramón Téllez", "Don Ramón", "rec", "Vigilante nocturno", "m", [.5, .3, .6, .2, .8], "Pachuca", "café de la máquina", "Vigilante nocturno; platica con quien se quede tarde.", "Aquí todo tranquilo.", { guardia: true })
+  ];
+  const POR_ID = Object.fromEntries(LISTA.map((p, i) => [p.id, { ...p, i, hogar: Math.floor(i / 3) }]));
+  LISTA.forEach((p, i) => { p.i = i; p.hogar = Math.floor(i / 3); });
+  const RIVALES = [["América", "Chivas"], ["América", "Pumas"], ["América", "Cruz Azul"], ["Tigres", "Rayados"], ["Pachuca", "América"]];
+  const sonRivales = (x, y) => RIVALES.some(([a, b]) => (a === x && b === y) || (a === y && b === x));
+
+  /* ---------- números ---------- */
+  const lim = x => Math.max(0, Math.min(100, x));
+  function semillaDe(txt) { let h = 2166136261; for (const ch of txt) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
+  function rng(semilla) { let a = semilla >>> 0; return () => { a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  const base = p => ({ animo: 50 + p.rasgos.optimista * 22, estres: 20 + p.rasgos.nervioso * 28, confianza: 52 + p.rasgos.competitivo * 8 });
+
+  function estadoInicial() {
+    const agentes = {};
+    for (const p of LISTA) {
+      const r = rng(semillaDe("inicio" + p.id)), b = base(p);
+      agentes[p.id] = { animo: lim(b.animo + (r() - 0.5) * 26), estres: lim(b.estres + (r() - 0.5) * 22), confianza: lim(b.confianza + (r() - 0.5) * 16), rel: {}, diario: [] };
+    }
+    for (const a of LISTA) for (const b of LISTA) {
+      if (a.id >= b.id) continue;
+      const r = rng(semillaDe(a.id + b.id));
+      let v = (a.depto === b.depto ? 12 : 0) + (a.hogar === b.hogar ? 15 : 0) + (a.equipo === b.equipo ? 8 : 0) - (sonRivales(a.equipo, b.equipo) ? 5 : 0)
+        + Math.round(10 * (1 - Math.abs(a.rasgos.sociable - b.rasgos.sociable))) - 6 + Math.round((r() - 0.5) * 20);
+      v = Math.max(-100, Math.min(100, v));
+      agentes[a.id].rel[b.id] = v; agentes[b.id].rel[a.id] = v;
+    }
+    return agentes;
+  }
+
+  /* Cambia emociones respetando la personalidad: a los nerviosos el estrés les pega más, a los optimistas lo malo menos */
+  // cerca de los extremos cuesta más moverse (nadie vive en 100 de felicidad)
+  const freno = (x, d) => d > 0 ? Math.max(0.15, Math.min(1.3, (108 - x) / 55)) : Math.max(0.15, Math.min(1.3, (x + 8) / 55));
+  function sentir(e, p, d) {
+    if (d.animo) { const v = d.animo > 0 ? d.animo * (0.8 + p.rasgos.optimista * 0.4) : d.animo * (1.2 - p.rasgos.optimista * 0.4); e.animo = lim(e.animo + v * freno(e.animo, v)); }
+    if (d.estres) { const v = d.estres > 0 ? d.estres * (0.6 + p.rasgos.nervioso * 0.8) : d.estres; e.estres = lim(e.estres + v * freno(e.estres, v)); }
+    if (d.confianza) e.confianza = lim(e.confianza + d.confianza * freno(e.confianza, d.confianza));
+  }
+  /* Con el tiempo cada quien regresa a su forma de ser */
+  function volverABase(e, p, horas, tasa = 0.03) {
+    const b = base(p), k = 1 - Math.pow(1 - tasa, horas);
+    for (const c of ["animo", "estres", "confianza"]) e[c] += (b[c] - e[c]) * k;
+  }
+  function humor(e, p) {
+    const o = p.g === "f" ? "a" : "o";
+    if (e.estres > 78) return { txt: `Bajo mucha presión`, tono: "tenso" };
+    if (e.animo < 28) return { txt: `De malas`, tono: "mal" };
+    if (e.estres > 62 && e.animo < 45) return { txt: `Preocupad${o}`, tono: "tenso" };
+    if (e.animo > 78 && e.estres < 45) return { txt: `Feliz`, tono: "bien" };
+    if (e.animo > 68) return { txt: `De buenas`, tono: "bien" };
+    if (e.confianza > 75) return { txt: `Muy segur${o}`, tono: "bien" };
+    if (e.confianza < 30) return { txt: `Insegur${o}`, tono: "mal" };
+    return { txt: "Tranquil" + o, tono: "neutral" };
+  }
+
+  /* ---------- pláticas ----------
+     Cada tema: frase de quien empieza, respuesta si la plática sale bien, respuesta si sale mal. */
+  const TEMAS = {
+    saludo: [["¡Buenos días, {B}!", "¡Buenos días! Con todas las ganas.", "Mmm… no me hables antes del café."], ["¿Cómo amaneciste, {B}?", "Bien, ¿y tú?", "Con sueño, ni me digas."]],
+    cafe: [["¿Vamos por un {gustoA}?", "¡Va, yo invito!", "Ahorita no puedo, estoy hasta el cuello."], ["Ya me hacía falta un café.", "Igual yo, este día está pesado.", "Tú siempre con tu café."]],
+    trafico: [["Reforma estaba imposible hoy.", "Ni me digas, el Metrobús venía a reventar.", "Pues sal más temprano."], ["Me tardé hora y media en llegar.", "Uff, te entiendo.", "Ya, no te quejes."]],
+    futbolMismo: [["¿Viste a {equipoA}? ¡Así sí!", "¡Ya era hora, carnal!", "Ni lo menciones, sufrí todo el partido."], ["Este torneo es de {equipoA}.", "¡Eso! Vamos a la final.", "Lo mismo dijimos el año pasado."]],
+    futbolRival: [["El {equipoA} le gana al {equipoB}, ya verás.", "Ja, eso dices cada torneo.", "Ni en tus sueños."], ["¿Y tu {equipoB}? Muy calladito.", "Ya nos tocará, no te emociones.", "No empieces, que me enojo."]],
+    mercado: [["¿Viste {emisora}? {movimiento} {cambio} hoy.", "Sí, lo estuve siguiendo toda la mañana.", "Ya ni le veo, me estresa."], ["Hoy el mercado anda {humorMercado}.", "Así es esto, hay que tener paciencia.", "Pues a mí ya me tiene harto."]],
+    felicitar: [["¡Felicidades por la estrategia aprobada!", "¡Gracias! Costó trabajo.", "Bah, seguro la retiran en una semana."], ["Vi que pasó tu expediente. ¡Bien!", "¡Gracias! Ahora a ver cómo le va.", "Fue suerte, no te creas."]],
+    apoyo: [["Te veo estresad{oB}, ¿todo bien?", "Gracias por preguntar, ya me siento mejor.", "Es mucho trabajo, no me alcanza el día."], ["Tómatelo con calma, {B}.", "Tienes razón, voy por aire.", "Fácil decirlo."]],
+    pleito: [["Tu última estrategia nos hizo perder.", "Puede ser; la revisamos juntos, ¿va?", "¿Y las tuyas qué? Ni pasan análisis."], ["Otra vez archivaron todo lo tuyo, ¿eh?", "Sí, pero aprendo de cada una.", "Mejor ocúpate de lo tuyo."]],
+    chisme: [["Dicen que la Lic. Cervantes va a retirar otra estrategia.", "¿Neta? No me sorprende.", "No me gusta el chisme, la verdad."], ["¿Ya supiste quién llegó tarde hoy?", "¡Cuéntamelo todo!", "Ni me interesa."]],
+    comida: [["¿Qué trajiste de comer?", "{gustoB}, ¿quieres probar?", "Nada, se me olvidó el tóper."], ["¿Vamos por unos tacos aquí en la esquina?", "¡Va! Ya tengo hambre.", "Hoy traje mi comida, otro día."]],
+    horasExtra: [["¿Otra vez horas extra?", "Ni modo, a darle.", "Ya no aguanto, quiero dormir."], ["Ojalá esta jornada termine pronto.", "Ya casi, ánimo.", "Esto no es vida."]],
+    casa: [["¿Quién lava los trastes hoy?", "Yo, tú lavaste ayer.", "A mí no me toca, ¿eh?"], ["¿Vemos una serie?", "¡Va, escoge tú!", "Me voy a dormir, mañana hay jornada."], ["¿Cómo te fue hoy?", "Bien, aprobaron algo en la oficina.", "Pesado, mejor no pregunto."]],
+    viernes: [["¡Ya es viernes! ¿Qué planes?", "Ir a comer tacos a la Roma.", "Dormir todo el fin de semana."]],
+    noche: [["¿Tan tarde y sigue aquí?", "Ya me voy, ya me voy.", "Es que no termino, déjeme."]],
+    frase: [["{fraseA}", "Ja, siempre dices eso.", "Otra vez con eso…"]]
+  };
+  const llenar = (t, v) => t.replace(/\{(\w+)\}/g, (_, k) => v[k] ?? "");
+
+  /* ctx: { h, dia, lugar: "oficina" | "cafeteria" | "casa" | "noche", mercado: {emisora, cambio} | null, felicitar: Set(ids), horasExtra } */
+  function elegirTema(a, b, ea, eb, ctx, r) {
+    const af = ea.rel[b.id] || 0, op = [];
+    const add = (t, w) => { if (w > 0) op.push([t, w]); };
+    if (ctx.lugar === "casa") add("casa", 5);
+    if (ctx.lugar === "noche") add("noche", 4);
+    if (ctx.h < 10 && ctx.lugar !== "casa") { add("saludo", 3); add("trafico", 2); add("cafe", 2); }
+    if (ctx.lugar === "cafeteria" || (ctx.h >= 13.5 && ctx.h < 16.5)) add("comida", 3);
+    add("cafe", 1);
+    if (a.equipo === b.equipo) add("futbolMismo", 2.5);
+    else if (sonRivales(a.equipo, b.equipo)) add("futbolRival", 2);
+    if (ctx.mercado && ctx.lugar !== "casa") add("mercado", 2.5);
+    if (ctx.felicitar && ctx.felicitar.has(b.id)) add("felicitar", 5);
+    if (eb.estres > 65) add("apoyo", 4 * a.rasgos.amable);
+    if (ea.estres > 60 && af < 5) add("pleito", 3 * a.rasgos.competitivo * (1 - a.rasgos.amable));
+    if (b.id !== "elena" && a.id !== "elena") add("chisme", 1.5 * a.rasgos.sociable);
+    if (ctx.horasExtra) add("horasExtra", 4);
+    if (ctx.dia === 5) add("viernes", 2);
+    add("frase", 0.8);
+    let tot = op.reduce((s, x) => s + x[1], 0), x = r() * tot;
+    for (const [t, w] of op) { x -= w; if (x <= 0) return t; }
+    return "cafe";
+  }
+
+  /* Devuelve la plática completa y sus efectos (no los aplica) */
+  function conversar(a, b, ea, eb, ctx, r = Math.random) {
+    const tema = elegirTema(a, b, ea, eb, ctx, r);
+    const opciones = TEMAS[tema], [t1, ok, mal] = opciones[Math.floor(r() * opciones.length)];
+    const af = (ea.rel[b.id] || 0) / 100;
+    let q = af * 0.5 + (a.rasgos.sociable + b.rasgos.sociable - 1) * 0.25
+      + ((ea.animo + eb.animo) / 2 - 50) / 120 - ((ea.estres + eb.estres) / 2 - 45) / 110
+      + (b.rasgos.amable - 0.5) * 0.3 + (r() - 0.5) * 0.9 - 0.22;
+    if (tema === "apoyo" || tema === "felicitar") q += 0.45;
+    if (tema === "pleito") q -= 0.55 - b.rasgos.amable * 0.4;
+    if (tema === "futbolRival") q += (r() - 0.5) * 0.6;
+    q = Math.max(-1, Math.min(1, q));
+    const m = ctx.mercado || {};
+    const v = {
+      B: b.corto, gustoA: a.gusto, gustoB: b.gusto.charAt(0).toUpperCase() + b.gusto.slice(1), equipoA: a.equipo, equipoB: b.equipo, fraseA: a.frase,
+      oB: b.g === "f" ? "a" : "o", emisora: m.emisora || "el IPC", movimiento: (m.cambio || 0) >= 0 ? "Subió" : "Bajó",
+      cambio: m.cambio != null ? Math.abs(m.cambio * 100).toFixed(1) + "%" : "", humorMercado: (m.cambio || 0) >= 0 ? "de buenas" : "nervioso"
+    };
+    const lineas = [[a.id, llenar(t1, v)], [b.id, llenar(q >= 0 ? ok : mal, v)]];
+    const k = Math.round(q * 6);
+    return {
+      tema, calidad: q, lineas,
+      efecto: { rel: k, a: { animo: q * 3.5, estres: q < 0 ? -q * 6 : -q * 2.5 }, b: { animo: q * 3.5 + (tema === "apoyo" && q > 0 ? 3 : 0), estres: q < 0 ? -q * 6 : -q * 2.5 - (tema === "apoyo" && q > 0 ? 6 : 0) } }
+    };
+  }
+  function aplicarPlatica(est, a, b, res) {
+    const ea = est[a.id], eb = est[b.id];
+    sentir(ea, a, res.efecto.a); sentir(eb, b, res.efecto.b);
+    const v = Math.max(-100, Math.min(100, (ea.rel[b.id] || 0) + res.efecto.rel));
+    ea.rel[b.id] = v; eb.rel[a.id] = v;
+  }
+  const NOMBRE_TEMA = { saludo: "se saludaron", cafe: "fueron por café", trafico: "se quejaron del tráfico", futbolMismo: "platicaron de su equipo", futbolRival: "se picaron con el futbol", mercado: "comentaron el mercado", felicitar: "hubo felicitaciones", apoyo: "se echaron la mano", pleito: "discutieron", chisme: "chismearon", comida: "platicaron de la comida", horasExtra: "se quejaron de las horas extra", casa: "platicaron en casa", viernes: "hicieron planes de fin de semana", noche: "platicaron de noche", frase: "bromearon" };
+  function resumen(a, b, res) {
+    const como = res.calidad > 0.35 ? "y se cayeron mejor" : res.calidad < -0.35 ? "y acabaron molestos" : res.calidad < 0 ? "y quedaron medio incómodos" : "";
+    return `${a.corto} y ${b.corto} ${NOMBRE_TEMA[res.tema]}${como ? " " + como : ""}.`;
+  }
+
+  return { LISTA, POR_ID, estadoInicial, sentir, volverABase, humor, conversar, aplicarPlatica, resumen, rng, semillaDe, base, sonRivales };
+})();
+if (typeof module !== "undefined") module.exports = Personal;
+
+(() => {
+  const $ = s => document.querySelector(s);
+  const NS = "http://www.w3.org/2000/svg";
+  const sinMovimiento = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const el = (tag, attrs = {}, padre) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (padre) padre.appendChild(e); return e; };
+  const pct = (x, signo = true) => (signo && x > 0 ? "+" : "") + (x * 100).toFixed(1) + "%";
+  const num = x => x.toFixed(2);
+  const clase = x => (x > 0 ? "pos" : x < 0 ? "neg" : "");
+
+  /* ---------- planta de la oficina ---------- */
+  const SALAS = {
+    min: { nombre: "Minería", clave: "S-01", x: 20, y: 20, w: 260, h: 180, fila: "A", puerta: 150 },
+    ana: { nombre: "Análisis", clave: "S-02", x: 290, y: 20, w: 160, h: 180, fila: "A", puerta: 370 },
+    rie: { nombre: "Riesgos", clave: "S-03", x: 460, y: 20, w: 160, h: 180, fila: "A", puerta: 540 },
+    mac: { nombre: "Macroeconomía", clave: "S-04", x: 630, y: 20, w: 170, h: 180, fila: "A", puerta: 715 },
+    not: { nombre: "Noticias", clave: "S-05", x: 810, y: 20, w: 170, h: 180, fila: "A", puerta: 895 },
+    me1: { nombre: "Mesa de pruebas I", clave: "S-06", x: 20, y: 250, w: 210, h: 180, fila: "B", puerta: 125 },
+    me2: { nombre: "Mesa de pruebas II", clave: "S-07", x: 240, y: 250, w: 210, h: 180, fila: "B", puerta: 345 },
+    com: { nombre: "Comité", clave: "S-08", x: 490, y: 250, w: 190, h: 180, fila: "B", puerta: 585 },
+    cum: { nombre: "Cumplimiento", clave: "S-09", x: 690, y: 250, w: 140, h: 180, fila: "B", puerta: 760 },
+    bib: { nombre: "Biblioteca", clave: "S-10", x: 840, y: 250, w: 140, h: 180, fila: "B", puerta: 910 },
+    trd: { nombre: "Sala de trading", clave: "S-11", x: 20, y: 480, w: 410, h: 120, fila: "C", puerta: 225 },
+    rec: { nombre: "Entrada", clave: "S-12", x: 430, y: 480, w: 80, h: 120, fila: "C", puerta: 470 },
+    caf: { nombre: "Cafetería", clave: "S-13", x: 520, y: 480, w: 160, h: 120, fila: "C", puerta: 600 },
+    sis: { nombre: "Sistemas", clave: "S-14", x: 690, y: 480, w: 140, h: 120, fila: "C", puerta: 760 },
+    arc: { nombre: "Archivo muerto", clave: "S-15", x: 840, y: 480, w: 140, h: 120, fila: "C", puerta: 910 }
+  };
+  const PASILLO = { 1: 225, 2: 455 }, CRUCE = 470;
+  const DEPTO_SALA = { analisis: "ana", riesgos: "rie", mesa1: "me1", mesa2: "me2", comite: "com" };
+  const ORDEN = ["min", "ana", "rie", "me1", "me2", "com"];
+  const PIPE = ["min", "ana", "rie", "me1", "me2", "com", "bib", "arc"];
+
+  function bordePuerta(S, p) {
+    if (p === 1) return S.fila === "A" ? S.y + S.h : S.y;
+    return S.fila === "B" ? S.y + S.h : S.y;
+  }
+  function adentro(S, p) { const b = bordePuerta(S, p); return [S.puerta, b + (b === S.y ? 22 : -22)]; }
+  function ruta(a, b, pa, pb) {
+    if (a === b) return [pa, pb];
+    const A = SALAS[a], B = SALAS[b], fs = A.fila + B.fila;
+    const via = (p, X, Y) => [adentro(X, p), [X.puerta, PASILLO[p]], [Y.puerta, PASILLO[p]], adentro(Y, p)];
+    if (fs === "AA" || fs === "BB" || fs === "AB" || fs === "BA") return [pa, ...via(1, A, B), pb];
+    if (fs === "CC" || fs === "BC" || fs === "CB") return [pa, ...via(2, A, B), pb];
+    if (fs === "AC") return [pa, adentro(A, 1), [A.puerta, PASILLO[1]], [CRUCE, PASILLO[1]], [CRUCE, PASILLO[2]], [B.puerta, PASILLO[2]], adentro(B, 2), pb];
+    return [pa, adentro(A, 2), [A.puerta, PASILLO[2]], [CRUCE, PASILLO[2]], [CRUCE, PASILLO[1]], [B.puerta, PASILLO[1]], adentro(B, 1), pb];
+  }
+  const alAzarEn = (k, m = 30) => { const S = SALAS[k]; return [S.x + m + Math.random() * (S.w - 2 * m), S.y + m + 30 + Math.random() * Math.max(4, S.h - 2 * m - 40)]; };
+
+  /* ---------- la colonia ---------- */
+  const BANQUETA = 681, RIO_SENA = 851, ANDADOR = 407, SALIDA = [[470, 612], [470, BANQUETA]];
+  const XS_CASA = [20, 206, 432, 618, 804];
+  const CASAS = [];
+  for (let fila = 0; fila < 2; fila++) for (const x of XS_CASA) {
+    const y = fila ? 872 : 700;
+    CASAS.push({ x, y, w: 176, h: 130, fila, puerta: x + 30, num: (fila ? 12 : 3) + CASAS.length * 4, calle: fila ? "Río Sena" : "Reforma" });
+  }
+  const hastaCasa = c => c.fila === 0
+    ? [[c.puerta, BANQUETA], [c.puerta, c.y + 14]]
+    : [[ANDADOR, BANQUETA], [ANDADOR, RIO_SENA], [c.puerta, RIO_SENA], [c.puerta, c.y + 14]];
+  const cama = (c, i) => [c.x + 82 + i * 34, c.y + 92];
+  const rincones = c => [[c.x + 30, c.y + 62], [c.x + 34, c.y + 100], [c.x + 120, c.y + 44], [c.x + 150, c.y + 44], [c.x + 52, c.y + 84]];
+
+  /* Ruta entre dos lugares: { tipo: "sala", k } o { tipo: "casa", i } */
+  function rutaMundo(de, a, pa, pb) {
+    if (de.tipo === "sala" && a.tipo === "sala") return ruta(de.k, a.k, pa, pb);
+    if (de.tipo === "casa" && a.tipo === "casa") {
+      if (de.i === a.i) return [pa, pb];
+      const A = CASAS[de.i], B = CASAS[a.i];
+      return [pa, ...hastaCasa(A).reverse(), ...hastaCasa(B), pb];
+    }
+    if (de.tipo === "sala") return [...ruta(de.k, "rec", pa, [470, 585]), ...SALIDA, ...hastaCasa(CASAS[a.i]), pb];
+    return [pa, ...hastaCasa(CASAS[de.i]).reverse(), ...SALIDA.slice().reverse(), ...ruta("rec", a.k, [470, 585], pb)];
+  }
+
+  /* ---------- reloj de la Ciudad de México (UTC-6 todo el año) ---------- */
+  const RELOJ = { modo: "real", ms: Date.now(), escala: 360 };
+  const DIAS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
+  function horaMX() {
+    const d = new Date(RELOJ.ms - 6 * 3600e3);
+    const h = d.getUTCHours() + d.getUTCMinutes() / 60 + d.getUTCSeconds() / 3600, dia = d.getUTCDay();
+    return { h, dia, finde: dia === 0 || dia === 6, txt: `${String(d.getUTCHours()).padStart(2, "0")}:${String(d.getUTCMinutes()).padStart(2, "0")}` };
+  }
+  const nocheDe = h => (h < 6.3 || h >= 20.3 ? 1 : h < 7.6 ? (7.6 - h) / 1.3 : h >= 19 ? (h - 19) / 1.3 : 0);
+  const momento = h => (h < 5 ? "de madrugada" : h < 12 ? "en la mañana" : h < 19 ? "en la tarde" : "en la noche");
+
+  /* ---------- agentes ---------- */
+  // dónde está el escritorio de cada quien (la personalidad viene de personal.js)
+  const ESCRITORIOS = {
+    lupita: [55, 112], beto: [115, 112], tono: [175, 112], karla: [235, 112], mariana: [322, 112], rodrigo: [370, 112], ximena: [418, 112],
+    chema: [505, 112], fer: [578, 112], paco: [680, 125], ale: [752, 125], diego: [852, 125], vale: [935, 125], ivan: [85, 345], dani: [165, 345],
+    sofia: [305, 345], emilio: [385, 345], elena: [585, 318], robles: [528, 372], paredes: [642, 372], mendez: [728, 345], andrea: [792, 345],
+    memo: [948, 390], renata: [338, 548], hugo: [395, 548], charly: [728, 548], ingrid: [792, 548], fermin: [948, 548], lucha: [450, 535], ramon: [490, 565]
+  };
+  const AGENTES = Personal.LISTA.map(p => ({ ...p, rasgos: { ...p.rasgos }, escritorio: ESCRITORIOS[p.id] }));
+  /* Emociones y relaciones de cada quien; se reemplazan con las del piloto o las guardadas en el navegador */
+  let EMO = Personal.estadoInicial();
+  const GRUPO = { min: "inv", ana: "inv", not: "inv", rie: "ope", mac: "ope", trd: "ope", me1: "val", me2: "val", cum: "val", com: "gob", bib: "arc", arc: "arc", rec: "arc", sis: "arc" };
+  const POR_DEPTO = {
+    trd: { despertar: 5.7, salir: 6.4, comida: 14.2, salida: 15.9, dormir: 22.0 },
+    rec: { despertar: 5.9, salir: 6.6, comida: 13.4, salida: 16.4 },
+    sis: { despertar: 6.0, salir: 6.8, salida: 17.2 },
+    com: { despertar: 7.0, salir: 8.1, salida: 17.1 },
+    not: { despertar: 5.9, salir: 6.6, salida: 16.2 }
+  };
+  const AG = Object.fromEntries(AGENTES.map(a => [a.id, a]));
+  const STAFF = {};
+  AGENTES.forEach((a, i) => {
+    (STAFF[a.depto] ??= []).push(a);
+    const j = (((i * 37) % 71) / 100) - 0.35;
+    const p = { despertar: 6.4, salir: 7.3, comida: 15.1, comidaDur: 0.9, salida: 18.0, dormir: 22.9, ...POR_DEPTO[a.depto] };
+    for (const k of ["despertar", "salir", "salida", "dormir"]) p[k] += j;
+    p.comida += j / 2;
+    if (a.desvelado) Object.assign(p, { despertar: 7.2 + j / 3, salir: 7.9 + j / 3, dormir: 24.6 + j });
+    if (a.madrugador) Object.assign(p, { despertar: 5.3, salir: 6.0, dormir: 21.6 });
+    a.perfil = p; a.g = GRUPO[a.depto]; a.hogar = Math.floor(i / 3); a.camaN = i % 3; a.emo = EMO[a.id];
+    a.ini = a.nombre.split(" ").map(s => s[0]).join("").slice(0, 2).toUpperCase();
+    Object.assign(a, { pos: [0, 0], lugar: { tipo: "casa", i: a.hogar }, camino: null, modo: "dormir", meta: null, energia: 60 + ((i * 53) % 40), hechos: 0, estado: "", espera: Math.random() * 3 });
+  });
+
+  /* Qué debería estar haciendo cada quien a cierta hora */
+  function agenda(a, t) {
+    const p = a.perfil, h = t.h;
+    const dormido = (d, w) => { d %= 24; return d > w ? h >= d || h < w : h >= d && h < w; };
+    let r;
+    if (a.guardia) {
+      if (h >= 20.4 || h < 7.2) r = { k: "guardia", lugar: { tipo: "sala", k: "rec" }, txt: "Cuidando el edificio" };
+      else if (h >= 8.1 && h < 15) r = { k: "dormir", txt: "Durmiendo después del turno de noche" };
+      else r = { k: "casa", txt: h < 12 ? "Llegando de su turno" : "En casa antes de su turno" };
+    } else if (t.finde) {
+      if (dormido(p.dormir + 0.8, p.despertar + 1.6)) r = { k: "dormir", txt: "Durmiendo (es fin de semana)" };
+      else r = { k: "casa", txt: "Descansando en casa; es fin de semana" };
+    } else if (dormido(p.dormir, p.despertar)) r = { k: "dormir", txt: "Durmiendo" };
+    else if (h >= p.despertar && h < p.salir) r = { k: "casa", txt: "Desayunando y arreglándose" };
+    else if (h >= p.salir && h < p.comida) r = { k: "trabajo", txt: "" };
+    else if (h >= p.comida && h < p.comida + p.comidaDur) r = { k: "comida", lugar: { tipo: "sala", k: "caf" }, txt: "Comiendo en la cafetería" };
+    else if (h >= p.comida + p.comidaDur && h < p.salida) r = { k: "trabajo", txt: "" };
+    else r = { k: "casa", txt: h < 21 ? "Cenando en casa" : "Viendo la tele antes de dormir" };
+    if (st.corriendo && !st.repeticion && PIPE.includes(a.depto) && r.k !== "trabajo") r = { k: "trabajo", extra: true, txt: "Horas extra por la jornada" };
+    if (r.k === "trabajo") r.lugar = { tipo: "sala", k: a.depto };
+    if (r.k === "dormir" || r.k === "casa") r.lugar = { tipo: "casa", i: a.hogar };
+    return r;
+  }
+  const disponibles = k => (STAFF[k] || []).filter(a => a.modo === "trabajo" && a.lugar.tipo === "sala" && a.lugar.k === k && !a.camino);
+  const hayGente = k => (STAFF[k] || []).some(a => a.lugar.tipo === "sala" && a.lugar.k === k && ["trabajo", "regresando", "llevando"].includes(a.modo));
+  let turno = 0;
+  const quienAtiende = k => { const d = disponibles(k); return d.length ? d[turno++ % d.length] : (STAFF[k] || [])[0]; };
+
+  /* ---------- datos ---------- */
+  const SERIES = new Map();
+  const MODO_INFO = {
+    rapido: { grupo: "En vivo · EE.UU., tiempo real (USD)", todas: "Todas en vivo", nombre: "las empresas mexicanas en EE.UU." },
+    bmv: { grupo: "BMV en pesos · 20 min de retraso", todas: "Todas de la BMV", nombre: "las emisoras de la BMV" },
+    real: { grupo: "Tus archivos CSV", todas: "Todas tus CSV", nombre: "tus archivos CSV" },
+    ej: { grupo: "Datos de ejemplo (simulados)", todas: "Todas de ejemplo", nombre: "las emisoras de ejemplo" }
+  };
+  function agregarEjemplos() { EMISORAS_EJEMPLO.forEach(sp => { const S = Motor.generarSerie(sp); S.key = "ej:" + sp.id; SERIES.set(S.key, S); }); }
+  const VIVO = { activo: false, cot: {}, prev: {}, mercado: {}, actualizado: {}, error: {} };
+  /* Piloto automático: si junto a la página hay datos/estado.json, la sala muestra lo que hizo el piloto en GitHub */
+  const PILOTO = { activo: false, estado: null, generado: null };
+  async function cargarPiloto() {
+    if (!/^https?:$/.test(location.protocol)) return false;
+    try {
+      const r = await fetch("datos/estado.json", { cache: "no-store" }); if (!r.ok) return false;
+      const E = await r.json(); if (!E || !E.version) return false;
+      const p = await (await fetch("datos/precios.json", { cache: "no-store" })).json();
+      for (const t of p.series) {
+        const S = { id: t.id, nombre: t.nombre, sector: t.sector, moneda: t.moneda, fechas: t.fechas, o: Float64Array.from(t.o), c: Float64Array.from(t.c), ejemplo: false, modo: t.modo, key: t.modo + ":" + t.id };
+        SERIES.set(S.key, S); VIVO.cot[S.key] = t.cot;
+      }
+      VIVO.mercado = p.mercados || {}; VIVO.actualizado = { rapido: p.generado, bmv: p.generado };
+      Object.assign(PILOTO, { activo: true, estado: E, generado: p.generado });
+      return SERIES.size > 0;
+    } catch (e) { return false; }
+  }
+  async function cargarEnVivo() {
+    if (!/^https?:$/.test(location.protocol)) return false;
+    try { const r = await fetch("/api/estado", { cache: "no-store" }); if (!r.ok) return false; const j = await r.json(); if (!j.ok) return false; } catch (e) { return false; }
+    let alguna = false;
+    for (const modo of ["rapido", "bmv"]) {
+      try {
+        const j = await (await fetch("/api/historico?modo=" + modo)).json();
+        if (j.error) { VIVO.error[modo] = j.error; continue; }
+        for (const t of j.series) {
+          const S = { id: t.id, nombre: t.nombre, sector: t.sector, moneda: t.moneda, fechas: t.fechas, o: Float64Array.from(t.o), c: Float64Array.from(t.c), ejemplo: false, modo, key: modo + ":" + t.id };
+          SERIES.set(S.key, S); alguna = true;
+        }
+        if (j.fallas && j.fallas.length) VIVO.error[modo + "-fallas"] = j.fallas.join(", ");
+      } catch (e) { VIVO.error[modo] = "El servidor de la sala no respondió."; }
+    }
+    return alguna;
+  }
+  const CANDIDATAS = Motor.todasLasCandidatas();
+
+  /* ---------- estado de la sala ---------- */
+  const st = {
+    seleccion: "todas:ej", cantidad: 120, vel: sinMovimiento ? 0 : 1, corriendo: false, pausa: false,
+    cola: [], fichas: [], evaluadas: new Set(), expedientes: [], aprobadas: [], motivos: {},
+    llegadas: { min: 0, ana: 0, rie: 0, me1: 0, me2: 0, com: 0, bib: 0, arc: 0 },
+    acum: 0, emitidos: 0, totalJornada: 0, abierto: null, semilla: 1, avisoEspera: 0
+  };
+
+  /* ---------- dibujo del mundo ---------- */
+  const svg = $("#plano");
+  const defs = el("defs", {}, svg);
+  const pat = el("pattern", { id: "cuad", width: 20, height: 20, patternUnits: "userSpaceOnUse" }, defs);
+  el("path", { d: "M20 0H0V20", fill: "none", class: "cuadricula" }, pat);
+  el("rect", { x: 0, y: 0, width: 1000, height: 1012, fill: "url(#cuad)" }, svg);
+  const capaCalle = el("g", {}, svg), capaAutos = el("g", {}, svg);
+  const sombraFuera = el("rect", { x: 0, y: 0, width: 1000, height: 1012, class: "sombra", opacity: 0 }, svg);
+  const capaSalas = el("g", {}, svg), capaSombras = el("g", {}, svg), capaRot = el("g", {}, svg), capaLuz = el("g", {}, svg), capaFichas = el("g", {}, svg), capaAg = el("g", {}, svg), capaBurbujas = el("g", {}, svg);
+  const rotCuenta = {}, muros = {}, sombras = {}, sombrasCasa = [];
+
+  // calle Reforma, banquetas, cruce peatonal, calle Río Sena y andador
+  const c_ = (tag, a) => el(tag, a, capaCalle);
+  c_("rect", { x: 0, y: 612, width: 1000, height: 16, class: "banqueta" });
+  c_("rect", { x: 0, y: 628, width: 1000, height: 44, class: "asfalto" });
+  c_("line", { x1: 0, x2: 1000, y1: 650, y2: 650, class: "raya" });
+  c_("rect", { x: 0, y: 672, width: 1000, height: 18, class: "banqueta" });
+  for (let i = 0; i < 6; i++) c_("rect", { x: 452 + i * 6.5, y: 630, width: 3.5, height: 40, class: "cebra" });
+  c_("rect", { x: 0, y: 830, width: 1000, height: 42, class: "asfalto" });
+  c_("rect", { x: 384, y: 690, width: 46, height: 140, class: "banqueta" });
+  for (const x of [130, 790]) el("text", { x, y: 646, class: "rot-calle", "text-anchor": "middle" }, capaCalle).textContent = "Av. Paseo de la Reforma";
+  el("text", { x: 700, y: 855, class: "rot-calle", "text-anchor": "middle" }, capaCalle).textContent = "Calle Río Sena";
+  el("text", { x: 407, y: 762, class: "rot-calle", "text-anchor": "middle", transform: "rotate(-90 407 762)" }, capaCalle).textContent = "Andador";
+  const faroles = [60, 240, 600, 780, 960].flatMap(x => [[x, 620], [x, 682]]).concat([[200, 840], [620, 840], [880, 840]]);
+  const halos = faroles.map(([x, y]) => { const h = el("circle", { cx: x, cy: y, r: 16, class: "halo", opacity: 0 }, capaLuz); el("circle", { cx: x, cy: y, r: 2.5, class: "farol" }, capaCalle); return h; });
+  const AUTOS = [0, 1, 2, 3].map(i => {
+    const dir = i % 2 ? -1 : 1, g = el("g", {}, capaAutos);
+    el("rect", { x: -12, y: -6, width: 24, height: 12, rx: 3, class: "auto auto-" + i }, g);
+    const faro = el("circle", { cx: dir * 12, cy: 0, r: 2.2, class: "faro", opacity: 0 }, g);
+    return { g, faro, dir, x: Math.random() * 1000, y: dir > 0 ? 639 : 661, v: 70 + Math.random() * 50 };
+  });
+
+  // edificio
+  el("rect", { x: 10, y: 10, width: 980, height: 600, class: "edificio" }, capaSalas);
+  el("line", { x1: 452, x2: 488, y1: 610, y2: 610, class: "corte-ext" }, capaSalas);
+  el("text", { x: 500, y: 624, class: "rot-pasillo" }, capaRot).textContent = "Reforma 255";
+
+  for (const [k, S] of Object.entries(SALAS)) {
+    muros[k] = el("rect", { x: S.x, y: S.y, width: S.w, height: S.h, class: "muro" }, capaSalas);
+    const puertas = S.fila === "B" ? [S.y, S.y + S.h] : S.fila === "A" ? [S.y + S.h] : k === "rec" ? [S.y, S.y + S.h] : [S.y];
+    for (const py of puertas) {
+      el("line", { x1: S.puerta - 16, x2: S.puerta + 16, y1: py, y2: py, class: "corte" }, capaSalas);
+      const dentro = py === S.y ? 1 : -1;
+      el("path", { d: `M${S.puerta - 16} ${py} A32 32 0 0 ${dentro > 0 ? 1 : 0} ${S.puerta + 16} ${py + dentro * 32}`, class: "abatimiento" }, capaSalas);
+    }
+    sombras[k] = el("rect", { x: S.x, y: S.y, width: S.w, height: S.h, class: "sombra", opacity: 0 }, capaSombras);
+    el("text", { x: S.x + 10, y: S.y + 17, class: "rot-clave" }, capaRot).textContent = S.clave;
+    el("text", { x: S.x + 10, y: S.y + 34, class: "rot-sala" }, capaRot).textContent = S.nombre;
+    rotCuenta[k] = el("text", { x: S.x + 10, y: S.y + S.h - 9, class: "rot-cuenta" }, capaRot);
+  }
+  el("text", { x: 250, y: PASILLO[1] + 4, class: "rot-pasillo", "text-anchor": "middle" }, capaRot).textContent = "Pasillo norte";
+  el("text", { x: 250, y: PASILLO[2] + 4, class: "rot-pasillo", "text-anchor": "middle" }, capaRot).textContent = "Pasillo sur";
+
+  // mobiliario de la oficina
+  const m = (tag, a) => el(tag, a, capaSalas);
+  const escritorio = (x, y, w = 40, h = 14) => { m("rect", { x: x - w / 2, y, width: w, height: h, class: "mueble" }); m("rect", { x: x - 7, y: y + 3, width: 14, height: 3, class: "mueble-lleno" }); };
+  for (const a of AGENTES) if (!["com", "rec", "bib", "arc"].includes(a.depto) || a.id === "lucha") escritorio(a.escritorio[0], a.escritorio[1] + 13, a.id === "lucha" ? 30 : 40);
+  for (let i = 0; i < 3; i++) m("rect", { x: 200 + i * 22, y: 44, width: 16, height: 34, class: "mueble" }); // servidores de minería
+  m("rect", { x: 900, y: 42, width: 64, height: 36, class: "mueble" }); m("line", { x1: 908, x2: 956, y1: 54, y2: 54, class: "mueble" }); m("line", { x1: 908, x2: 944, y1: 64, y2: 64, class: "mueble" }); // pantalla de noticias
+  for (const k of ["me1", "me2"]) { const S = SALAS[k]; m("rect", { x: S.x + 22, y: S.y + 60, width: S.w - 44, height: 16, class: "mueble" }); }
+  m("ellipse", { cx: 585, cy: 352, rx: 46, ry: 20, class: "mueble" });
+  for (const [x, y] of [[585, 318], [528, 372], [642, 372]]) m("circle", { cx: x, cy: y + 12, r: 4, class: "mueble" });
+  for (let i = 0; i < 4; i++) m("line", { x1: 852, x2: 968, y1: 300 + i * 22, y2: 300 + i * 22, class: "mueble" });
+  m("rect", { x: 768, y: 296, width: 50, height: 22, class: "mueble" }); // archivero de cumplimiento
+  for (let i = 0; i < 2; i++) m("rect", { x: 798 + i * 16, y: 494, width: 12, height: 32, class: "mueble" }); // racks
+  for (const [x, y] of [[560, 545], [640, 545]]) { m("circle", { cx: x, cy: y, r: 13, class: "mueble" }); }
+  m("rect", { x: 650, y: 494, width: 22, height: 14, class: "mueble-lleno" }); // cafetera
+  const pilaBib = el("g", {}, capaSalas), pilaArc = el("g", {}, capaSalas);
+  const pizarra = el("g", {}, capaSalas);
+  el("rect", { x: 32, y: 524, width: 262, height: 66, class: "pizarra" }, pizarra);
+  const pizLineas = [0, 1, 2, 3].map(i => el("text", { x: 40, y: 540 + i * 14, class: "pizarra-txt" }, pizarra));
+  const macroTxt = [0, 1, 2].map(i => el("text", { x: 640, y: 66 + i * 13, class: "rot-cuenta" }, capaRot));
+
+  // casas
+  CASAS.forEach((c, i) => {
+    const casaEl = el("rect", { x: c.x, y: c.y, width: c.w, height: c.h, class: "casa" }, capaSalas);
+    el("line", { x1: c.puerta - 14, x2: c.puerta + 14, y1: c.y, y2: c.y, class: "corte" }, capaSalas);
+    el("path", { d: `M${c.puerta - 14} ${c.y} A28 28 0 0 1 ${c.puerta + 14} ${c.y + 28}`, class: "abatimiento" }, capaSalas);
+    for (let b = 0; b < 3; b++) { const [x, y] = cama(c, b); m("rect", { x: x - 12, y: y - 26, width: 24, height: 44, rx: 2, class: "cama" }); m("rect", { x: x - 9, y: y - 23, width: 18, height: 8, rx: 2, class: "almohada" }); }
+    m("rect", { x: c.x + 12, y: c.y + 104, width: 44, height: 16, rx: 3, class: "mueble" }); // sillón
+    m("circle", { cx: c.x + 34, cy: c.y + 64, r: 11, class: "mueble" }); // mesa
+    m("rect", { x: c.x + 70, y: c.y + 10, width: 96, height: 12, class: "mueble" }); // cocina
+    sombrasCasa[i] = el("rect", { x: c.x, y: c.y, width: c.w, height: c.h, class: "sombra", opacity: 0 }, capaSombras);
+    el("text", { x: c.x + 8, y: c.y + c.h - 6, class: "rot-casa" }, capaRot).textContent = `${c.calle} ${c.num}`;
+    el("title", {}, casaEl).textContent = "Aquí viven " + AGENTES.filter(a => a.hogar === i).map(a => a.nombre).join(", ");
+  });
+
+  // agentes
+  for (const a of AGENTES) {
+    a.nodo = el("g", { class: "agente" }, capaAg);
+    a.tt = el("title", {}, a.nodo);
+    el("circle", { r: 10, class: "cuerpo", style: `stroke:var(--g-${a.g})` }, a.nodo);
+    el("text", { class: "ini" }, a.nodo).textContent = a.ini;
+    el("text", { y: 20, class: "nom" }, a.nodo).textContent = a.corto;
+    a.zz = el("text", { x: 8, y: -10, class: "zz", visibility: "hidden" }, a.nodo); a.zz.textContent = "z";
+    a.cargaEl = el("rect", { x: 6, y: -16, width: 10, height: 7, class: "carga", visibility: "hidden" }, a.nodo);
+    a.humorEl = el("circle", { cx: -8, cy: -8, r: 3.4, class: "humor neutral" }, a.nodo);
+    a.nodo.setAttribute("tabindex", "0"); a.nodo.setAttribute("role", "button");
+    a.nodo.addEventListener("click", () => abrirFicha(a.id));
+    a.nodo.addEventListener("keydown", e => { if (e.key === "Enter") abrirFicha(a.id); });
+  }
+
+  /* ---------- movimiento ---------- */
+  function largo(pts) { let L = 0; for (let i = 1; i < pts.length; i++) L += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); return L; }
+  function puntoEn(pts, d) {
+    for (let i = 1; i < pts.length; i++) {
+      const s = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]);
+      if (d <= s) { const t = s ? d / s : 1; return [pts[i - 1][0] + (pts[i][0] - pts[i - 1][0]) * t, pts[i - 1][1] + (pts[i][1] - pts[i - 1][1]) * t]; }
+      d -= s;
+    }
+    return pts[pts.length - 1];
+  }
+  /* Mueve a un agente a un lugar (sala o casa) y a un punto dentro de él */
+  function irA(a, lugar, punto, modo, alLlegar, vel = 1) {
+    const pts = rutaMundo(a.lugar, lugar, a.pos, punto);
+    a.camino = { pts, L: largo(pts), d: 0, vel, alLlegar: () => { a.lugar = lugar; if (alLlegar) alLlegar(); } };
+    a.modo = modo;
+  }
+  const caminar = (a, sala, destino, modo, alLlegar) => irA(a, { tipo: "sala", k: sala }, destino, modo, alLlegar);
+  const mismoLugar = (x, y) => x && y && x.tipo === y.tipo && (x.tipo === "sala" ? x.k === y.k : x.i === y.i);
+
+  /* ---------- jornada ---------- */
+  function seriesActivas() {
+    const [tipo, id] = st.seleccion.split(":");
+    if (tipo === "todas") return [...SERIES.values()].filter(S => S.key.startsWith(id + ":"));
+    return [SERIES.get(st.seleccion)].filter(Boolean);
+  }
+  const clave = c => c.fam + JSON.stringify(c.p);
+  function armarCola() {
+    const ss = seriesActivas(), listas = ss.map((S, i) => Motor.barajar(CANDIDATAS, st.semilla * 97 + i * 13).filter(c => !st.evaluadas.has(S.key + "|" + clave(c))).map(c => ({ S, c })));
+    const cola = []; let i = 0;
+    while (cola.length < st.cantidad && listas.some(l => l.length)) { const l = listas[i % listas.length]; if (l.length) cola.push(l.shift()); i++; }
+    st.semilla++;
+    return cola;
+  }
+
+  function abrirJornada() {
+    if (PILOTO.activo) return verJornadaPiloto();
+    st.cola = armarCola();
+    if (!st.cola.length) { registrar(null, `<b>Lic. Cervantes:</b> ya revisamos todas las combinaciones de esta selección. Elige otra emisora o limpia la sala.`); return; }
+    const t = horaMX();
+    const ausentes = AGENTES.filter(a => PIPE.includes(a.depto) && agenda(a, t).k !== "trabajo").length; // antes de marcar la jornada
+    st.totalJornada = st.cola.length; st.emitidos = 0; st.corriendo = true; st.pausa = false; st.avisoEspera = 0;
+    actualizarLectura();
+    registrar(null, `<b>Se abre la jornada.</b> ${st.totalJornada} expedientes en cola para ${nombreSeleccion()}.`);
+    if (ausentes && st.vel !== 0) registrar(null, `<b>Lic. Cervantes</b> llamó a horas extra a ${ausentes} ${ausentes === 1 ? "persona" : "personas"}; ${t.h < 6 || t.h >= 22 ? "algunos llegan en pijama" : "vienen en camino"}.`);
+    const L = Motor.lecturaMercado(seriesActivas()[0]);
+    registrar(null, `<b>Paco:</b> el mercado se ve ${L.tendencia.toLowerCase()} y la volatilidad está ${L.volTxt.toLowerCase()}.`);
+    if (st.vel === 0) { procesarLote(); terminar(); }
+    botonJornada();
+  }
+  function procesarLote() {
+    st.lote = true; while (st.cola.length) emitir(true); st.lote = false;
+    pintarBiblioteca(); pintarConteos();
+  }
+  function terminar() {
+    st.corriendo = false;
+    if (st.repeticion) { st.repeticion = false; botonJornada(); registrar(null, `<b>Fin de la repetición.</b> Así trabajó la oficina en la última jornada del piloto.`); return; }
+    botonJornada();
+    const ap = st.expedientes.slice(-st.totalJornada).filter(e => e.estado === "aprobada").length;
+    registrar(null, `<b>Se cierra la jornada.</b> De ${st.totalJornada} expedientes, ${ap} llegaron a la biblioteca. Cada quien vuelve a su horario.`);
+  }
+  function botonJornada() {
+    const b = $("#btn-jornada");
+    b.textContent = !st.corriendo ? (PILOTO.activo ? "Ver la última jornada" : "Abrir jornada") : st.pausa ? "Reanudar" : "Pausar";
+  }
+
+  function emitir(instantaneo) {
+    const { S, c } = st.cola.shift();
+    st.evaluadas.add(S.key + "|" + clave(c));
+    const exp = Motor.evaluar(S, c); exp.serie = S.key; exp.id = st.expedientes.length;
+    st.expedientes.push(exp); st.emitidos++;
+    const salas = ORDEN.slice(0, ORDEN.indexOf(exp.llego === "comite" ? "com" : DEPTO_SALA[exp.llego]) + 1);
+    salas.push(exp.estado === "aprobada" ? "bib" : "arc");
+    const minero = quienAtiende("min"); exp.minero = minero.id; exp.key = S.key + "|" + clave(c);
+    if (instantaneo || st.fichas.length > 80) { salas.forEach((s, i) => llegar(exp, s, salas[i - 1], true, s === "min" ? minero : null)); return; }
+    const f = { exp, salas, i: 0, pos: [...minero.pos], camino: null, espera: 0.25, el: el("rect", { width: 9, height: 7, x: -4.5, y: -3.5, class: "token" }, capaFichas) };
+    st.fichas.push(f);
+    llegar(exp, "min", null, false, minero);
+  }
+
+  function llegar(exp, sala, desde, rapido, quien) {
+    st.llegadas[sala]++;
+    if (!rapido && muros[sala]) { muros[sala].classList.add("activo"); setTimeout(() => muros[sala].classList.remove("activo"), 380 / Math.max(1, st.vel)); }
+    const a = STAFF[sala] ? (quien || quienAtiende(sala)) : null;
+    if (a) {
+      a.hechos++; a.ultimo = performance.now(); a.energia = Math.max(0, a.energia - (sala === "min" ? 0.3 : sala === "ana" ? 0.25 : 1.5));
+      a.estado = sala === "min" ? `Minó ${exp.etiqueta} en ${exp.emisora}` : sala === "arc" ? `Archivó ${exp.etiqueta} · ${(exp.motivo || "").toLowerCase()}` : sala === "bib" ? `Acomodó ${exp.etiqueta} en el estante` : `Revisando ${exp.etiqueta} · ${exp.emisora}`;
+    }
+    const paso = exp.pasos.find(p => DEPTO_SALA[p.depto] === sala);
+    const verbose = !rapido && st.vel <= 3 && st.vel !== 0;
+    if (paso && !paso.ok && a && (verbose || (!st.lote && Math.random() < 0.08)))
+      registrar(exp, `<b>${a.corto}</b> <span class="no">descartó</span> ${exp.etiqueta} en ${exp.emisora}: ${paso.nota.charAt(0).toLowerCase() + paso.nota.slice(1)}.`);
+    if (paso && paso.ok && sala !== "ana" && verbose && a)
+      registrar(exp, `<b>${a.corto}</b> <span class="ok">pasó</span> ${exp.etiqueta} en ${exp.emisora} a la siguiente sala.`);
+    if (sala === "arc") st.motivos[exp.motivo] = (st.motivos[exp.motivo] || 0) + 1;
+    if (sala === "ana" && paso && !paso.ok && exp.minero && !st.lote) Personal.sentir(EMO[exp.minero], AG[exp.minero], { confianza: -0.15 });
+    if (sala === "bib") {
+      if (st.aprobadas.some(x => x.key === exp.key)) { if (!st.lote) pintarConteos(); return; }
+      st.aprobadas.push(exp);
+      if (exp.minero && !st.lote) { Personal.sentir(EMO[exp.minero], AG[exp.minero], { confianza: 4, animo: 3 }); AG[exp.minero].felicitarHasta = performance.now() + 90000; STAFF.com.forEach(p => Personal.sentir(EMO[p.id], p, { animo: 1 })); }
+      registrar(exp, `<b>Lic. Cervantes</b> <span class="ok">aprobó</span> ${exp.etiqueta} en ${exp.emisora}. Sharpe en datos nuevos: ${num(exp.oos.sharpe)}.`);
+      if (!st.lote) { pintarBiblioteca(); if (st.abierto == null) abrirExpediente(exp); }
+    }
+    if (!st.lote) pintarConteos();
+  }
+
+  function siguienteTramo(f) {
+    const de = f.salas[f.i], a = f.salas[f.i + 1];
+    const destino = a === "arc" ? [856 + Math.random() * 40, 548 + Math.random() * 8] : a === "bib" ? [860 + Math.random() * 60, 392] : alAzarEn(a, 40);
+    f.camino = { pts: ruta(de, a, f.pos, destino), d: 0 }; f.camino.L = largo(f.camino.pts);
+    f.el.setAttribute("class", "token" + (a === "arc" ? " rechazo" : ""));
+    // si alguien del departamento está libre, lleva el expediente en persona
+    const libres = a !== "arc" && de !== "min" ? disponibles(de) : [];
+    if (libres.length) {
+      const ag = libres[0];
+      ag.pos = [...f.pos];
+      ag.camino = { pts: f.camino.pts, L: f.camino.L, d: 0, vel: 260 / 120, alLlegar: null }; ag.modo = "llevando"; f.portador = ag;
+      ag.lugar = { tipo: "sala", k: a };
+      ag.estado = `Llevando ${f.exp.etiqueta} a ${SALAS[a].nombre}`;
+    }
+  }
+
+  function moverFichas(dt) {
+    const v = 260 * dt;
+    let esperando = 0;
+    for (const f of st.fichas) {
+      if (f.espera > 0) {
+        f.espera -= dt;
+        if (f.espera <= 0) {
+          if (f.i >= f.salas.length - 1) { f.fin = true; continue; }
+          const aqui = f.salas[f.i];
+          if (STAFF[aqui] && !st.repeticion && !hayGente(aqui)) { f.espera = 0.4; f.detenida = true; esperando++; }
+          else { f.detenida = false; siguienteTramo(f); }
+        }
+      } else if (f.camino) {
+        f.camino.d += v; f.pos = puntoEn(f.camino.pts, f.camino.d);
+        if (f.camino.d >= f.camino.L) {
+          f.i++; f.camino = null; f.espera = f.salas[f.i] === "arc" || f.salas[f.i] === "bib" ? 0.6 : 0.35;
+          if (f.portador) { const ag = f.portador; f.portador = null; ag.camino = null; regresar(ag); }
+          llegar(f.exp, f.salas[f.i], f.salas[f.i - 1]);
+        }
+      }
+      if (f.detenida) esperando++;
+      f.el.setAttribute("transform", `translate(${f.pos[0].toFixed(1)},${f.pos[1].toFixed(1)})`);
+      f.el.style.visibility = f.portador ? "hidden" : "visible";
+      f.el.classList.toggle("detenida", !!f.detenida);
+    }
+    st.fichas = st.fichas.filter(f => { if (f.fin) { f.el.remove(); return false; } return true; });
+    st.esperando = esperando;
+    pintarPila(pilaBib, st.llegadas.bib, 854, 306, "pila-ok", 4);
+    pintarPila(pilaArc, st.llegadas.arc, 852, 524, "pila", 6);
+  }
+  function pintarPila(g, n, x, y, cls, paso) {
+    const vis = Math.min(36, Math.ceil(n / paso));
+    if (g.childElementCount === vis) return;
+    g.replaceChildren();
+    for (let i = 0; i < vis; i++) el("rect", { x: x + (i % 12) * 9, y: y + Math.floor(i / 12) * 22 - (i % 3), width: 7, height: 15, class: cls }, g);
+  }
+
+  function regresar(a) {
+    const enSuLugar = a.lugar.tipo === "sala" && a.lugar.k === a.depto && Math.hypot(a.pos[0] - a.escritorio[0], a.pos[1] - a.escritorio[1]) < 2;
+    if (enSuLugar) { a.modo = "trabajo"; return; }
+    irA(a, { tipo: "sala", k: a.depto }, [...a.escritorio], "regresando", () => { a.modo = "trabajo"; });
+  }
+
+  /* ---------- la vida de cada agente ---------- */
+  const ETIQUETA_MODO = { dormir: "Durmiendo", casa: "En casa", viaje: "En camino", trabajo: "Trabajando", regresando: "Trabajando", llevando: "Llevando expediente", comida: "Comiendo", cafe: "Por un café", tomando: "Por un café", pizarra: "En la pizarra", guardia: "Vigilando", ronda: "Vigilando" };
+  function puntoPara(a, r) {
+    if (r.k === "dormir") return cama(CASAS[a.hogar], a.camaN);
+    if (r.k === "casa") { const rs = rincones(CASAS[a.hogar]); return rs[(a.camaN + Math.floor(Math.random() * 2)) % rs.length].map(v => v + (Math.random() - 0.5) * 8); }
+    if (r.k === "comida") return alAzarEn("caf", 24);
+    return [...a.escritorio];
+  }
+  /* Cómo se van sintiendo según lo que hacen (por hora) */
+  const RITMO = {
+    dormir: { estres: -3, animo: 0.6 }, casa: { estres: -1.5, animo: 0.8 }, trabajo: { estres: 0.8, animo: -0.3 }, regresando: { estres: 0.8 }, llevando: { estres: 1 },
+    comida: { animo: 2, estres: -2 }, tomando: { estres: -2, animo: 0.5 }, viaje: { estres: 0.6 }, guardia: { estres: 0.2 }, ronda: { estres: 0.2 }
+  };
+  function emocionar(a, horas, t, r) {
+    if (!horas) return;
+    const d = RITMO[a.modo]; if (d) {
+      const extra = r && r.extra && a.modo === "trabajo";
+      Personal.sentir(a.emo, a, { animo: ((d.animo || 0) + (extra ? -2 : 0) + (t.finde && a.modo === "casa" ? 0.6 : 0)) * horas, estres: ((d.estres || 0) + (extra ? 3 : 0)) * horas });
+    }
+    Personal.volverABase(a.emo, a, horas, 0.02);
+  }
+
+  /* ---------- pláticas en vivo ---------- */
+  function lugarDePlatica(a, t) {
+    if (a.lugar.tipo === "casa") return "casa";
+    if (a.lugar.k === "caf") return "cafeteria";
+    return t.h >= 21 || t.h < 6 ? "noche" : "oficina";
+  }
+  function moverMercado() {
+    let mejor = null;
+    for (const [k, q] of Object.entries(VIVO.cot)) { const ch = q.precio / q.cierreAnt - 1; if (!mejor || Math.abs(ch) > Math.abs(mejor.cambio)) mejor = { emisora: k.split(":")[1], cambio: ch }; }
+    if (mejor) return mejor;
+    const S = seriesActivas()[0]; if (!S) return null;
+    const n = S.c.length; return { emisora: S.id, cambio: S.c[n - 1] / S.c[n - 2] - 1 };
+  }
+  const LIBRE = ["trabajo", "comida", "casa", "guardia"];
+  function intentarPlatica(a, t) {
+    if (a.charla || a.camino || !LIBRE.includes(a.modo) || a.emo.animo < 22) return false;
+    if (Math.random() > 0.22 * (a.rasgos.sociable + 0.15)) return false;
+    const cerca = AGENTES.filter(b => b !== a && !b.charla && !b.camino && LIBRE.includes(b.modo) && mismoLugar(a.lugar, b.lugar) && Math.hypot(a.pos[0] - b.pos[0], a.pos[1] - b.pos[1]) < 140);
+    if (!cerca.length) return false;
+    const b = cerca[Math.floor(Math.random() * cerca.length)];
+    const ahora = performance.now();
+    const ctx = { h: t.h, dia: t.dia, lugar: lugarDePlatica(a, t), mercado: moverMercado(), felicitar: new Set(AGENTES.filter(x => (x.felicitarHasta || 0) > ahora).map(x => x.id)), horasExtra: st.corriendo && !st.repeticion && PIPE.includes(a.depto) };
+    const res = Personal.conversar(a, b, a.emo, b.emo, ctx);
+    const ch = { lider: a, otro: b, res, t: 0, fase: -1 };
+    a.charla = ch; b.charla = ch;
+    return true;
+  }
+  const DURA = 3.4;
+  function avanzarPlatica(a, dt) {
+    const ch = a.charla; ch.t += dt;
+    const fase = ch.t < DURA ? 0 : ch.t < DURA * 2 ? 1 : 2;
+    if (fase !== ch.fase) {
+      ch.fase = fase;
+      if (fase < 2) { const [id, txt] = ch.res.lineas[fase]; decir(AG[id], txt, DURA); }
+      else {
+        Personal.aplicarPlatica(EMO, ch.lider, ch.otro, ch.res);
+        const linea = { t: horaMX().txt, a: ch.lider.id, b: ch.otro.id, resumen: Personal.resumen(ch.lider, ch.otro, ch.res), lineas: ch.res.lineas, calidad: ch.res.calidad };
+        PLATICAS.unshift(linea); PLATICAS.length = Math.min(PLATICAS.length, 80);
+        if (Math.abs(ch.res.calidad) > 0.3 || Math.random() < 0.25) registrar(null, `<span class="soc">${linea.resumen}</span>`, "social");
+        ch.lider.charla = null; ch.otro.charla = null;
+        if (fichaAbierta === ch.lider.id || fichaAbierta === ch.otro.id) abrirFicha(fichaAbierta, true);
+      }
+    }
+  }
+  const PLATICAS = [];
+  /* globos de diálogo */
+  const GLOBOS = new Map();
+  function partir(txt, n = 30) {
+    const out = []; let linea = "";
+    for (const w of txt.split(" ")) { if ((linea + " " + w).trim().length > n && linea) { out.push(linea); linea = w; } else linea = (linea + " " + w).trim(); }
+    if (linea) out.push(linea); return out.slice(0, 3);
+  }
+  function decir(a, txt, dur) {
+    quitarGlobo(a);
+    const g = el("g", { class: "globo" }, capaBurbujas), lineas = partir(txt);
+    const w = Math.max(...lineas.map(l => l.length)) * 5.4 + 14, h = lineas.length * 12 + 8;
+    el("rect", { x: -w / 2, y: -h, width: w, height: h, rx: 6, class: "globo-caja" }, g);
+    el("path", { d: `M-4 0 L0 6 L4 0 Z`, class: "globo-caja" }, g);
+    lineas.forEach((l, i) => { const t = el("text", { x: 0, y: -h + 12 + i * 12, class: "globo-txt", "text-anchor": "middle" }, g); t.textContent = l; });
+    GLOBOS.set(a.id, { g, hasta: performance.now() + dur * 1000 / Math.max(1, st.vel), w, h });
+  }
+  function quitarGlobo(a) { const x = GLOBOS.get(a.id); if (x) { x.g.remove(); GLOBOS.delete(a.id); } }
+
+  function vivir(a, dt, t, horas) {
+    // energía: baja despierto, más trabajando; sube durmiendo
+    const trabajando = ["trabajo", "regresando", "llevando", "guardia", "ronda"].includes(a.modo);
+    a.energia = Math.max(0, Math.min(100, a.energia + horas * (a.modo === "dormir" ? 11 : trabajando ? -6 : -2.5)));
+    emocionar(a, horas, t, a.ultimaAgenda);
+    if (a.charla) { if (a.charla.lider === a) avanzarPlatica(a, dt); return; }
+    if (a.camino) {
+      a.camino.d += 120 * dt * (a.camino.vel || 1);
+      a.pos = puntoEn(a.camino.pts, a.camino.d);
+      if (a.camino.d >= a.camino.L) { const cb = a.camino.alLlegar; a.camino = null; if (cb) cb(); }
+      return;
+    }
+    if (["llevando", "cafe", "pizarra"].includes(a.modo)) { if (a.modo === "pizarra") { a.espera -= dt; if (a.espera <= 0) regresar(a); } return; }
+    if (a.modo === "tomando") { a.espera -= dt; a.energia = Math.min(100, a.energia + dt * 6); if (a.espera <= 0) regresar(a); return; }
+
+    const r = agenda(a, t); a.ultimaAgenda = r;
+    if (!mismoLugar(a.lugar, r.lugar) || (a.meta !== r.k && !(r.k === "trabajo" && ["trabajo", "regresando"].includes(a.modo)))) {
+      a.meta = r.k;
+      const destino = puntoPara(a, r);
+      const llegando = r.k === "trabajo" ? "Va a la oficina" : r.k === "dormir" || r.k === "casa" ? "Va de regreso a casa" : r.k === "comida" ? "Va a comer" : "Va a su turno";
+      a.estado = r.extra ? "Lo llamaron a horas extra; va a la oficina" : mismoLugar(a.lugar, r.lugar) ? a.estado : llegando;
+      irA(a, r.lugar, destino, mismoLugar(a.lugar, r.lugar) ? a.modo : "viaje", () => { a.modo = r.k === "guardia" ? "guardia" : r.k; if (r.txt) a.estado = r.txt; else if (r.k === "trabajo") a.estado = `Llegó a ${SALAS[a.depto].nombre}`; });
+      return;
+    }
+    if (a.modo === "viaje") a.modo = r.k;
+    a.espera -= dt;
+    if (a.espera > 0) return;
+    a.espera = 3 + Math.random() * 6;
+    if (r.k === "dormir") { a.estado = r.txt; return; }
+    if (intentarPlatica(a, t)) return;
+    if (r.k === "casa") { a.estado = r.txt; const p = puntoPara(a, r); irA(a, r.lugar, p, "casa", null, 0.5); return; }
+    if (r.k === "comida") { a.estado = r.txt; irA(a, r.lugar, alAzarEn("caf", 24), "comida", null, 0.4); return; }
+    if (r.k === "guardia") {
+      if (Math.random() < 0.35) { a.estado = "Haciendo su ronda por los pasillos"; const k = ["min", "me2", "com", "trd", "bib"][Math.floor(Math.random() * 5)]; caminar(a, k, alAzarEn(k, 34), "ronda", () => { regresarGuardia(a); }); }
+      else a.estado = r.txt;
+      return;
+    }
+    // trabajo
+    const ocupado = st.fichas.some(f => f.salas[f.i] === a.depto && f.espera > 0);
+    if (a.energia < 30 && !ocupado && a.depto !== "rec") {
+      a.estado = "Fue por un café a la cafetería";
+      caminar(a, "caf", alAzarEn("caf", 24), "cafe", () => { a.modo = "tomando"; a.espera = 6; });
+      return;
+    }
+    const S = SALAS[a.depto], d = [a.escritorio[0] + (Math.random() - 0.5) * 30, a.escritorio[1] + (Math.random() - 0.5) * 16];
+    d[0] = Math.max(S.x + 18, Math.min(S.x + S.w - 18, d[0])); d[1] = Math.max(S.y + 46, Math.min(S.y + S.h - 34, d[1]));
+    caminar(a, a.depto, d, "trabajo", null);
+    a.camino.vel = 0.4;
+    if (!ocupado && performance.now() - (a.ultimo || 0) > 8000) a.estado = r.extra ? "Horas extra por la jornada" : (TAREAS[a.depto] || "Trabajando en su escritorio");
+  }
+  function regresarGuardia(a) { caminar(a, "rec", [...a.escritorio], "guardia", () => { a.modo = "guardia"; a.estado = "Cuidando el edificio"; }); }
+  const TAREAS = {
+    min: "Preparando ideas para la próxima jornada", ana: "Revisando reportes de otras jornadas", rie: "Actualizando los límites de riesgo",
+    mac: "Leyendo indicadores de Banxico y el INEGI", not: "Revisando las noticias de las emisoras", me1: "Preparando datos de prueba",
+    me2: "Ajustando las pruebas de robustez", com: "En junta del comité", cum: "Revisando que todo se haga con dinero ficticio",
+    bib: "Ordenando el estante de estrategias", trd: "Vigilando la cinta de precios", sis: "Revisando que el servidor esté en línea",
+    arc: "Clasificando expedientes viejos", rec: "Atendiendo la recepción"
+  };
+
+  function pintarAgentes(t) {
+    for (const a of AGENTES) {
+      a.nodo.setAttribute("transform", `translate(${a.pos[0].toFixed(1)},${a.pos[1].toFixed(1)})`);
+      const dormido = a.modo === "dormir" && !a.camino;
+      a.nodo.classList.toggle("dormido", dormido);
+      a.zz.setAttribute("visibility", dormido ? "visible" : "hidden");
+      if (dormido && !sinMovimiento) { const f = (performance.now() / 1400 + a.camaN * 0.33) % 1; a.zz.setAttribute("y", -10 - f * 10); a.zz.setAttribute("opacity", 1 - f); }
+      a.cargaEl.setAttribute("visibility", a.modo === "llevando" ? "visible" : "hidden");
+      const hu = Personal.humor(a.emo, a).tono;
+      if (a.humorTono !== hu) { a.humorTono = hu; a.humorEl.setAttribute("class", "humor " + hu); }
+      const gl = GLOBOS.get(a.id);
+      if (gl) {
+        if (performance.now() > gl.hasta) quitarGlobo(a);
+        else { const x = Math.max(gl.w / 2 + 2, Math.min(998 - gl.w / 2, a.pos[0])); gl.g.setAttribute("transform", `translate(${x.toFixed(1)},${(a.pos[1] - 15).toFixed(1)})`); }
+      }
+    }
+  }
+  function pintarNoche(t) {
+    const n = nocheDe(t.h);
+    sombraFuera.setAttribute("opacity", (n * 0.42).toFixed(3));
+    halos.forEach(h => h.setAttribute("opacity", (n * 0.9).toFixed(2)));
+    AUTOS.forEach(c => c.faro.setAttribute("opacity", n.toFixed(2)));
+    for (const k in sombras) {
+      const ocupada = AGENTES.some(a => a.lugar.tipo === "sala" && a.lugar.k === k && !a.camino) || (k === "rec");
+      sombras[k].setAttribute("opacity", (n * (ocupada ? 0.06 : 0.5)).toFixed(3));
+    }
+    CASAS.forEach((c, i) => {
+      const despiertos = AGENTES.some(a => a.lugar.tipo === "casa" && a.lugar.i === i && a.modo !== "dormir" && !a.camino);
+      sombrasCasa[i].setAttribute("opacity", (n * (despiertos ? 0.06 : 0.55)).toFixed(3));
+    });
+  }
+  function moverAutos(dt) {
+    for (const c of AUTOS) {
+      c.x += c.dir * c.v * dt;
+      if (c.x > 1030) c.x = -30; if (c.x < -30) c.x = 1030;
+      c.g.setAttribute("transform", `translate(${c.x.toFixed(1)},${c.y})`);
+    }
+  }
+  /* Al cargar, cada quien aparece donde debería estar a esta hora */
+  function colocarSegunHora() {
+    const t = horaMX();
+    for (const a of AGENTES) {
+      const r = agenda(a, t);
+      a.lugar = r.lugar; a.meta = r.k; a.modo = r.k; a.pos = puntoPara(a, r); a.camino = null;
+      a.estado = r.txt || TAREAS[a.depto] || "Trabajando en su escritorio";
+    }
+  }
+  /* ---------- pintar textos ---------- */
+  function pintarReloj(t = horaMX()) {
+    $("#reloj").textContent = t.txt;
+    $("#reloj-dia").textContent = `${DIAS[t.dia]} ${momento(t.h)}${RELOJ.modo === "acelerado" ? " · acelerado" : ""}`;
+  }
+  function pintarAhora() {
+    const cuenta = {};
+    for (const a of AGENTES) { const e = a.camino && a.modo === "viaje" ? "En camino" : ETIQUETA_MODO[a.modo] || "En casa"; cuenta[e] = (cuenta[e] || 0) + 1; }
+    const orden = ["Trabajando", "Llevando expediente", "En la pizarra", "Vigilando", "Comiendo", "Por un café", "En camino", "En casa", "Durmiendo"];
+    $("#ahora").innerHTML = orden.filter(k => cuenta[k]).map(k => `<li><span>${k}</span><span class="dato">${cuenta[k]}</span></li>`).join("");
+    const esp = st.esperando || 0;
+    $("#ahora-nota").textContent = st.corriendo && esp ? `${esp} ${esp === 1 ? "expediente espera" : "expedientes esperan"} a que llegue alguien a su sala.` : st.corriendo ? "Jornada en curso." : "";
+  }
+  function pintarConteos() {
+    const L = st.llegadas;
+    const txt = { min: `${L.min} minadas`, ana: `${L.ana} revisadas · pasan ${L.rie}`, rie: `${L.rie} revisadas · pasan ${L.me1}`, me1: `${L.me1} probadas · pasan ${L.me2}`, me2: `${L.me2} probadas · pasan ${L.com}`, com: `${L.com} en sesión`, bib: `${L.bib} en estante`, arc: `${L.arc} archivados`, trd: "", caf: "", mac: "" };
+    for (const k in txt) rotCuenta[k].textContent = txt[k];
+    const filas = [["Minadas", L.min], ["Pasan análisis", L.rie], ["Pasan riesgos", L.me1], ["Pasan datos nuevos", L.me2], ["Pasan robustez", L.com], ["Aprobadas", L.bib]];
+    const max = Math.max(1, L.min);
+    const emb = $("#embudo");
+    if (!emb.childElementCount) emb.innerHTML = filas.map(() => `<li><span></span><span class="dato"></span><span class="barra"><i></i></span></li>`).join("");
+    filas.forEach(([n, v], i) => { const li = emb.children[i]; li.children[0].textContent = n; li.children[1].textContent = v.toLocaleString("es-MX"); li.children[2].firstChild.style.width = (100 * v / max) + "%"; });
+    $("#emb-total").textContent = `${L.min.toLocaleString("es-MX")} revisados`;
+    $("#arc-cuenta").textContent = `${L.arc.toLocaleString("es-MX")} expedientes`;
+    pintarMotivos(); pintarPizarra();
+  }
+  let motivosHash = "";
+  function pintarMotivos() {
+    const ent = Object.entries(st.motivos).sort((a, b) => b[1] - a[1]), h = JSON.stringify(ent);
+    if (h === motivosHash) return; motivosHash = h;
+    const tot = ent.reduce((s, e) => s + e[1], 0) || 1;
+    $("#motivos").innerHTML = ent.length ? ent.map(([k, v]) => `<li><span>${k}</span><span class="dato">${v} · ${Math.round(100 * v / tot)}%</span><span class="barra"><i style="width:${100 * v / ent[0][1]}%"></i></span></li>`).join("") : `<li class="vacio">Sin rechazos todavía.</li>`;
+  }
+  function pintarPizarra() {
+    const S = seriesActivas()[0]; if (!S) return;
+    const q = VIVO.cot[S.key], c = S.c, n = c.length;
+    const precio = q ? q.precio : c[n - 1], var1 = precio / (q ? q.cierreAnt : c[n - 2]) - 1;
+    const m = S.modo && VIVO.mercado[S.modo];
+    pizLineas[0].textContent = `${S.id.padEnd(9)} ${fmt(precio).padStart(10)}  ${pct(var1).padStart(6)}${q && m ? (m.estado === "abierto" ? "  EN VIVO" : "  CERRADO") : ""}`;
+    pizLineas[0].setAttribute("class", "pizarra-txt " + (var1 >= 0 ? "compra" : "venta"));
+    const filas = CARTERA.length
+      ? CARTERA.slice(0, 3).map(it => { const r = (it.valor || it.capital) / it.capital - 1; return { txt: `${it.emisora.padEnd(9)} ${it.etiqueta.slice(0, 16).padEnd(16)} ${pct(r)}`, tipo: r >= 0 ? "compra" : "venta" }; })
+      : st.aprobadas.slice(-3).reverse().map(e => ({ txt: `${e.emisora.padEnd(9)} ${e.etiqueta.slice(0, 16).padEnd(16)} ${e.hoy.txt.split(" ")[0].toUpperCase()}`, tipo: e.hoy.tipo }));
+    for (let i = 1; i < 4; i++) {
+      const e = filas[i - 1];
+      pizLineas[i].textContent = e ? e.txt : i === 1 ? "Sin estrategias aprobadas todavía" : "";
+      pizLineas[i].setAttribute("class", "pizarra-txt " + (e ? e.tipo : ""));
+    }
+  }
+  function actualizarLectura() {
+    const S = seriesActivas()[0]; if (!S) return;
+    const L = Motor.lecturaMercado(S);
+    $("#lec-emisora").textContent = S.id;
+    $("#lectura").innerHTML = `<dt>Tendencia</dt><dd>${L.tendencia}</dd><dt>Últimos 12 meses</dt><dd class="${clase(L.anio)}">${pct(L.anio)}</dd><dt>Distancia al máximo del año</dt><dd>${pct(L.caida)}</dd><dt>Volatilidad 20 días</dt><dd>${(L.vol20 * 100).toFixed(0)}% anual</dd><dt>Volatilidad del año</dt><dd>${(L.vol252 * 100).toFixed(0)}% anual</dd><dt>Ánimo</dt><dd>${L.volTxt}</dd>`;
+    macroTxt[0].textContent = `${S.id}: ${L.tendencia.toLowerCase()}`;
+    macroTxt[1].textContent = `12 meses: ${pct(L.anio)}`;
+    macroTxt[2].textContent = `Volatilidad: ${L.volTxt.toLowerCase()}`;
+    AG.paco.ultimo = performance.now(); AG.paco.estado = `Lee el ${S.id}: tendencia ${L.tendencia.toLowerCase()}, volatilidad ${L.volTxt.toLowerCase()}`;
+    pintarPizarra();
+  }
+
+  const bit = $("#bitacora");
+  function registrar(exp, html, tipo = "", hora = horaMX().txt, alFinal = false) {
+    if (bit.firstElementChild && bit.firstElementChild.classList.contains("vacio")) bit.innerHTML = "";
+    const li = document.createElement("li");
+    if (tipo) li.dataset.tipo = tipo;
+    li.innerHTML = `<span class="hora">${hora}</span><span>${html}</span>`;
+    if (exp) { li.tabIndex = 0; li.addEventListener("click", () => abrirExpediente(exp)); li.addEventListener("keydown", e => { if (e.key === "Enter") abrirExpediente(exp); }); }
+    else li.style.cursor = "default";
+    if (alFinal) bit.append(li); else bit.prepend(li);
+    while (bit.childElementCount > 120) bit.lastElementChild.remove();
+  }
+
+  /* ---------- plantilla ---------- */
+  const plantilla = $("#plantilla");
+  const barra = (k, nombre) => `<span class="emo" data-emo="${k}"><span>${nombre}</span><span class="riel"><i></i></span><span class="dato"></span></span>`;
+  plantilla.innerHTML = AGENTES.map(a => `<div class="ficha" id="f-${a.id}" data-id="${a.id}" role="button" tabindex="0" aria-label="Ver la ficha de ${a.nombre}"><span class="avatar" style="border-color:var(--g-${a.g})">${a.ini}</span><span class="nombre">${a.nombre}</span><span class="puesto">${a.puesto} · ${SALAS[a.depto].nombre}</span><span class="puesto dato" data-c></span><span class="chips"><span class="chip-act" data-a></span><span class="chip-humor" data-h></span></span><span class="estado" data-e></span><span class="emociones">${barra("animo", "Ánimo")}${barra("estres", "Estrés")}${barra("confianza", "Confianza")}${barra("energia", "Energía")}</span></div>`).join("");
+  plantilla.addEventListener("click", e => { const f = e.target.closest(".ficha"); if (f) abrirFicha(f.dataset.id); });
+  plantilla.addEventListener("keydown", e => { const f = e.target.closest(".ficha"); if (f && e.key === "Enter") abrirFicha(f.dataset.id); });
+  function pintarBarras(cont, a) {
+    for (const k of ["animo", "estres", "confianza", "energia"]) {
+      const v = k === "energia" ? a.energia : a.emo[k], b = cont.querySelector(`[data-emo="${k}"]`);
+      if (!b) continue;
+      b.querySelector("i").style.width = v.toFixed(0) + "%"; b.querySelector(".dato").textContent = v.toFixed(0);
+      b.classList.toggle("alto", (k === "estres" && v > 70) || (k !== "estres" && v < 30));
+    }
+  }
+  function pintarPlantilla() {
+    for (const a of AGENTES) {
+      const f = document.getElementById("f-" + a.id);
+      f.querySelector("[data-c]").textContent = `${a.hechos.toLocaleString("es-MX")} expedientes`;
+      f.querySelector("[data-e]").textContent = a.estado;
+      const act = a.camino && a.modo === "viaje" ? "En camino" : ETIQUETA_MODO[a.modo] || "En casa";
+      const ca = f.querySelector("[data-a]"); if (ca.textContent !== act) { ca.textContent = act; ca.dataset.k = act; }
+      const hu = Personal.humor(a.emo, a), ch = f.querySelector("[data-h]");
+      if (ch.textContent !== hu.txt) { ch.textContent = hu.txt; ch.dataset.tono = hu.tono; }
+      pintarBarras(f, a);
+      a.tt.textContent = `${a.nombre} · ${a.puesto}\n${hu.txt} · ${a.estado}`;
+    }
+    pintarClima();
+    if (fichaAbierta) pintarBarras($("#ficha-personal"), AG[fichaAbierta]);
+  }
+
+  /* ---------- clima de la oficina ---------- */
+  function pintarClima() {
+    const prom = k => AGENTES.reduce((s, a) => s + a.emo[k], 0) / AGENTES.length;
+    const filas = [["Ánimo", prom("animo")], ["Estrés", prom("estres")], ["Confianza", prom("confianza")]];
+    $("#clima-barras").innerHTML = filas.map(([n, v]) => `<li><span>${n}</span><span class="dato">${v.toFixed(0)}</span><span class="barra"><i style="width:${v.toFixed(0)}%"></i></span></li>`).join("");
+    const orden = (k, dir) => AGENTES.slice().sort((x, y) => dir * (y.emo[k] - x.emo[k]))[0];
+    let mejor = null, peor = null;
+    for (const a of AGENTES) for (const [id, v] of Object.entries(a.emo.rel)) { if (id < a.id) continue; if (!mejor || v > mejor[2]) mejor = [a, AG[id], v]; if (!peor || v < peor[2]) peor = [a, AG[id], v]; }
+    const n = x => `<button type="button" class="enlace" data-ficha="${x.id}">${x.corto}</button>`;
+    $("#clima-txt").innerHTML = `<li>De mejor humor: ${n(orden("animo", 1))}</li><li>Bajo más presión: ${n(orden("estres", 1))}</li>`
+      + (mejor ? `<li>Mejores amigos: ${n(mejor[0])} y ${n(mejor[1])}</li>` : "") + (peor && peor[2] < 0 ? `<li>Más tensión: ${n(peor[0])} y ${n(peor[1])}</li>` : "");
+  }
+  document.addEventListener("click", e => { const b = e.target.closest("[data-ficha]"); if (b) abrirFicha(b.dataset.ficha); });
+
+  /* ---------- ficha personal ---------- */
+  let fichaAbierta = null;
+  const RASGOS = [["sociable", "Sociable"], ["nervioso", "Nervios"], ["optimista", "Optimismo"], ["competitivo", "Competitividad"], ["amable", "Amabilidad"]];
+  const hr = h => `${String(Math.floor(h % 24)).padStart(2, "0")}:${String(Math.round((h % 1) * 60) % 60).padStart(2, "0")}`;
+  function abrirFicha(id, silencioso = false) {
+    const a = AG[id]; if (!a) return;
+    fichaAbierta = id;
+    const hu = Personal.humor(a.emo, a), casa = CASAS[a.hogar];
+    const roomies = AGENTES.filter(x => x.hogar === a.hogar && x !== a).map(x => x.corto);
+    const rel = Object.entries(a.emo.rel).map(([k, v]) => [AG[k], v]).sort((x, y) => y[1] - x[1]);
+    const amigos = rel.slice(0, 3), choques = rel.filter(x => x[1] < 0).slice(-2).reverse();
+    const relTxt = ([b, v]) => `<li><button type="button" class="enlace" data-ficha="${b.id}">${b.nombre}</button><span class="dato ${v >= 0 ? "pos" : "neg"}">${v > 0 ? "+" : ""}${v}</span></li>`;
+    const p = a.perfil;
+    const charlas = [...PLATICAS.filter(x => x.a === id || x.b === id).map(x => ({ ...x, cuando: "hoy " + x.t })),
+      ...(PILOTO.activo ? PILOTO.estado.social.filter(x => x.a === id || x.b === id).map(x => ({ ...x, cuando: fechaCorta(x.t) + " " + x.hora })) : [])].slice(0, 5);
+    const diario = PILOTO.activo ? (PILOTO.estado.agentes[id]?.diario || []) : [];
+    const el2 = $("#ficha-personal");
+    el2.hidden = false;
+    el2.innerHTML = `
+      <header class="ficha-cab"><span class="avatar grande" style="border-color:var(--g-${a.g})">${a.ini}</span>
+        <div><span class="eti">${a.puesto} · ${SALAS[a.depto].nombre}</span><h3>${a.nombre}</h3><span class="chip-humor" data-tono="${hu.tono}">${hu.txt}</span> <span class="chip-act">${a.camino && a.modo === "viaje" ? "En camino" : ETIQUETA_MODO[a.modo] || "En casa"}</span></div>
+        <button type="button" class="chico" id="cerrar-ficha">Cerrar</button></header>
+      <p>${a.descripcion} <i>«${a.frase}»</i></p>
+      <p class="nota-sala">Le va al ${a.equipo}. Su favorito: ${a.gusto}. Vive en ${casa.calle} ${casa.num} con ${roomies.join(" y ")}. ${a.guardia ? "Trabaja de 20:30 a 7:00." : `Entre semana se despierta a las ${hr(p.despertar)}, sale a la oficina a las ${hr(p.salir)}, come a las ${hr(p.comida)}, sale a las ${hr(p.salida)} y se duerme a las ${hr(p.dormir)}.`}</p>
+      <div class="ficha-cols">
+        <div class="bloque"><h3>Cómo se siente</h3><div class="emociones grande">${barra("animo", "Ánimo")}${barra("estres", "Estrés")}${barra("confianza", "Confianza")}${barra("energia", "Energía")}</div>
+          ${diario.length > 1 ? `<div class="eti" style="margin-top:6px">Ánimo de los últimos ${diario.length} días</div>${linea(diario.map(d => d.animo), 260, 44)}` : ""}</div>
+        <div class="bloque"><h3>Personalidad</h3><div class="emociones grande">${RASGOS.map(([k, n]) => `<span class="emo"><span>${n}</span><span class="riel"><i style="width:${a.rasgos[k] * 100}%"></i></span><span class="dato">${Math.round(a.rasgos[k] * 10)}</span></span>`).join("")}</div></div>
+        <div class="bloque"><h3>Se lleva mejor con</h3><ul class="rel">${amigos.map(relTxt).join("")}</ul>
+          <h3 style="margin-top:8px">Choca con</h3>${choques.length ? `<ul class="rel">${choques.map(relTxt).join("")}</ul>` : `<p class="nota-sala">Se lleva bien con todos.</p>`}</div>
+      </div>
+      <div class="bloque"><h3>Últimas pláticas</h3>${charlas.length ? `<ul class="charlas">${charlas.map(c => `<li><span class="eti">${c.cuando}</span><span>${c.lineas.map(([q, t]) => `<b>${AG[q].corto}:</b> ${t}`).join("<br>")}</span></li>`).join("")}</ul>` : `<p class="nota-sala">Todavía no platica con nadie en esta sesión.</p>`}</div>`;
+    pintarBarras(el2, a);
+    $("#cerrar-ficha").addEventListener("click", () => { el2.hidden = true; fichaAbierta = null; });
+    if (!silencioso) el2.scrollIntoView({ behavior: sinMovimiento ? "auto" : "smooth", block: "nearest" });
+  }
+  function linea(vals, w, h) {
+    const mn = Math.min(...vals, 0), mx = Math.max(...vals, 100), d = vals.map((v, i) => `${(i / (vals.length - 1) * (w - 4) + 2).toFixed(1)},${(h - 2 - (v - mn) / (mx - mn) * (h - 4)).toFixed(1)}`).join(" ");
+    return `<svg class="mini" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" aria-hidden="true"><line x1="0" x2="${w}" y1="${h / 2}" y2="${h / 2}" class="eje"/><polyline points="${d}" fill="none" stroke="var(--rosa)" stroke-width="1.6"/></svg>`;
+  }
+  const fechaCorta = iso => { const d = new Date(new Date(iso).getTime() - 6 * 3600e3); return `${d.getUTCDate()}/${d.getUTCMonth() + 1}`; };
+
+  /* ---------- biblioteca y expediente ---------- */
+  function pintarBiblioteca() {
+    const lista = st.aprobadas.slice().sort((a, b) => b.puntaje - a.puntaje);
+    $("#bib-cuenta").textContent = `${lista.length} ${lista.length === 1 ? "estrategia aprobada" : "estrategias aprobadas"}`;
+    const tb = $("#tabla-bib");
+    if (!lista.length) { tb.innerHTML = `<tr><td colspan="9" class="vacio" style="text-align:left;font-family:var(--f-txt)">Todavía no hay estrategias aprobadas.</td></tr>`; return; }
+    tb.innerHTML = lista.map(e => `<tr data-id="${e.id}" tabindex="0" aria-selected="${st.abierto === e.id}"><td>${e.etiqueta}</td><td>${e.emisora}</td><td>${num(e.is.sharpe)}</td><td>${num(e.oos.sharpe)}</td><td class="${clase(e.oos.total)}">${pct(e.oos.total)}</td><td class="${clase(e.bhOOS.total)}">${pct(e.bhOOS.total)}</td><td>${pct(e.oos.dd, false)}</td><td>${Math.round(e.robustez * 100)}%</td><td><span class="chip ${e.hoy.tipo}">${e.hoy.txt}</span></td></tr>`).join("");
+  }
+  $("#tabla-bib").addEventListener("click", e => { const tr = e.target.closest("tr[data-id]"); if (tr) abrirExpediente(st.expedientes[+tr.dataset.id]); });
+  $("#tabla-bib").addEventListener("keydown", e => { const tr = e.target.closest("tr[data-id]"); if (tr && e.key === "Enter") abrirExpediente(st.expedientes[+tr.dataset.id]); });
+
+  function abrirExpediente(exp) {
+    st.abierto = exp.id;
+    document.querySelectorAll("#tabla-bib tr[data-id]").forEach(tr => tr.setAttribute("aria-selected", tr.dataset.id == exp.id));
+    const S = SERIES.get(exp.serie), F = Motor.FAMILIAS[exp.fam];
+    const col = (m, bh) => m ? [pct(m.total), pct(m.cagr), num(m.sharpe), pct(m.dd, false), m.ops, pct(m.acierto, false), pct(m.expo, false)] : null;
+    const filas = ["Rendimiento total", "Rendimiento anual", "Sharpe", "Caída máxima", "Operaciones", "Operaciones ganadoras", "Tiempo invertido"];
+    const ci = col(exp.is), co = col(exp.oos), cb = exp.bhOOS ? [pct(exp.bhOOS.total), pct(exp.bhOOS.cagr), num(exp.bhOOS.sharpe), pct(exp.bhOOS.dd, false), "1", "—", "100%"] : null;
+    const llego = exp.llego === "comite" ? 5 : ORDEN.indexOf(DEPTO_SALA[exp.llego]);
+    const deptos = [["ana", "Análisis", "analisis"], ["rie", "Riesgos", "riesgos"], ["me1", "Mesa de pruebas I", "mesa1"], ["me2", "Mesa de pruebas II", "mesa2"], ["com", "Comité", "comite"]];
+    const recorrido = deptos.map(([s, n, d]) => {
+      const p = exp.pasos.find(x => x.depto === d);
+      if (!p) return `<li class="pend"><span class="marca">·</span><span class="depto">${n}</span><span class="nota">No llegó a esta sala</span></li>`;
+      return `<li class="${p.ok ? "ok" : "no"}"><span class="marca">${p.ok ? "✓" : "✕"}</span><span class="depto">${n}</span><span class="nota">${p.nota}</span></li>`;
+    }).join("");
+    $("#expediente").innerHTML = `
+      <div class="encabezado">
+        <span class="eti">Expediente ${String(exp.id + 1).padStart(4, "0")} · ${exp.emisora} · ${F.nombre}</span>
+        <span class="estrategia">${exp.etiqueta}</span>
+        <p>${F.idea}</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:4px"><span class="estado-final ${exp.estado}">${exp.estado === "aprobada" ? "Aprobada" : "Archivada · " + exp.motivo}</span>${exp.hoy ? `<span class="chip ${exp.hoy.tipo}">Señal de hoy: ${exp.hoy.txt}</span>` : ""}${papelBoton(exp, S)}</div>
+      </div>
+      <div class="bloque"><div class="grafica-caja"><svg id="grafica" viewBox="0 0 640 250" role="img" aria-label="Crecimiento de 100 pesos con la estrategia contra comprar y mantener"></svg></div>
+        <div class="claves"><span>La estrategia</span><span class="bh">Comprar y mantener ${exp.emisora}</span><span>Base: 100 pesos al inicio</span></div></div>
+      <div style="overflow-x:auto"><table class="comparativa"><thead><tr><th></th><th>Histórico (70%)</th><th>Datos nuevos (30%)</th><th>Comprar y mantener en datos nuevos</th></tr></thead><tbody>
+        ${filas.map((f, i) => `<tr><td style="font-family:var(--f-txt);font-weight:400">${f}</td><td>${ci[i]}</td><td>${co ? co[i] : "—"}</td><td>${cb ? cb[i] : "—"}</td></tr>`).join("")}
+      </tbody></table></div>
+      <div class="bloque"><h3>Recorrido por la sala</h3><ul class="recorrido">${recorrido}</ul></div>
+      ${exp.notas ? `<div class="bloque"><h3>Notas del comité</h3><ul class="notas">${exp.notas.map(n => `<li>${n}</li>`).join("")}</ul></div>` : ""}`;
+    dibujarGrafica(exp, S);
+    const bp = $("#btn-papel"); if (bp) bp.addEventListener("click", () => operarEnPapel(exp));
+  }
+
+  function dibujarGrafica(exp, S) {
+    const g = $("#grafica"), W = 640, H = 250, ml = 46, mr = 12, mt = 22, mb = 26;
+    const N = S.c.length, corte = exp.corte;
+    const est = [100]; for (const r of exp.is.rets) est.push(est[est.length - 1] * (1 + r));
+    if (exp.oos) for (const r of exp.oos.rets) est.push(est[est.length - 1] * (1 + r));
+    const bh = Array.from({ length: N }, (_, i) => (100 * S.c[i]) / S.c[0]);
+    const nEst = est.length, ymin0 = Math.min(...est, ...bh), ymax0 = Math.max(...est, ...bh);
+    const paso = (() => { const r = ymax0 - ymin0, b = Math.pow(10, Math.floor(Math.log10(r / 4))); return [1, 2, 2.5, 5, 10].map(k => k * b).find(s => r / s <= 6); })();
+    const ymin = Math.floor(ymin0 / paso) * paso, ymax = Math.ceil(ymax0 / paso) * paso;
+    const X = i => ml + (i / (N - 1)) * (W - ml - mr), Y = v => mt + (1 - (v - ymin) / (ymax - ymin)) * (H - mt - mb);
+    let s = `<rect class="zona-nueva" x="${X(corte)}" y="${mt}" width="${X(N - 1) - X(corte)}" height="${H - mt - mb}"/>`;
+    s += `<text class="rot-zona" x="${ml + 4}" y="${mt - 8}">Histórico · aquí se buscó</text><text class="rot-zona" x="${X(corte) + 4}" y="${mt - 8}">Datos nuevos · examen</text>`;
+    for (let v = ymin; v <= ymax + 1e-9; v += paso) s += `<line class="eje" x1="${ml}" x2="${W - mr}" y1="${Y(v)}" y2="${Y(v)}"/><text x="${ml - 6}" y="${Y(v) + 3}" text-anchor="end">${Math.round(v)}</text>`;
+    let anio = "";
+    for (let i = 0; i < N; i++) { const a = S.fechas[i].slice(0, 4); if (a !== anio) { if (anio && X(i) < W - 20) s += `<line class="eje" x1="${X(i)}" x2="${X(i)}" y1="${H - mb}" y2="${H - mb + 4}"/><text x="${X(i)}" y="${H - 8}" text-anchor="middle">${a}</text>`; anio = a; } }
+    const linea = (arr, k) => arr.map((v, i) => `${i ? "L" : "M"}${X(i).toFixed(1)} ${Y(v).toFixed(1)}`).join("");
+    s += `<path class="lin-bh" d="${linea(bh)}"/><path class="lin-est" d="${linea(est)}"/>`;
+    const ue = est[nEst - 1], ub = bh[N - 1];
+    s += `<circle cx="${X(nEst - 1)}" cy="${Y(ue)}" r="3.5" fill="var(--rosa)"/><text x="${X(nEst - 1) - 6}" y="${Y(ue) + (ue >= ub ? -8 : 14)}" text-anchor="end" style="fill:var(--rosa);font-weight:600">${Math.round(ue)}</text>`;
+    s += `<text x="${X(N - 1) - 6}" y="${Y(ub) + (ub > ue ? -8 : 14)}" text-anchor="end">${Math.round(ub)}</text>`;
+    g.innerHTML = s;
+  }
+
+  /* ---------- controles ---------- */
+  const modoSel = () => { const [t, id] = st.seleccion.split(":"); return t === "todas" ? id : t; };
+  function nombreSeleccion() { const [t, id] = st.seleccion.split(":"); return t === "todas" ? MODO_INFO[id].nombre : SERIES.get(st.seleccion).id; }
+  function llenarSelect() {
+    const sel = $("#sel-emisora"); let h = "";
+    for (const modo of ["rapido", "bmv", "real", "ej"]) {
+      const ss = [...SERIES.values()].filter(S => S.key.startsWith(modo + ":")); if (!ss.length) continue;
+      h += `<optgroup label="${MODO_INFO[modo].grupo}"><option value="todas:${modo}">${MODO_INFO[modo].todas} (${ss.length})</option>${ss.map(S => `<option value="${S.key}">${S.id} · ${S.nombre}</option>`).join("")}</optgroup>`;
+    }
+    sel.innerHTML = h; sel.value = st.seleccion;
+  }
+  function pintarSello() {
+    if (PILOTO.activo) { $("#sello").className = "sello real"; $("#sello-txt").textContent = `Piloto automático · última revisión ${cuando(PILOTO.estado.ultimaCorrida && PILOTO.estado.ultimaCorrida.t)}`; return; }
+    const m = modoSel(), S = seriesActivas()[0];
+    const txt = { rapido: "En vivo · EE.UU. en tiempo real", bmv: "BMV en pesos · 20 min de retraso", real: `Datos reales · último cierre ${S.fechas[S.fechas.length - 1]}`, ej: "Datos de ejemplo simulados" }[m];
+    $("#sello").className = "sello " + (m === "ej" ? "ejemplo" : "real");
+    $("#sello-txt").textContent = txt;
+  }
+  $("#sel-emisora").addEventListener("change", e => { st.seleccion = e.target.value; pintarSello(); actualizarLectura(); pintarCinta(); });
+  function segmentos(id, fn) {
+    $(id).addEventListener("click", e => {
+      const b = e.target.closest("button"); if (!b) return;
+      $(id).querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b)); fn(+b.dataset.v);
+    });
+  }
+  segmentos("#seg-cant", v => { st.cantidad = v; });
+  segmentos("#seg-vel", v => { st.vel = v; if (v === 0 && st.corriendo) { procesarLote(); if (!st.fichas.length) terminar(); } });
+  if (sinMovimiento) $("#seg-vel").querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x.dataset.v === "0"));
+  $("#btn-jornada").addEventListener("click", () => { if (!st.corriendo) abrirJornada(); else { st.pausa = !st.pausa; botonJornada(); } });
+  $("#btn-limpiar").addEventListener("click", () => {
+    st.cola = []; st.fichas.forEach(f => f.el.remove()); st.fichas = []; st.corriendo = false; st.pausa = false;
+    st.evaluadas.clear(); st.expedientes = []; st.aprobadas = []; st.motivos = {}; st.abierto = null;
+    for (const k in st.llegadas) st.llegadas[k] = 0;
+    AGENTES.forEach(a => { a.hechos = 0; });
+    bit.innerHTML = `<li class="vacio">La sala está en silencio. Abre una jornada.</li>`;
+    $("#expediente").innerHTML = `<p class="vacio">Elige una estrategia de la biblioteca o toca una línea de la bitácora para abrir su expediente.</p>`;
+    pintarBiblioteca(); pintarConteos(); pintarReloj(); botonJornada(); pintarPlantilla();
+  });
+  $("#in-csv").addEventListener("change", async e => {
+    const err = $("#error-csv"), problemas = []; let ok = 0;
+    for (const file of e.target.files) {
+      try {
+        const id = file.name.replace(/\.csv$/i, "").replace(/\.MX$/i, "").replace(/^\^/, "").replace(/^MXX$/i, "IPC").toUpperCase();
+        const S = Motor.leerCSV(await file.text(), id); S.key = "real:" + id; SERIES.set(S.key, S); ok++;
+      } catch (x) { problemas.push(x.message); }
+    }
+    err.hidden = !problemas.length; err.textContent = problemas.join(" ");
+    if (ok) { st.seleccion = "todas:real"; llenarSelect(); pintarSello(); actualizarLectura(); registrar(null, `<b>Paco:</b> llegaron ${ok} archivo(s) con precios reales de la BMV.`); }
+    e.target.value = "";
+  });
+
+
+  /* ---------- precios en vivo y operación en papel ---------- */
+  const fmt = (x, d = 2) => x.toLocaleString("es-MX", { minimumFractionDigits: d, maximumFractionDigits: d });
+  const dinero = (x, mon) => "$" + fmt(x, 0) + " " + mon;
+  const claveCartera = exp => exp.serie + "|" + exp.fam + JSON.stringify(exp.p);
+  let CARTERA = [];
+  try { CARTERA = JSON.parse(localStorage.getItem("piso-cartera") || "[]"); if (!Array.isArray(CARTERA)) CARTERA = []; } catch (e) { CARTERA = []; }
+  function guardarCartera() { try { localStorage.setItem("piso-cartera", JSON.stringify(CARTERA)); } catch (e) { /* sin almacenamiento */ } }
+
+  function papelBoton(exp, S) {
+    if (PILOTO.activo) return PILOTO.estado.cartera.some(i => i.key === exp.key && i.estado === "activa") ? `<span class="chip mantener">Operando: la eligió el comité</span>` : "";
+    if (!VIVO.activo || exp.estado !== "aprobada" || !S.modo) return "";
+    return CARTERA.some(i => i.key === claveCartera(exp)) ? `<span class="chip mantener">Ya opera en papel</span>` : `<button type="button" class="primario chico" id="btn-papel">Operar en papel</button>`;
+  }
+  function operarEnPapel(exp) {
+    const key = claveCartera(exp); if (CARTERA.some(i => i.key === key)) return;
+    const S = SERIES.get(exp.serie), mon = S.moneda || "MXN", cap = mon === "USD" ? 5000 : 100000;
+    CARTERA.push({ key, serie: exp.serie, fam: exp.fam, p: exp.p, etiqueta: exp.etiqueta, emisora: exp.emisora, moneda: mon, capital: cap, efectivo: cap, titulos: 0, entrada: 0, ops: [], alta: new Date().toISOString() });
+    registrar(exp, `<b>Lic. Cervantes</b> mandó ${exp.etiqueta} en ${exp.emisora} a operar en papel con ${dinero(cap, mon)}.`);
+    actualizarCartera(); abrirExpediente(exp);
+    document.getElementById("sec-cartera").scrollIntoView({ behavior: sinMovimiento ? "auto" : "smooth", block: "start" });
+  }
+  function serieConVivo(S, q) {
+    const n = S.c.length, f = S.fechas[n - 1];
+    if (q.fecha === f) { const c = Float64Array.from(S.c); c[n - 1] = q.precio; return { id: S.id, fechas: S.fechas, c, o: S.o }; }
+    if (q.fecha > f) return { id: S.id, fechas: [...S.fechas, q.fecha], c: Float64Array.from([...S.c, q.precio]), o: Float64Array.from([...S.o, q.apertura || q.precio]) };
+    return { id: S.id, fechas: S.fechas, c: S.c, o: S.o };
+  }
+  /* Quien opera: alguien de la sala de trading; si no hay nadie, Renata lo hace desde su celular */
+  function operador() { const d = disponibles("trd"); return d.length ? { a: d[0], txt: `<b>${d[0].corto}</b>` } : { a: AG.renata, txt: `<b>Renata</b>, desde su celular,` }; }
+  function irAPizarra(a) {
+    if (!(a.modo === "trabajo" && a.lugar.k === "trd" && !a.camino)) return;
+    caminar(a, "trd", [300 + Math.random() * 10, 548], "pizarra", () => { a.modo = "pizarra"; a.espera = 2.5; });
+  }
+  function comprar(it, precio, k) {
+    const n = Math.floor(it.efectivo / (precio * (1 + k))); if (n < 1) return;
+    it.efectivo -= n * precio * (1 + k); it.titulos = n; it.entrada = precio;
+    it.ops.unshift({ tipo: "compra", precio, titulos: n, cuando: new Date().toISOString() }); it.ops = it.ops.slice(0, 30);
+    const op = operador();
+    op.a.estado = `Compró ${n.toLocaleString("es-MX")} ${it.emisora} a ${fmt(precio)} ${it.moneda}`; op.a.hechos++; op.a.ultimo = performance.now();
+    registrar(null, `${op.txt} <span class="ok">compró</span> ${n.toLocaleString("es-MX")} ${it.emisora} a ${fmt(precio)} ${it.moneda} en papel, siguiendo ${it.etiqueta}.`);
+    irAPizarra(op.a);
+  }
+  function vender(it, precio, k) {
+    const n = it.titulos, res = (precio * (1 - k)) / (it.entrada * (1 + k)) - 1;
+    it.efectivo += n * precio * (1 - k); it.titulos = 0;
+    it.ops.unshift({ tipo: "venta", precio, titulos: n, resultado: res, cuando: new Date().toISOString() }); it.ops = it.ops.slice(0, 30);
+    const op = operador();
+    op.a.estado = `Vendió ${n.toLocaleString("es-MX")} ${it.emisora}: ${pct(res)}`; op.a.hechos++; op.a.ultimo = performance.now();
+    registrar(null, `${op.txt} <span class="no">vendió</span> ${n.toLocaleString("es-MX")} ${it.emisora} a ${fmt(precio)} ${it.moneda} en papel (${pct(res)} en la operación).`);
+    irAPizarra(op.a);
+  }
+  /* La señal se decide con el cierre de cada día y se ejecuta en la primera actualización de la sesión siguiente. */
+  function actualizarCartera() {
+    if (PILOTO.activo) return pintarCartera();
+    const k = Motor.costoLado();
+    for (const it of CARTERA) {
+      const S = SERIES.get(it.serie), q = VIVO.cot[it.serie], m = S && VIVO.mercado[S.modo];
+      if (!S || !q || !m) { it.sinDatos = true; continue; }
+      it.sinDatos = false;
+      const S2 = serieConVivo(S, q), pos = Motor.FAMILIAS[it.fam].señal(S2, it.p), L = pos.length;
+      const sesionHoy = m.estado === "abierto" && q.fecha === m.hoy && S2.fechas[L - 1] === m.hoy;
+      const quiere = sesionHoy ? pos[L - 2] : pos[L - 1];
+      it.provisional = sesionHoy ? pos[L - 1] : null;
+      if (sesionHoy) {
+        if (quiere && !it.titulos) comprar(it, q.precio, k);
+        else if (!quiere && it.titulos) vender(it, q.precio, k);
+        it.pendiente = null;
+      } else it.pendiente = quiere && !it.titulos ? "compra" : !quiere && it.titulos ? "venta" : null;
+      it.precio = q.precio; it.valor = it.efectivo + it.titulos * q.precio;
+    }
+    if (CARTERA.length) TAREAS.trd = `Vigilando ${CARTERA.length} ${CARTERA.length === 1 ? "estrategia" : "estrategias"} en papel`;
+    guardarCartera(); pintarCartera();
+  }
+  function pintarCartera() {
+    const tb = $("#tabla-cartera"), nota = $("#cartera-nota"), caja = $("#cartera-caja");
+    if (PILOTO.activo) return pintarCarteraPiloto(tb, nota, caja);
+    if (!VIVO.activo) { caja.hidden = true; $("#cartera-total").textContent = ""; nota.textContent = "La operación en papel se enciende cuando abres la sala desde tu compu con iniciar.bat, porque necesita precios en vivo."; return; }
+    caja.hidden = !CARTERA.length;
+    nota.textContent = CARTERA.length
+      ? "Cada estrategia decide con el precio de cierre y Renata ejecuta en cuanto abre la bolsa al día siguiente. Cobra 0.25% de comisión más IVA en cada operación. Todo es dinero ficticio."
+      : "Todavía no hay estrategias operando. Abre un expediente aprobado de EE.UU. o de la BMV y toca «Operar en papel». Renata le asigna $100,000 MXN o $5,000 USD ficticios y sigue sus señales con los precios en vivo.";
+    const tot = {};
+    tb.innerHTML = CARTERA.map(it => {
+      const valor = it.valor ?? it.capital, res = valor / it.capital - 1;
+      (tot[it.moneda] ??= { cap: 0, val: 0 }); tot[it.moneda].cap += it.capital; tot[it.moneda].val += valor;
+      const prov = it.provisional == null ? "—" : (it.provisional ? 1 : 0) === (it.titulos ? 1 : 0) ? "Sin cambio" : it.provisional ? "Compraría" : "Vendería";
+      const orden = it.pendiente ? `<span class="chip ${it.pendiente}">${it.pendiente === "compra" ? "Comprar" : "Vender"} al abrir</span>` : "—";
+      const posicion = it.sinDatos ? "Sin precio" : it.titulos ? `${it.titulos.toLocaleString("es-MX")} títulos` : "En efectivo";
+      return `<tr data-k="${it.key}" tabindex="0"><td>${it.etiqueta}</td><td>${it.emisora}</td><td>${posicion}</td><td>${it.precio ? fmt(it.precio) : "—"}</td><td>${dinero(valor, it.moneda)}</td><td class="${clase(res)}">${pct(res)}</td><td>${prov}</td><td>${orden}</td><td><button type="button" class="chico" data-quitar="${it.key}">Quitar</button></td></tr>`;
+    }).join("");
+    $("#cartera-total").textContent = Object.entries(tot).map(([mon, t]) => `${dinero(t.val, mon)} (${pct(t.val / t.cap - 1)})`).join(" · ");
+    pintarPizarra();
+  }
+  $("#tabla-cartera").addEventListener("click", e => {
+    const b = e.target.closest("[data-quitar]");
+    if (b) {
+      if (b.dataset.seguro) { CARTERA = CARTERA.filter(i => i.key !== b.dataset.quitar); guardarCartera(); pintarCartera(); if (st.abierto != null) abrirExpediente(st.expedientes[st.abierto]); }
+      else { b.dataset.seguro = "1"; b.textContent = "¿Quitar?"; setTimeout(() => { if (b.isConnected) { delete b.dataset.seguro; b.textContent = "Quitar"; } }, 3000); }
+      return;
+    }
+    const tr = e.target.closest("tr[data-k]"); if (!tr) return;
+    const exp = st.expedientes.find(x => claveCartera(x) === tr.dataset.k); if (exp) abrirExpediente(exp);
+  });
+
+  const modoCinta = () => { const m = modoSel(); return m === "rapido" || m === "bmv" ? m : [...SERIES.keys()].some(k => k.startsWith("rapido:")) ? "rapido" : "bmv"; };
+  function spark(puntos, ch) {
+    if (!puntos || puntos.length < 2) return `<svg viewBox="0 0 64 18" aria-hidden="true"></svg>`;
+    const mn = Math.min(...puntos), mx = Math.max(...puntos), r = mx - mn || 1;
+    const d = puntos.map((v, i) => `${(i / (puntos.length - 1) * 62 + 1).toFixed(1)},${(16 - (v - mn) / r * 14).toFixed(1)}`).join(" ");
+    return `<svg viewBox="0 0 64 18" aria-hidden="true"><polyline points="${d}" fill="none" stroke="var(${ch >= 0 ? "--jade" : "--rojo"})" stroke-width="1.4"/></svg>`;
+  }
+  function pintarCinta() {
+    const caja = $("#cinta"), txt = $("#cinta-txt"), punto = $("#cinta-punto");
+    if (!VIVO.activo) { caja.innerHTML = ""; punto.className = "punto"; txt.textContent = "Precios en vivo apagados: esta copia usa datos de ejemplo. En tu compu, abre la sala con iniciar.bat para conectarla a la bolsa."; return; }
+    const modo = modoCinta(), m = VIVO.mercado[modo];
+    const nombre = modo === "rapido" ? "Bolsa de Nueva York" : "Bolsa Mexicana";
+    if (PILOTO.activo) { punto.className = "punto " + (m && m.estado === "abierto" ? "abierto" : "cerrado"); txt.textContent = `Precios de la última revisión del piloto (${cuando(PILOTO.generado)}) · ${nombre} ${m && m.estado === "abierto" ? "abierta en ese momento" : "cerrada en ese momento"}`; }
+    else if (VIVO.error[modo]) { punto.className = "punto"; txt.textContent = `${nombre}: ${VIVO.error[modo]}`; }
+    else if (!m) { txt.textContent = `Conectando con la ${nombre}…`; return; }
+    else {
+      const hora = new Date(VIVO.actualizado[modo]).toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+      punto.className = "punto " + (m.estado === "abierto" ? "abierto" : "cerrado");
+      txt.textContent = m.estado === "abierto"
+        ? `${nombre} abierta · ${m.retraso ? "precios con 20 min de retraso" : "precios en tiempo real"} · actualizado ${hora}`
+        : `${nombre} cerrada · abre a las ${m.abre} (hora de ${modo === "rapido" ? "Nueva York" : "Ciudad de México"}) · últimos precios conocidos`;
+    }
+    const sel = st.seleccion;
+    caja.innerHTML = [...SERIES.values()].filter(S => S.key.startsWith(modo + ":")).map(S => {
+      const q = VIVO.cot[S.key]; if (!q) return "";
+      const ch = q.precio / q.cierreAnt - 1, prev = VIVO.prev[S.key];
+      const mov = prev == null || prev === q.precio || sinMovimiento ? "" : q.precio > prev ? " sube" : " baja";
+      return `<button type="button" class="cot${mov}" data-k="${S.key}" aria-pressed="${sel === S.key}" title="${S.nombre}"><span class="sim">${S.id}</span><span class="precio dato">${fmt(q.precio)}</span>${spark(q.puntos, ch)}<span class="cambio dato ${clase(ch)}">${pct(ch)}</span></button>`;
+    }).join("");
+  }
+  $("#cinta").addEventListener("click", e => {
+    const b = e.target.closest("[data-k]"); if (!b) return;
+    st.seleccion = b.dataset.k; $("#sel-emisora").value = st.seleccion; pintarSello(); actualizarLectura(); pintarCinta();
+  });
+  async function refrescar() {
+    if (PILOTO.activo) return;
+    for (const modo of ["rapido", "bmv"]) {
+      if (![...SERIES.keys()].some(k => k.startsWith(modo + ":"))) continue;
+      try {
+        const j = await (await fetch("/api/cotizaciones?modo=" + modo, { cache: "no-store" })).json();
+        if (j.error) { VIVO.error[modo] = j.error; continue; }
+        VIVO.error[modo] = ""; VIVO.mercado[modo] = j.mercado; VIVO.actualizado[modo] = j.actualizado;
+        for (const q of j.cotizaciones) { const k = modo + ":" + q.id; VIVO.prev[k] = VIVO.cot[k] ? VIVO.cot[k].precio : null; VIVO.cot[k] = q; }
+      } catch (e) { VIVO.error[modo] = "se perdió la conexión con la sala. ¿Cerraste la ventana negra de iniciar.bat?"; }
+    }
+    pintarCinta(); actualizarCartera(); pintarPizarra();
+  }
+
+  /* ---------- modo piloto automático ---------- */
+  const cuando = iso => { if (!iso) return ""; const d = new Date(iso), hoy = new Date(); const mismo = d.toDateString() === hoy.toDateString(); return (mismo ? "hoy " : d.toLocaleDateString("es-MX", { day: "numeric", month: "short" }) + " ") + d.toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "America/Mexico_City" }); };
+  function pintarCarteraPiloto(tb, nota, caja) {
+    const E = PILOTO.estado, activas = E.cartera.filter(i => i.estado === "activa"), retiradas = E.cartera.filter(i => i.estado === "retirada").slice(-6).reverse();
+    CARTERA = activas;
+    caja.hidden = !activas.length;
+    nota.textContent = activas.length
+      ? `El comité decide solo: manda a operar las mejores de la biblioteca (máximo 8 a la vez) y retira las que pierden. Última revisión: ${cuando(E.ultimaCorrida && E.ultimaCorrida.t)}.`
+      : "El comité todavía no manda ninguna estrategia a operar. Pasará después del primer cierre.";
+    const tot = {};
+    tb.innerHTML = activas.map(it => {
+      const valor = it.valor ?? it.capital, res = valor / it.capital - 1;
+      (tot[it.moneda] ??= { cap: 0, val: 0 }); tot[it.moneda].cap += it.capital; tot[it.moneda].val += valor;
+      const orden = it.pendiente ? `<span class="chip ${it.pendiente}">${it.pendiente === "compra" ? "Comprar" : "Vender"} al abrir</span>` : "—";
+      const ult = it.ops && it.ops[0] ? `${it.ops[0].tipo === "compra" ? "Compró" : "Vendió"} el ${it.ops[0].fecha.slice(8, 10)}/${it.ops[0].fecha.slice(5, 7)}` : "Sin operar";
+      return `<tr data-k="${it.key}" tabindex="0"><td>${it.etiqueta}</td><td>${it.emisora}</td><td>${it.titulos ? `${it.titulos.toLocaleString("es-MX")} títulos` : "En efectivo"}</td><td>${it.precio ? fmt(it.precio) : "—"}</td><td>${dinero(valor, it.moneda)}</td><td class="${clase(res)}">${pct(res)}</td><td>${ult} · ${it.dias || 0} días</td><td>${orden}</td><td></td></tr>`;
+    }).join("");
+    $("#cartera-total").textContent = Object.entries(tot).map(([mon, t]) => `${dinero(t.val, mon)} (${pct(t.val / t.cap - 1)})`).join(" · ");
+    const h = E.historial;
+    $("#fondo").innerHTML = h.length > 1 ? `<h3>Resultado acumulado del fondo</h3>${graficaFondo(h)}` : "";
+    $("#retiradas").innerHTML = retiradas.length ? `<h3>Retiradas por el comité</h3><ul class="notas">${retiradas.map(i => `<li>${i.etiqueta} en ${i.emisora}: ${i.retiro.motivo} (${pct(i.retiro.resultado)}), el ${i.retiro.fecha.slice(8, 10)}/${i.retiro.fecha.slice(5, 7)}.</li>`).join("")}</ul>` : "";
+    pintarPizarra();
+  }
+  function graficaFondo(h) {
+    const W = 640, H = 180, ml = 44, mr = 10, mt = 14, mb = 24, mon = ["MXN", "USD"].filter(m => h.some(x => x[m]));
+    const ser = mon.map(m => h.map(x => (x[m] && x[m].cap ? x[m].val / x[m].cap - 1 : null)));
+    const vals = ser.flat().filter(v => v != null), mn = Math.min(0, ...vals), mx = Math.max(0, ...vals), r = mx - mn || 0.01;
+    const X = i => ml + (i / (h.length - 1)) * (W - ml - mr), Y = v => mt + (1 - (v - mn) / r) * (H - mt - mb);
+    const paso = [0.005, 0.01, 0.02, 0.05, 0.1, 0.2].find(p => r / p <= 5) || 0.5;
+    let s = "";
+    for (let v = Math.ceil(mn / paso) * paso; v <= mx + 1e-9; v += paso) s += `<line class="eje" x1="${ml}" x2="${W - mr}" y1="${Y(v)}" y2="${Y(v)}"/><text x="${ml - 6}" y="${Y(v) + 3}" text-anchor="end">${(v * 100).toFixed(paso < 0.01 ? 1 : 0)}%</text>`;
+    s += `<line class="cero" x1="${ml}" x2="${W - mr}" y1="${Y(0)}" y2="${Y(0)}"/>`;
+    [0, Math.floor((h.length - 1) / 2), h.length - 1].forEach(i => { s += `<text x="${X(i)}" y="${H - 6}" text-anchor="middle">${h[i].fecha.slice(8, 10)}/${h[i].fecha.slice(5, 7)}</text>`; });
+    ser.forEach((v, k) => {
+      const d = v.map((y, i) => y == null ? "" : `${i && v[i - 1] != null ? "L" : "M"}${X(i).toFixed(1)} ${Y(y).toFixed(1)}`).join("");
+      const ult = v.length - 1;
+      s += `<path d="${d}" class="${k ? "lin-usd" : "lin-mxn"}"/>`;
+      if (v[ult] != null) s += `<text x="${X(ult) - 4}" y="${Y(v[ult]) - 6}" text-anchor="end" class="${k ? "rot-usd" : "rot-mxn"}">${mon[k]} ${pct(v[ult])}</text>`;
+    });
+    return `<div class="grafica-caja"><svg class="grafica-fondo" viewBox="0 0 ${W} ${H}" role="img" aria-label="Resultado acumulado del fondo en pesos y en dólares">${s}</svg></div>`;
+  }
+  function verJornadaPiloto() {
+    const j = PILOTO.estado.jornadas[0];
+    if (!j) { registrar(null, `<b>Lic. Cervantes:</b> todavía no hay jornadas del piloto; la primera es hoy a las 15:40.`); return; }
+    st.cola = j.candidatas.map(([serie, fam, p]) => ({ S: SERIES.get(serie), c: { fam, p } })).filter(x => x.S);
+    st.totalJornada = st.cola.length; st.emitidos = 0; st.corriendo = true; st.pausa = false; st.repeticion = true;
+    for (const k in st.llegadas) st.llegadas[k] = 0; st.motivos = {};
+    registrar(null, `<b>Repetición de la jornada del ${j.fecha.slice(8, 10)}/${j.fecha.slice(5, 7)}:</b> ${st.totalJornada} expedientes. Nadie hace horas extra; es solo para verla.`);
+    if (st.vel === 0) { procesarLote(); terminar(); }
+    botonJornada();
+  }
+  /* Lo que el piloto hizo mientras no estabas */
+  function pintarMientras() {
+    const E = PILOTO.estado, caja = $("#mientras");
+    let ultima = null; try { ultima = localStorage.getItem("piso-ultima-visita"); } catch (e) { /* sin almacenamiento */ }
+    const desde = ultima || new Date(Date.now() - 864e5).toISOString();
+    const nuevos = E.bitacora.filter(b => b.t > desde), charlas = E.social.filter(x => x.t > desde);
+    const corridas = E.corridas.filter(c => c.t > desde);
+    const ops = nuevos.filter(b => b.tipo === "operacion" && /compró|vendió/.test(b.txt)).length, com = nuevos.filter(b => b.tipo === "comite");
+    const h = E.historial, ult = h.at(-1), ant = h.filter(x => x.fecha < (desde.slice(0, 10))).at(-1) || h[0];
+    const cambio = ult && ant ? Object.keys(ult).filter(k => k !== "fecha" && ult[k] && ant[k]).map(m => `${m} ${pct(ult[m].val / ult[m].cap - (ant[m].val / ant[m].cap))}`).join(" · ") : "";
+    const destacadas = charlas.slice().sort((a, b) => Math.abs(b.calidad) - Math.abs(a.calidad)).slice(0, 3);
+    caja.hidden = false;
+    caja.innerHTML = `<header><h2>${ultima ? "Mientras no estabas" : "Las últimas 24 horas"}</h2><span class="eti">${corridas.length} ${corridas.length === 1 ? "revisión" : "revisiones"} del piloto</span></header>
+      <div class="mientras-cols">
+        <ul class="resumen-mientras">
+          <li><span class="dato">${ops}</span><span>operaciones en papel</span></li>
+          <li><span class="dato">${com.length}</span><span>decisiones del comité</span></li>
+          <li><span class="dato">${charlas.length}</span><span>pláticas entre agentes</span></li>
+          ${cambio ? `<li><span class="dato">${cambio}</span><span>cambio del fondo</span></li>` : ""}
+        </ul>
+        <ul class="notas">${(com.length ? com : nuevos).slice(0, 5).map(b => `<li>${b.txt}</li>`).join("") || "<li>Nada nuevo desde tu última visita.</li>"}</ul>
+        <ul class="charlas">${destacadas.map(c => `<li><span class="eti">${fechaCorta(c.t)} ${c.hora} · ${c.lugar === "casa" ? "en casa" : c.lugar === "cafeteria" ? "en la cafetería" : c.lugar === "noche" ? "de noche" : "en la oficina"}</span><span>${c.lineas.map(([q, t]) => `<b>${AG[q].corto}:</b> ${t}`).join("<br>")}</span></li>`).join("")}</ul>
+      </div>`;
+    try { localStorage.setItem("piso-ultima-visita", new Date().toISOString()); } catch (e) { /* sin almacenamiento */ }
+  }
+  function cargarBitacoraPiloto() {
+    const E = PILOTO.estado;
+    bit.innerHTML = "";
+    E.bitacora.slice(0, 80).forEach(b => {
+      const html = b.tipo === "social" ? `<span class="soc">${b.txt}</span>` : b.txt.replace(/^(Lic\. Cervantes|Renata|Hugo|Lupita|El comité)/, "<b>$1</b>");
+      registrar(null, html, b.tipo, cuando(b.t).replace("hoy ", ""), true);
+    });
+  }
+  /* Emociones guardadas en este navegador (cuando no hay piloto) */
+  function cargarEmociones() {
+    if (PILOTO.activo) { EMO = JSON.parse(JSON.stringify(PILOTO.estado.agentes)); }
+    else { try { const g = JSON.parse(localStorage.getItem("piso-emociones") || "null"); if (g && g.lupita) EMO = g; } catch (e) { /* sin almacenamiento */ } }
+    for (const a of AGENTES) { if (!EMO[a.id]) EMO[a.id] = Personal.estadoInicial()[a.id]; a.emo = EMO[a.id]; }
+  }
+  setInterval(() => { if (!PILOTO.activo) try { localStorage.setItem("piso-emociones", JSON.stringify(EMO)); } catch (e) { /* sin almacenamiento */ } }, 20000);
+
+  /* ---------- ciclo ---------- */
+  let ultimo = performance.now(), acumUI = 0;
+  function cuadro(ahora) {
+    const real = Math.min(0.05, (ahora - ultimo) / 1000); ultimo = ahora;
+    const dt = st.pausa ? 0 : real * Math.max(1, st.vel);
+    if (RELOJ.modo === "real") RELOJ.ms = Date.now(); else if (!st.pausa) RELOJ.ms += real * 1000 * RELOJ.escala;
+    const t = horaMX(), horas = st.pausa ? 0 : (RELOJ.modo === "real" ? real : real * RELOJ.escala) / 3600;
+    if (st.corriendo && !st.pausa && st.vel > 0) {
+      if (st.repeticion || disponibles("min").length) {
+        st.acum += real * 1.7 * st.vel;
+        while (st.acum >= 1 && st.cola.length) { st.acum -= 1; emitir(false); }
+      } else if (!st.avisoEspera && st.cola.length === st.totalJornada) { st.avisoEspera = 1; registrar(null, `<b>Minería</b> todavía no llega a la oficina; la jornada empieza en cuanto entren.`); }
+      if (!st.cola.length && !st.fichas.length) terminar();
+    }
+    moverFichas(dt);
+    for (const a of AGENTES) vivir(a, dt, t, horas);
+    pintarAgentes(t);
+    moverAutos(st.pausa ? 0 : real * Math.min(Math.max(1, st.vel), 3));
+    acumUI += real;
+    if (acumUI > 0.25) { acumUI = 0; pintarPlantilla(); pintarNoche(t); pintarReloj(t); pintarAhora(); }
+    requestAnimationFrame(cuadro);
+  }
+
+  /* ---------- arranque: una jornada previa ya cerrada para que la sala no esté vacía ---------- */
+  async function arrancar() {
+    $("#cinta-txt").textContent = "Buscando datos de la sala…";
+    if (await cargarPiloto()) VIVO.activo = true;
+    else VIVO.activo = await cargarEnVivo();
+    if (!VIVO.activo) agregarEjemplos();
+    cargarEmociones();
+    st.seleccion = !VIVO.activo ? "todas:ej" : [...SERIES.keys()].some(k => k.startsWith("rapido:")) ? "todas:rapido" : "todas:bmv";
+    document.body.classList.toggle("modo-piloto", PILOTO.activo);
+    llenarSelect(); pintarSello(); actualizarLectura(); pintarConteos(); pintarCinta(); pintarCartera();
+    if (PILOTO.activo) {
+      const E = PILOTO.estado, j = E.jornadas[0];
+      if (j) { st.cola = j.candidatas.map(([serie, fam, p]) => ({ S: SERIES.get(serie), c: { fam, p } })).filter(x => x.S); st.totalJornada = st.cola.length; procesarLote(); }
+      for (const b of E.biblioteca) {
+        const S = SERIES.get(b.serie); if (!S || st.aprobadas.some(x => x.key === b.key)) continue;
+        const exp = Motor.evaluar(S, { fam: b.fam, p: b.p }); if (exp.estado !== "aprobada") continue;
+        Object.assign(exp, { serie: b.serie, id: st.expedientes.length, key: b.key, minero: b.minero });
+        st.expedientes.push(exp); st.aprobadas.push(exp);
+      }
+      pintarBiblioteca(); pintarConteos(); cargarBitacoraPiloto(); pintarMientras();
+      $("#sello").className = "sello real";
+      $("#sello-txt").textContent = `Piloto automático · última revisión ${cuando(E.ultimaCorrida && E.ultimaCorrida.t)}`;
+      botonJornada();
+    } else {
+      st.cola = armarCola(); st.totalJornada = st.cola.length;
+      procesarLote();
+      registrar(null, `<b>Resumen de ayer:</b> ${st.totalJornada} expedientes revisados, ${st.aprobadas.length} en la biblioteca. Abre una jornada para seguir minando.`);
+    }
+    colocarSegunHora(); pintarPlantilla();
+    if (st.aprobadas.length) abrirExpediente(st.aprobadas.slice().sort((a, b) => b.puntaje - a.puntaje)[0]);
+    if (VIVO.activo && !PILOTO.activo) {
+      const fallas = ["rapido", "bmv"].map(m => VIVO.error[m + "-fallas"]).filter(Boolean).join(", ");
+      registrar(null, `<b>Renata:</b> conectada a la bolsa; reviso precios cada 30 segundos.${fallas ? ` No llegaron datos de ${fallas}.` : ""}`);
+      await refrescar(); setInterval(refrescar, 30000);
+    }
+  }
+  segmentos("#seg-reloj", v => {
+    RELOJ.modo = v ? "acelerado" : "real"; if (!v) RELOJ.ms = Date.now();
+    registrar(null, v ? `<b>Reloj acelerado:</b> cada segundo pasan 6 minutos; un día completo dura 4 minutos.` : `<b>Reloj en hora real</b> de la Ciudad de México. Cada quien vuelve a donde le toca.`);
+  });
+  colocarSegunHora(); pintarReloj(); pintarNoche(horaMX()); pintarAgentes(horaMX());
+  requestAnimationFrame(cuadro);
+  arrancar();
+})();
+
+</script>
+</body></html>
