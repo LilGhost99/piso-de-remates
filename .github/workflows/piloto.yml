@@ -1,0 +1,69 @@
+name: Piloto automático
+
+on:
+  schedule:
+    - cron: "10 15 * * 1-5"   # 9:10 en CDMX: apertura
+    - cron: "10 18 * * 1-5"   # 12:10 en CDMX: mediodía
+    - cron: "40 21 * * 1-5"   # 15:40 en CDMX: cierre y jornada
+  workflow_dispatch:
+    inputs:
+      tipo:
+        description: "Qué revisión hacer (vacío = según la hora)"
+        required: false
+        default: ""
+        type: choice
+        options: ["", "apertura", "mediodia", "cierre"]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: piloto
+  cancel-in-progress: false
+
+jobs:
+  piloto:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.publicar.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar librerías
+        run: pip install --quiet yfinance pandas
+
+      - name: Bajar precios
+        run: python piloto/descargar.py
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Correr el piloto
+        run: node piloto/piloto.js
+        env:
+          PILOTO_TIPO: ${{ inputs.tipo }}
+
+      - name: Guardar lo que pasó
+        run: |
+          git config user.name "piloto-automatico"
+          git config user.email "piloto-automatico@users.noreply.github.com"
+          git add sitio/datos/estado.json
+          git commit -m "Piloto: $(TZ=America/Mexico_City date '+%Y-%m-%d %H:%M')" || echo "Sin cambios"
+          git push
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: sitio
+
+      - id: publicar
+        uses: actions/deploy-pages@v4
