@@ -447,6 +447,9 @@ button.chico[aria-pressed="true"] { background: color-mix(in srgb, var(--rosa) 1
 .tr-quien[data-tier="oro"] .nv-chip { background: linear-gradient(135deg, #FFE38A, #C08A0C); color: #2A1D00; } .tr-quien[data-tier="leyenda"] .nv-chip { background: linear-gradient(135deg, #C38BFF, #FF4F9A); }
 .tr-tabla { max-height: none; }
 .tr-tabla td:first-child { font-family: var(--f-txt); }
+.tr-mente td { white-space: normal; text-align: left !important; vertical-align: top; font-family: var(--f-txt); font-size: .84rem; }
+.tr-mente td:nth-child(2) { min-width: 200px; } .tr-mente td:nth-child(3) { font-family: var(--f-dato); white-space: nowrap; } .tr-mente td:nth-child(4) { min-width: 260px; }
+.tr-mente th { text-align: left !important; }
 .tr-lista { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; font-size: .86rem; }
 .tr-lista li { display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: start; }
 .tr-lista.tr-simple li { display: block; }
@@ -458,6 +461,20 @@ button.chico[aria-pressed="true"] { background: color-mix(in srgb, var(--rosa) 1
 .tr-medidor { display: grid; grid-template-columns: auto 1fr auto; gap: 8px; align-items: center; font-size: .82rem; }
 .tr-medidor .barra { height: 8px; border-radius: 8px; background: color-mix(in srgb, var(--linea) 70%, transparent); overflow: hidden; }
 .tr-medidor .barra i { display: block; height: 100%; background: var(--azul); }
+.gan-vs { display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px 16px; align-items: center; padding: 14px 16px; border-radius: 12px; background: var(--sala-2); border: 1px solid var(--linea); }
+.gan-vs > div { display: grid; gap: 2px; }
+.gan-vs > div b { font: 700 1.8rem var(--f-disp); }
+.gan-vs > div small { color: var(--tinta-2); font-size: .78rem; }
+.gan-vs-x { font: 700 1rem var(--f-disp); color: var(--tinta-2); text-transform: uppercase; }
+.gan-vs p { grid-column: 1 / -1; font-size: .9rem; }
+.tr-ia { padding: 8px 12px; border-radius: 10px; font-size: .88rem; border: 1px solid var(--linea); background: var(--sala-2); }
+.tr-ia.si { border-color: color-mix(in srgb, var(--violeta) 40%, var(--linea)); background: color-mix(in srgb, var(--violeta) 8%, var(--sala-2)); }
+.tr-razones { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 2px; font-size: .78rem; color: var(--tinta-2); }
+.tr-razones b { color: var(--tinta); }
+.su-mente { display: grid; gap: 6px; padding: 12px 14px; border-radius: 12px; border: 1px dashed color-mix(in srgb, var(--violeta) 45%, var(--linea)); background: color-mix(in srgb, var(--violeta) 6%, var(--sala)); }
+.su-mente .lecciones { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: .9rem; }
+.su-mente small { color: var(--tinta-2); margin-right: 6px; }
+@media (max-width: 640px) { .gan-vs { grid-template-columns: 1fr; } .gan-vs-x { display: none; } }
 .su-trabajo { display: grid; gap: 4px; padding: 12px 14px; border-radius: 12px; border: 1px dashed color-mix(in srgb, var(--azul) 45%, var(--linea)); background: color-mix(in srgb, var(--azul) 6%, var(--sala)); }
 .su-trabajo .ultimo { font-size: .9rem; color: var(--tinta); }
 
@@ -630,7 +647,8 @@ tbody tr[aria-selected="true"] td:first-child { box-shadow: inset 3px 0 0 var(--
 
   <section class="bloque tarjeta trabajo-real" id="trabajo-real" aria-labelledby="tr-titulo">
     <header><h2 id="tr-titulo">El trabajo real de cada quien</h2><span class="eti" id="tr-cuando"></span></header>
-    <p class="nota-sala">Cada departamento hace una parte de verdad: precios, noticias, pruebas, votaciones, vigilancia y auditoría. Esto es lo último que hizo cada quien, con datos reales. Toca un nombre para ver su ficha.</p>
+    <p class="nota-sala">Cada departamento hace una parte de verdad: precios, noticias, pruebas, votaciones, vigilancia y auditoría. Los que deciden piensan con IA, recuerdan sus decisiones y aprenden de sus errores. Esto es lo último que hizo cada quien, con datos reales. Toca un nombre para ver su ficha.</p>
+    <div id="tr-ia-caja"></div>
     <div class="tr-grid" id="tr-grid"></div>
   </section>
 
@@ -1042,19 +1060,19 @@ const Personal = (() => {
     mariana: "Análisis: revisa en el histórico que cada estrategia tenga Sharpe de 0.5 o más y al menos 5 operaciones.",
     rodrigo: "Análisis: revisa Sharpe y número de operaciones de cada estrategia en el histórico.",
     ximena: "Análisis: revisa Sharpe y número de operaciones de cada estrategia en el histórico.",
-    chema: "Riesgos: rechaza lo que cayó más de 25%. En cada corrida vigila la cartera, avisa si algo se acerca al límite y retira a mediodía lo que pierda 12%.",
+    chema: "Riesgos: rechaza lo que cayó más de 25%. Vigila la cartera en cada revisión; cuando algo pierde más de 8% decide si lo retira ya o lo aguanta, según lo que aprendió de alertas pasadas. A fuerza retira en 12%.",
     fer: "Riesgos: mide cuánto del fondo está invertido y en qué empresas, y avisa si hay demasiada concentración.",
-    paco: "Lee el IPC real en cada cierre (tendencia y caída desde su máximo) y le dice al comité cuántas estrategias nuevas puede meter.",
+    paco: "Lee el IPC real en cada cierre y piensa (con IA) cómo está el mercado, junto con las noticias. Recuerda sus llamadas pasadas: si se asustó de más o se confió, ajusta su prudencia.",
     ale: "Compara la volatilidad de 20 días del IPC contra la del año para saber si el mercado está agitado.",
-    diego: "Trae los titulares reales de Yahoo Finance de las empresas que operamos.",
+    diego: "Lee los titulares reales de Yahoo Finance (muchos en inglés), los resume en español y dice si son buenos o malos para cada empresa.",
     vale: "Avisa de los movimientos fuertes del día (más de 3%) en las 16 emisoras.",
     ivan: "Mesa de pruebas I: examina cada estrategia con el 30% de los datos que no vio.",
     dani: "Mesa de pruebas I: examina cada estrategia con el 30% de los datos que no vio.",
     sofia: "Mesa de pruebas II: mueve un poco los parámetros para descartar estrategias de pura suerte.",
     emilio: "Mesa de pruebas II: mueve un poco los parámetros para descartar estrategias de pura suerte.",
-    elena: "Preside el comité: propone las mejores estrategias de la biblioteca y vota que su Sharpe en datos nuevos sea de 0.5 o más.",
-    robles: "Vota en el comité: rechaza lo que no sea robusto (menos de 70% de variantes cercanas que funcionan).",
-    paredes: "Vota en el comité: rechaza lo que haya caído más de 15% en los datos nuevos.",
+    elena: "Preside el comité. Vota pensando con su criterio de Sharpe en datos nuevos, que se vuelve más exigente cuando aprueba algo que pierde y se afloja cuando rechaza algo que habría ganado.",
+    robles: "Vota en el comité pidiendo robustez (variantes cercanas que funcionen). Su exigencia cambia según cómo salieron sus votos pasados.",
+    paredes: "Vota en el comité cuidando la caída en datos nuevos. Su límite cambia según cómo salieron sus votos pasados.",
     mendez: "Audita cada corrida: que se respeten los límites del comité y que las cuentas de cada estrategia cuadren.",
     andrea: "Suma las comisiones que se pagaron en el día y revisa que cada operación las haya pagado.",
     memo: "Vuelve a probar cada semana las estrategias de la biblioteca con los datos más nuevos y saca las que ya no pasan.",
@@ -1063,7 +1081,7 @@ const Personal = (() => {
     charly: "Revisa que lleguen los precios de las 16 emisoras y el dólar, y avisa cuando Yahoo falla.",
     ingrid: "Revisa que los precios estén al día; los que vienen viejos se apartan para no operar con ellos.",
     fermin: "Lleva la estadística del archivo: qué tipo de estrategia se aprueba y cuál no. Con eso Lupita reparte sus pruebas.",
-    lucha: "Escribe el resumen del día con lo que de verdad pasó.",
+    lucha: "Escribe el resumen del día, con sus palabras, para quien no sabe de bolsa.",
     ramon: "En la apertura revisa los brincos de precio de la noche a la mañana en las empresas donde tenemos acciones."
   };
   const RIVALES = [["América", "Chivas"], ["América", "Pumas"], ["América", "Cruz Azul"], ["Tigres", "Rayados"], ["Pachuca", "América"]];
@@ -2168,6 +2186,7 @@ if (typeof module !== "undefined") module.exports = Personal;
         <button type="button" class="chico" id="cerrar-ficha">Cerrar</button></header>
       <p>${a.descripcion} <i>«${a.frase}»</i></p>
       <div class="su-trabajo"><span class="eti">Su trabajo de verdad</span><p>${esc(Personal.TRABAJO[id] || "")}</p>${PILOTO.activo && PILOTO.estado.trabajo && PILOTO.estado.trabajo[id] ? `<p class="ultimo"><b>Lo último que hizo (${cuando(PILOTO.estado.trabajo[id].t)}):</b> ${esc(PILOTO.estado.trabajo[id].txt)}</p>` : ""}</div>
+      ${PILOTO.activo && PILOTO.estado.mente && PILOTO.estado.mente[id] && id !== "diego" ? (() => { const m = PILOTO.estado.mente[id], [ahora, antes] = criterioDe(id, m); return `<div class="su-mente"><span class="eti">🧠 Su mente</span><p><b>Su criterio hoy:</b> ${esc(ahora)}${antes ? ` (empezó en ${esc(antes)})` : ""}. <b>Aciertos:</b> ${m.aciertos || 0} · <b>Errores:</b> ${m.errores || 0}.</p>${m.lecciones && m.lecciones.length ? `<ul class="lecciones">${m.lecciones.map(l => `<li><small>${fechaDM(l.fecha)}</small> «${esc(l.txt)}»</li>`).join("")}</ul>` : `<p class="nota-sala">Todavía no escribe lecciones; lo hace los viernes, cuando ya tiene resultados que revisar.</p>`}</div>`; })() : ""}
       <div class="carrera" data-tier="${tier}">
         <div class="nivel-anillo" style="--p:${(nv.progreso * 100).toFixed(1)}"><span class="dato">${k.nivel}</span><small>nivel</small></div>
         <div class="carrera-txt"><span class="eti">Carrera</span><h3>${Personal.rangoDe(k.nivel)}</h3>
@@ -2582,6 +2601,18 @@ if (typeof module !== "undefined") module.exports = Personal;
         ${Math.abs(gBH - bhTotal) < 1 ? "Las estrategias van igual que no hacer nada." : gBH > bhTotal ? `Las estrategias van <b class="pos">${pesos(gBH - bhTotal)} mejor</b> que no hacer nada. 👏` : `No hacer nada habría dado <b class="neg">${pesos(bhTotal - gBH)} más</b>. Pasa seguido: muchas veces la paciencia le gana a comprar y vender.`}
         ${faltanBH ? `<span class="nota-sala">(Sin contar ${faltanBH} ${faltanBH === 1 ? "estrategia" : "estrategias"} cuyos precios no llegaron hoy.)</span>` : ""}</p></div>` : "";
 
+    // agentes que piensan contra las reglas fijas de antes (cartera de sombra)
+    let versus = "";
+    const sombra = PILOTO.activo && PILOTO.estado.sombra && PILOTO.estado.sombra.cartera;
+    if (unaSuma && sombra && sombra.length) {
+      const gS = sombra.reduce((acc, it) => acc + (conv(it.moneda, (it.valor ?? it.capital) - it.capital) ?? 0), 0), dif = total - gS;
+      versus = `<div class="gan-vs">
+        <div><span class="eti">🧠 Agentes que piensan</span><b class="${signo(total)}">${conSigno(total)}</b><small>${d.items.length} ${d.items.length === 1 ? "estrategia" : "estrategias"} · ${unidad}</small></div>
+        <span class="gan-vs-x">vs</span>
+        <div><span class="eti">📏 Reglas fijas (de sombra)</span><b class="${signo(gS)}">${conSigno(gS)}</b><small>${sombra.length} ${sombra.length === 1 ? "estrategia" : "estrategias"} · ${unidad}</small></div>
+        <p>${Math.abs(dif) < 1 ? "Van parejos por ahora." : dif > 0 ? `Pensar les está sirviendo: van <b class="pos">${pesos(dif)} arriba</b> de las reglas fijas.` : `Por ahora las reglas fijas van <b class="neg">${pesos(-dif)} arriba</b>; pensar todavía no les ha ganado.`} Las reglas fijas operan en paralelo con la misma biblioteca, sin votar, sin leer noticias y sin aprender. Desde el inicio.</p>
+      </div>`;
+    }
     // gráfica de la ganancia acumulada
     let serie = hist.map(x => ({ f: x.fecha, r: gananciaDe(x) })).filter(x => x.r).map(x => ({ f: x.f, g: x.r.g }));
     if (unaSuma && serie.length && Math.abs(serie[serie.length - 1].g - total) > 0.5) serie.push({ f: "hoy", g: total });
@@ -2624,6 +2655,7 @@ if (typeof module !== "undefined") module.exports = Personal;
         </ul>
       </div>
       ${comparacion}
+      ${versus}
       ${grafica}
       <h3 class="gan-sub">Así le va a cada estrategia</h3>
       <ul class="gan-lista">${lista}</ul>
@@ -2672,9 +2704,12 @@ if (typeof module !== "undefined") module.exports = Personal;
   const REGIMEN = { normal: ["Normal", "pos"], agitado: ["Agitado", "ambar"], bajista: ["A la baja", "neg"], tormenta: ["A la baja y agitado", "neg"] };
   function pintarTrabajoReal() {
     const grid = $("#tr-grid"); if (!grid) return;
+    const iaCaja = $("#tr-ia-caja");
     if (!PILOTO.activo) { grid.innerHTML = `<p class="nota-sala">Esto lo hace el piloto automático en GitHub tres veces al día. Aparece aquí en la página publicada.</p>`; return; }
     const E = PILOTO.estado, j = E.jornadas[0];
     $("#tr-cuando").textContent = E.ultimaCorrida ? `revisión de ${cuando(E.ultimaCorrida.t)}` : "";
+    const ia = E.ia, pensaron = ia && ia.usadas - ia.fallas > 0;
+    const iaHTML = `<p class="tr-ia ${pensaron ? "si" : "no"}">${pensaron ? `🧠 En la última revisión pensaron con IA (${esc(ia.modelo)}, ${ia.usadas - ia.fallas} ${ia.usadas - ia.fallas === 1 ? "consulta" : "consultas"}). Lo marcado con 🧠 lo razonaron ellos.` : ia && ia.activa ? "La IA no respondió en la última revisión; decidieron con lo que ya habían aprendido." : "Sin IA en esta revisión: deciden con lo que ya aprendieron."}</p>`;
     const t = id => (E.trabajo && E.trabajo[id]) || {};
     // mineros
     const mineros = STAFF.min.map(a => {
@@ -2689,7 +2724,9 @@ if (typeof module !== "undefined") module.exports = Personal;
       .map(([k, n, que]) => `<li><b>${n}</b> (${que}): ${L ? `revisó ${L[k]} y pasaron ${L[SIG[k]]}.` : esc(t(STAFF[k][0].id).txt || "—")}</li>`).join("");
     // comité
     const votoIco = v => v ? `<span class="pos">✓</span>` : `<span class="neg">✕</span>`;
-    const decisiones = (E.comite || []).slice(0, 5).map(d => `<li><span class="tr-voto">${votoIco(d.votos.elena)}${votoIco(d.votos.robles)}${votoIco(d.votos.paredes)}</span><span><b>${esc(d.etiqueta)}</b> en ${esc(d.emisora)} · ${d.decision === "si" ? `<span class="pos">entró a operar</span>` : `<span class="neg">rechazada</span>`} <small>${fechaDM(d.fecha)}${d.porque.length ? " · " + esc(d.porque.join("; ")) : ""}</small></span></li>`).join("");
+    const razones = d => Array.isArray(d.porque) ? (d.porque.length ? `<small>${esc(d.porque.join("; "))}</small>` : "")
+      : `<ul class="tr-razones">${["elena", "robles", "paredes"].map(id => `<li>${votoIco(d.votos[id])} <b>${AG[id].corto}:</b> ${esc(d.porque[id] || "")}</li>`).join("")}</ul>`;
+    const decisiones = (E.comite || []).slice(0, 4).map(d => `<li><span class="tr-voto">${votoIco(d.votos.elena)}${votoIco(d.votos.robles)}${votoIco(d.votos.paredes)}</span><span><b>${esc(d.etiqueta)}</b> en ${esc(d.emisora)} · ${d.decision === "si" ? `<span class="pos">entró a operar</span>` : `<span class="neg">rechazada</span>`}${d.ia ? " 🧠" : ""} <small>${fechaDM(d.fecha)}${d.evaluada && d.evaluada.r != null ? ` · resultado ${d.evaluada.sombra ? "en la sombra " : ""}${pct(d.evaluada.r)}` : ""}</small>${razones(d)}</span></li>`).join("");
     // macro
     const M = E.macro, reg = M ? REGIMEN[M.regimen] : null;
     // riesgos
@@ -2701,7 +2738,14 @@ if (typeof module !== "undefined") module.exports = Personal;
     const fams = (t("fermin").datos || {}).familias || {}, maxF = Math.max(0.0001, ...Object.values(fams));
     const famHTML = Object.keys(fams).length ? `<ul class="motivos">${Object.entries(fams).sort((a, b) => b[1] - a[1]).map(([f, v]) => `<li><span>${Motor.FAMILIAS[f].nombre}</span><span class="dato">${(v * 100).toFixed(1)}%</span><span class="barra"><i style="width:${(v / maxF * 100).toFixed(1)}%;background:var(--jade)"></i></span></li>`).join("")}</ul>` : "";
     const salen = (t("memo").datos || {}).salen || [];
+    const mentes = ["elena", "robles", "paredes", "paco", "chema"].filter(id => E.mente && E.mente[id]).map(id => {
+      const m = E.mente[id], [ahora, antes] = criterioDe(id, m), l = m.lecciones && m.lecciones[0];
+      return `<tr><td>${quien(id)}</td><td>${esc(ahora)}${antes ? `<small> (empezó en ${esc(antes)})</small>` : ""}</td><td class="dato">${m.aciertos || 0} / ${m.errores || 0}</td><td>${l ? `«${esc(l.txt)}» <small>${fechaDM(l.fecha)}</small>` : `<small>Todavía sin lecciones</small>`}</td></tr>`;
+    }).join("");
+    const menteHTML = mentes ? `<div class="tabla-caja tr-tabla"><table class="tr-mente"><thead><tr><th>Quién</th><th>Su criterio hoy</th><th>Aciertos / errores</th><th>Su última lección</th></tr></thead><tbody>${mentes}</tbody></table></div>
+      <p class="nota-sala">Cada cierre revisan cómo salieron sus decisiones de hace dos semanas o más. Si se equivocaron, ajustan su criterio un paso. Cada viernes escriben qué aprendieron y lo usan para decidir después.</p>` : "";
     grid.innerHTML = [
+      menteHTML ? tarjetaTR("🧠", "Lo que han aprendido", ["elena", "robles", "paredes", "paco", "chema"], menteHTML, true) : "",
       tarjetaTR("⛏️", "Minería", STAFF.min.map(a => a.id), minerosHTML, true),
       tarjetaTR("🧭", "Macroeconomía", ["paco", "ale"], M ? `<p class="tr-regimen"><span class="chip ${reg[1] === "pos" ? "compra" : reg[1] === "neg" ? "venta" : "mantener"}">Mercado: ${reg[0]}</span></p>${hechoDe("paco")}${hechoDe("ale")}` : hechoDe("paco")),
       tarjetaTR("⚖️", "Comité", ["elena", "robles", "paredes"], `${hechoDe("elena")}${decisiones ? `<p class="nota-sala">Votos en orden: Lic. Cervantes · Ing. Robles · Dra. Paredes. Se necesitan 2 de 3.</p><ul class="tr-lista">${decisiones}</ul>` : ""}`),
@@ -2716,6 +2760,18 @@ if (typeof module !== "undefined") module.exports = Personal;
       tarjetaTR("🌙", "Vigilancia", ["ramon"], hechoDe("ramon")),
       tarjetaTR("📝", "Recepción", ["lucha"], `${hechoDe("lucha")}${(E.resumenes || []).slice(1, 4).length ? `<ul class="tr-lista tr-simple">${E.resumenes.slice(1, 4).map(r => `<li><small>${fechaDM(r.fecha)}</small> ${esc(r.txt)}</li>`).join("")}</ul>` : ""}`)
     ].join("");
+    if (iaCaja) iaCaja.innerHTML = iaHTML;
+  }
+  /* el criterio de cada quien, hoy y como empezó */
+  function criterioDe(id, m) {
+    const ini = m.inicial || {};
+    return {
+      elena: () => [`Sharpe en datos nuevos de ${(+m.umbral).toFixed(2)} o más`, ini.umbral != null && ini.umbral !== m.umbral ? (+ini.umbral).toFixed(2) : null],
+      robles: () => [`robustez de ${Math.round(m.umbral * 100)}% o más`, ini.umbral != null && ini.umbral !== m.umbral ? `${Math.round(ini.umbral * 100)}%` : null],
+      paredes: () => [`caída en datos nuevos no peor que ${pct(m.umbral)}`, ini.umbral != null && ini.umbral !== m.umbral ? pct(ini.umbral) : null],
+      paco: () => [`prudencia de ${(+m.prudencia).toFixed(2)} (0 = confiado, 1 = muy precavido)`, ini.prudencia != null && ini.prudencia !== m.prudencia ? (+ini.prudencia).toFixed(2) : null],
+      chema: () => [`de sus alertas, ${m.continuaron || 0} siguieron cayendo y ${m.recuperaron || 0} se recuperaron`, null]
+    }[id]?.() || ["", null];
   }
   /* ---------- modo piloto automático ---------- */
   const cuando = iso => { if (!iso) return ""; const d = new Date(iso), hoy = new Date(); const mismo = d.toDateString() === hoy.toDateString(); return (mismo ? "hoy " : d.toLocaleDateString("es-MX", { day: "numeric", month: "short" }) + " ") + d.toLocaleTimeString("es-MX", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "America/Mexico_City" }); };
