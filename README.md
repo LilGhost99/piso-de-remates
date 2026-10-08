@@ -68,6 +68,16 @@ Cada agente hace una parte de verdad. La página lo muestra en la sección «El 
 
 Su experiencia sale de su trabajo y de resultados reales: quien encontró una estrategia gana o pierde experiencia según lo que esa estrategia gana o pierde cada día. Las pláticas y emociones son el ambiente de la sala; no deciden nada.
 
+## Piensan, recuerdan y aprenden
+
+Los que deciden (el comité, Paco, Don Chema, Diego y Doña Lucha) **piensan con IA**: usan GitHub Models, la IA gratuita de GitHub, con el permiso `models: read` del flujo. Cada uno recibe sus datos, su memoria y sus lecciones, razona con su personalidad y deja escrito por qué decidió. En la página, lo que razonaron con IA lleva 🧠.
+
+- **Recuerdan:** cada decisión queda guardada en `estado.json` con su resultado.
+- **Aprenden:** dos semanas después revisan cómo salió. Si el comité aprobó algo que perdió, quien votó a favor se vuelve más exigente; si rechazó algo que habría ganado, se afloja. Paco ajusta su prudencia según si se asustó de más o se confió; Don Chema lleva la cuenta de cuántas alertas siguieron cayendo.
+- **Escriben lecciones** cada viernes y las usan para decidir después.
+- **Sin IA** (si GitHub no responde o se acaba el cupo gratuito) deciden con lo que ya aprendieron. Los límites duros (máximo 8 estrategias, retiro obligatorio al perder 12%) nunca dependen de la IA.
+- **Contra las reglas fijas:** las reglas de antes siguen operando «de sombra» con la misma biblioteca. La sección «¿Cuánto hemos ganado?» muestra quién va ganando.
+
 ## Qué decide el piloto solo
 
 - **Jornada:** cada cierre revisa 160 combinaciones nuevas de estrategias sobre 16 emisoras (8 en pesos de la BMV y 8 empresas mexicanas que cotizan en EE.UU.).

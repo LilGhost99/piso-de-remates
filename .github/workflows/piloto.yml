@@ -18,6 +18,7 @@ permissions:
   contents: write
   pages: write
   id-token: write
+  models: read      # para que los agentes piensen con la IA gratuita de GitHub Models
 
 concurrency:
   group: piloto
@@ -50,6 +51,7 @@ jobs:
         run: node piloto/piloto.js
         env:
           PILOTO_TIPO: ${{ inputs.tipo }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}   # con esto piensan; si la IA no responde, deciden con lo que ya aprendieron
 
       - name: Guardar lo que pasó
         run: |
