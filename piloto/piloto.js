@@ -44,7 +44,10 @@ function estadoNuevo() {
 }
 const E = fs.existsSync(RUTA_ESTADO) ? JSON.parse(fs.readFileSync(RUTA_ESTADO, "utf8")) : estadoNuevo();
 if (Array.isArray(E.evaluadas) || typeof E.evaluadas !== "object") E.evaluadas = {};
-for (const p of Personal.LISTA) if (!E.agentes[p.id]) E.agentes[p.id] = Personal.estadoInicial()[p.id];
+for (const p of Personal.LISTA) {
+  if (!E.agentes[p.id]) E.agentes[p.id] = Personal.estadoInicial()[p.id];
+  Personal.asegurar(E.agentes[p.id]); Personal.evolucionar(p, E.agentes[p.id]);
+}
 
 const PRECIOS = JSON.parse(fs.readFileSync(RUTA_PRECIOS, "utf8"));
 const SERIES = new Map(PRECIOS.series.map(s => [s.modo + ":" + s.id, { ...s, key: s.modo + ":" + s.id, o: Float64Array.from(s.o), c: Float64Array.from(s.c) }]));
@@ -58,6 +61,11 @@ function log(quien, txt, tipo = "trabajo", h = T.h) {
   E.bitacora.unshift({ t: sello(h), quien, txt, tipo });
   E.bitacora.length = Math.min(E.bitacora.length, 500);
 }
+/* experiencia: anota en la bitácora cada subida de nivel y cada logro nuevo */
+function xp(id, n, cuenta = {}, h = T.h) {
+  for (const ev of Personal.ganar(E.agentes[id], PERSONAL[id], n, cuenta, T.fecha)) log(id, Personal.textoEvento(ev, PERSONAL[id]), "carrera", h);
+}
+const derivar = (id, rasgo, d) => { Personal.derivar(E.agentes[id], rasgo, d); Personal.evolucionar(PERSONAL[id], E.agentes[id]); };
 
 /* ---------- precios ---------- */
 function serieConVivo(S) {
@@ -77,7 +85,7 @@ function comprar(it, precio, h) {
   it.ops.unshift({ tipo: "compra", precio, titulos: n, fecha: T.fecha }); it.ops.length = Math.min(it.ops.length, 40);
   const op = operadorDeTurno(); E.totales.operaciones++;
   log(op.id, `${op.corto} compró ${n.toLocaleString("es-MX")} ${it.emisora} a ${fmt(precio)} ${it.moneda} siguiendo ${it.etiqueta}.`, "operacion", h);
-  sentir(op.id, { estres: 1 });
+  sentir(op.id, { estres: 1 }); xp(op.id, 6, { operaciones: 1 }, h);
 }
 function vender(it, precio, h, motivo = "") {
   const n = it.titulos; if (!n) return 0;
@@ -86,8 +94,8 @@ function vender(it, precio, h, motivo = "") {
   it.ops.unshift({ tipo: "venta", precio, titulos: n, resultado: res, fecha: T.fecha }); it.ops.length = Math.min(it.ops.length, 40);
   const op = operadorDeTurno(); E.totales.operaciones++;
   log(op.id, `${op.corto} vendió ${n.toLocaleString("es-MX")} ${it.emisora} a ${fmt(precio)} ${it.moneda} (${pct(res)} en la operación)${motivo}.`, "operacion", h);
-  if (res > 0) { sentir(op.id, { animo: 4, confianza: 3 }); sentir("elena", { animo: 1 }); }
-  else { sentir(op.id, { animo: -3, estres: 3 }); sentir("chema", { estres: 1 }); }
+  if (res > 0) { sentir(op.id, { animo: 4, confianza: 3 }); sentir("elena", { animo: 1 }); xp(op.id, 14, { operaciones: 1, ganadoras: 1 }, h); derivar(op.id, "optimista", 0.004); }
+  else { sentir(op.id, { animo: -3, estres: 3 }); sentir("chema", { estres: 1 }); xp(op.id, 6, { operaciones: 1 }, h); derivar(op.id, "nervioso", 0.003); }
   return res;
 }
 function marcar(it) { const S = SERIES.get(it.serie); if (!S) return; it.precio = S.cot.precio; it.valor = it.efectivo + it.titulos * S.cot.precio; it.fechaPrecio = S.cot.fecha; }
@@ -109,8 +117,9 @@ function platicas(n, lugar, h, felicitar = new Set()) {
     if (!opciones.length) opciones = gente.filter(p => p.id !== a.id);
     const b = opciones[Math.floor(R() * opciones.length)];
     const res = Personal.conversar(a, b, E.agentes[a.id], E.agentes[b.id], ctx, R);
-    Personal.aplicarPlatica(E.agentes, a, b, res);
+    const eventos = Personal.aplicarPlatica(E.agentes, a, b, res, T.fecha);
     const hh = h + R() * 0.8;
+    for (const ev of eventos) log(ev.quien.id, Personal.textoEvento(ev, ev.quien), "carrera", hh);
     E.social.unshift({ t: sello(hh), hora: horaTxt(hh), a: a.id, b: b.id, lugar, tema: res.tema, calidad: +res.calidad.toFixed(2), lineas: res.lineas, resumen: Personal.resumen(a, b, res) });
     if (Math.abs(res.calidad) > 0.55) log(a.id, Personal.resumen(a, b, res), "social", hh);
   }
@@ -129,10 +138,12 @@ function jornada() {
   }
   const elegidas = Motor.barajar(pool, Personal.semillaDe(T.fecha)).slice(0, REGLAS.jornada);
   const motivos = {}, aprobadas = [], felicitar = new Set();
+  const llegaron = { min: elegidas.length, ana: 0, rie: 0, me1: 0, me2: 0, com: 0 }, SALA = { analisis: "ana", riesgos: "rie", mesa1: "me1", mesa2: "me2", comite: "com" };
   const vivas = new Map(series.map(S => [S.key, { ...serieConVivo(S), id: S.id }]));
   for (const { S, c, i: ci, k } of elegidas) {
     const exp = Motor.evaluar(vivas.get(S.key), c);
     E.evaluadas[S.key][ci] = hoyN;
+    for (const p of exp.pasos || []) if (SALA[p.depto]) llegaron[SALA[p.depto]]++;
     if (exp.estado !== "aprobada") { motivos[exp.motivo] = (motivos[exp.motivo] || 0) + 1; continue; }
     const minero = uno("min");
     const ficha = {
@@ -144,11 +155,14 @@ function jornada() {
     if (i >= 0) E.biblioteca[i] = ficha; else E.biblioteca.push(ficha);
     aprobadas.push(ficha); felicitar.add(minero.id);
     sentir(minero.id, { confianza: 4, animo: 3 });
+    xp(minero.id, 45, { aprobadas: 1 }, 15.2); derivar(minero.id, "competitivo", 0.004); derivar(minero.id, "optimista", 0.004);
     for (const d of ["ana", "rie", "me1", "me2"]) STAFF[d].forEach(p => sentir(p.id, { confianza: 1 }));
     sentir("elena", { animo: 1 });
     log("elena", `Lic. Cervantes aprobó ${ficha.etiqueta} en ${ficha.emisora}, minada por ${PERSONAL[minero.id].corto}. Sharpe en datos nuevos: ${ficha.sOOS}.`, "comite", 15.2);
   }
   if (!aprobadas.length) STAFF.min.forEach(p => sentir(p.id, { animo: -3, estres: 2 }));
+  // cada departamento gana experiencia por lo que revisó
+  for (const [d, n] of Object.entries(llegaron)) for (const p of STAFF[d]) { const mio = Math.round(n / STAFF[d].length); if (mio) xp(p.id, Math.min(20, mio * 0.25), { revisados: mio }, 15.1); }
   for (const k in E.evaluadas) E.evaluadas[k] = Array.from({ length: CANDS.length }, (_, i) => E.evaluadas[k][i] || 0);
   E.biblioteca.sort((a, b) => b.puntaje - a.puntaje);
   const enCartera = new Set(E.cartera.filter(i => i.estado === "activa").map(i => i.key));
@@ -174,7 +188,8 @@ function comite() {
     marcar(it);
     it.estado = "retirada"; it.retiro = { fecha: T.fecha, motivo, resultado: +(it.valor / it.capital - 1).toFixed(4) };
     log("elena", `El comité retiró ${it.etiqueta} en ${it.emisora}: ${motivo}.`, "comite", 15.3);
-    sentir("elena", { estres: 4, animo: -2 }); if (it.minero) sentir(it.minero, { confianza: -4, animo: -3 });
+    sentir("elena", { estres: 4, animo: -2 }); xp("elena", 8, {}, 15.3);
+    if (it.minero) { sentir(it.minero, { confianza: -4, animo: -3 }); xp(it.minero, 5, { retiradas: 1 }, 15.3); derivar(it.minero, "optimista", -0.006); derivar(it.minero, "nervioso", 0.004); }
   }
   const activas = E.cartera.filter(i => i.estado === "activa");
   const recientes = new Set(E.cartera.filter(i => i.estado === "activa" || (i.retiro && i.retiro.fecha > new Date(AHORA.getTime() - 30 * 864e5).toISOString().slice(0, 10))).map(i => i.key));
@@ -187,7 +202,7 @@ function comite() {
     const it = { key: b.key, serie: b.serie, fam: b.fam, p: b.p, etiqueta: b.etiqueta, emisora: b.emisora, moneda: b.moneda, minero: b.minero, capital: cap, efectivo: cap, titulos: 0, entrada: 0, ops: [], alta: T.fecha, dias: 0, estado: "activa" };
     E.cartera.push(it); activas.push(it); libres--;
     log("elena", `El comité mandó ${b.etiqueta} en ${b.emisora} a operar en papel con ${dinero(cap, b.moneda)}.`, "comite", 15.4);
-    sentir(b.minero, { animo: 5, confianza: 3 });
+    sentir(b.minero, { animo: 5, confianza: 3 }); xp(b.minero, 15, {}, 15.4); xp("elena", 8, {}, 15.4);
   }
 }
 
@@ -248,9 +263,16 @@ function cierre() {
   platicas(8, "oficina", 11, felicitar);
   platicas(5, "casa", 20.5, felicitar);
   if (R() < 0.6) platicas(1, "noche", 22.5);
+  // un día más en la sala: experiencia por asistir y la presión del día deja huella en los nervios
   for (const p of Personal.LISTA) {
     const e = E.agentes[p.id];
-    e.diario.push({ fecha: T.fecha, animo: Math.round(e.animo), estres: Math.round(e.estres), confianza: Math.round(e.confianza) });
+    xp(p.id, ["min", "ana", "rie", "me1", "me2", "com", "trd"].includes(p.depto) ? 10 : 16, { dias: 1 }, 15.6);
+    if (e.estres > 70) derivar(p.id, "nervioso", 0.003); else if (e.estres < 30) derivar(p.id, "nervioso", -0.003);
+    if (e.animo > 70) derivar(p.id, "optimista", 0.002); else if (e.animo < 30) derivar(p.id, "optimista", -0.002);
+  }
+  for (const p of Personal.LISTA) {
+    const e = E.agentes[p.id];
+    e.diario.push({ fecha: T.fecha, animo: Math.round(e.animo), estres: Math.round(e.estres), confianza: Math.round(e.confianza), xp: Math.round(e.carrera.xp), nivel: e.carrera.nivel });
     e.diario = e.diario.slice(-60);
   }
   const act = E.cartera.filter(i => i.estado === "activa").length;

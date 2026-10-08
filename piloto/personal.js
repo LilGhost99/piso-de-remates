@@ -36,8 +36,8 @@ const Personal = (() => {
     P("lucha", "Lucía Pérez", "Doña Lucha", "rec", "Recepcionista", "f", [.9, .3, .8, .2, .9], "América", "atole", "Recepcionista; trata a todos como si fueran sus hijos.", "¿Ya comiste, mijo?"),
     P("ramon", "Ramón Téllez", "Don Ramón", "rec", "Vigilante nocturno", "m", [.5, .3, .6, .2, .8], "Pachuca", "café de la máquina", "Vigilante nocturno; platica con quien se quede tarde.", "Aquí todo tranquilo.", { guardia: true })
   ];
-  const POR_ID = Object.fromEntries(LISTA.map((p, i) => [p.id, { ...p, i, hogar: Math.floor(i / 3) }]));
-  LISTA.forEach((p, i) => { p.i = i; p.hogar = Math.floor(i / 3); });
+  LISTA.forEach((p, i) => { p.i = i; p.hogar = Math.floor(i / 3); p.sexo = p.g; });
+  const POR_ID = Object.fromEntries(LISTA.map(p => [p.id, p]));
   const RIVALES = [["América", "Chivas"], ["América", "Pumas"], ["América", "Cruz Azul"], ["Tigres", "Rayados"], ["Pachuca", "América"]];
   const sonRivales = (x, y) => RIVALES.some(([a, b]) => (a === x && b === y) || (a === y && b === x));
 
@@ -45,13 +45,14 @@ const Personal = (() => {
   const lim = x => Math.max(0, Math.min(100, x));
   function semillaDe(txt) { let h = 2166136261; for (const ch of txt) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
   function rng(semilla) { let a = semilla >>> 0; return () => { a = (a + 0x6d2b79f5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
-  const base = p => ({ animo: 50 + p.rasgos.optimista * 22, estres: 20 + p.rasgos.nervioso * 28, confianza: 52 + p.rasgos.competitivo * 8 });
+  // con cada nivel la gente se estresa un poco menos y se tiene más confianza
+  const base = p => { const n = (p.nivel || 1) - 1; return { animo: 50 + p.rasgos.optimista * 22, estres: 20 + p.rasgos.nervioso * 28 - n * 1.2, confianza: 52 + p.rasgos.competitivo * 8 + n * 2.5 }; };
 
   function estadoInicial() {
     const agentes = {};
     for (const p of LISTA) {
       const r = rng(semillaDe("inicio" + p.id)), b = base(p);
-      agentes[p.id] = { animo: lim(b.animo + (r() - 0.5) * 26), estres: lim(b.estres + (r() - 0.5) * 22), confianza: lim(b.confianza + (r() - 0.5) * 16), rel: {}, diario: [] };
+      agentes[p.id] = { animo: lim(b.animo + (r() - 0.5) * 26), estres: lim(b.estres + (r() - 0.5) * 22), confianza: lim(b.confianza + (r() - 0.5) * 16), rel: {}, diario: [], carrera: carreraInicial() };
     }
     for (const a of LISTA) for (const b of LISTA) {
       if (a.id >= b.id) continue;
@@ -63,6 +64,73 @@ const Personal = (() => {
     }
     return agentes;
   }
+
+  /* ---------- carrera: experiencia, niveles, logros y una personalidad que va cambiando ----------
+     Cada quien junta experiencia (XP) trabajando, operando y platicando. Al subir de nivel cambia de rango,
+     se estresa menos y se tiene más confianza. Lo que vive mueve poco a poco sus rasgos (deriva), hasta ±0.3. */
+  const RANGOS = ["Novato", "Aprendiz", "Competente", "Sólido", "Senior", "Experto", "Mentor", "Maestro", "Leyenda"];
+  const necesita = n => Math.round(50 * Math.pow(n, 1.45));
+  function nivelDe(xp) {
+    let n = 1, acum = 0;
+    while (xp >= acum + necesita(n)) { acum += necesita(n); n++; }
+    return { nivel: n, desde: acum, hasta: acum + necesita(n), progreso: (xp - acum) / necesita(n) };
+  }
+  const rangoDe = n => RANGOS[Math.min(n, RANGOS.length) - 1];
+  const tierDe = n => (n >= 9 ? "leyenda" : n >= 7 ? "oro" : n >= 5 ? "plata" : n >= 3 ? "bronce" : "base");
+  const LOGROS = [
+    { id: "primera", icono: "⭐", nombre: "Primera estrategia", desc: "Le aprobaron su primera estrategia.", ok: c => c.aprobadas >= 1 },
+    { id: "mano", icono: "🔥", nombre: "Mano caliente", desc: "Cinco estrategias aprobadas.", ok: c => c.aprobadas >= 5 },
+    { id: "ojo", icono: "🔍", nombre: "Ojo clínico", desc: "Revisó 500 expedientes.", ok: c => c.revisados >= 500 },
+    { id: "pulso", icono: "📈", nombre: "Pulso firme", desc: "Hizo 20 operaciones en papel.", ok: c => c.operaciones >= 20 },
+    { id: "verde", icono: "💰", nombre: "En verde", desc: "Cerró una operación con ganancia.", ok: c => c.ganadoras >= 1 },
+    { id: "alma", icono: "🎉", nombre: "Alma de la oficina", desc: "25 pláticas que salieron bien.", ok: c => c.buenas >= 25 },
+    { id: "hombro", icono: "🤝", nombre: "Hombro amigo", desc: "Apoyó a 5 compañeros estresados.", ok: c => c.apoyos >= 5 },
+    { id: "amistad", icono: "💛", nombre: "Uña y mugre", desc: "Tiene una amistad de +80.", ok: (c, e) => Object.values(e.rel).some(v => v >= 80) },
+    { id: "zen", icono: "🧘", nombre: "Nervios de acero", desc: "Sus nervios bajaron 0.1 desde que llegó.", ok: (c, e) => (e.carrera.deriva.nervioso || 0) <= -0.1 },
+    { id: "veterano", icono: "🎖️", nombre: "Veterano", desc: "30 días en la sala.", ok: c => c.dias >= 30 },
+    { id: "senior", icono: "🏅", nombre: "Senior", desc: "Llegó al nivel 5.", ok: (c, e) => e.carrera.nivel >= 5 },
+    { id: "leyenda", icono: "👑", nombre: "Leyenda", desc: "Llegó al nivel 9.", ok: (c, e) => e.carrera.nivel >= 9 }
+  ];
+  function carreraInicial() { return { xp: 0, nivel: 1, c: {}, logros: [], hitos: [], deriva: {} }; }
+  function asegurar(e) {
+    if (!e.carrera) e.carrera = carreraInicial();
+    const k = e.carrera; k.c ||= {}; k.logros ||= []; k.hitos ||= []; k.deriva ||= {}; k.xp ||= 0; k.nivel ||= 1;
+    return k;
+  }
+  function derivar(e, rasgo, d) {
+    const k = asegurar(e);
+    k.deriva[rasgo] = Math.max(-0.3, Math.min(0.3, Math.round(((k.deriva[rasgo] || 0) + d) * 1000) / 1000));
+  }
+  /* Aplica la deriva y el nivel a la persona (sus rasgos de nacimiento quedan en rasgosBase) */
+  function evolucionar(p, e) {
+    if (!p.rasgosBase) p.rasgosBase = { ...p.rasgos };
+    const k = asegurar(e);
+    for (const r in p.rasgosBase) p.rasgos[r] = Math.max(0.03, Math.min(0.97, p.rasgosBase[r] + (k.deriva[r] || 0)));
+    p.nivel = k.nivel;
+  }
+  /* Suma experiencia y contadores; devuelve lo que pasó: subidas de nivel y logros nuevos */
+  function ganar(e, p, xp, cuenta = {}, fecha = "") {
+    const k = asegurar(e), eventos = [];
+    for (const c in cuenta) if (cuenta[c]) k.c[c] = (k.c[c] || 0) + cuenta[c];
+    k.xp = Math.round((k.xp + xp) * 10) / 10;
+    const n = nivelDe(k.xp).nivel;
+    while (k.nivel < n) {
+      k.nivel++;
+      derivar(e, "nervioso", -0.02); derivar(e, "optimista", 0.01);
+      const ev = { tipo: "nivel", nivel: k.nivel, rango: rangoDe(k.nivel), fecha };
+      k.hitos.unshift({ fecha, txt: `Subió a nivel ${k.nivel}: ${ev.rango}` }); eventos.push(ev);
+    }
+    for (const L of LOGROS) if (!k.logros.some(x => x.id === L.id) && L.ok(k.c, e)) {
+      k.logros.push({ id: L.id, fecha }); k.hitos.unshift({ fecha, txt: `Logro: ${L.icono} ${L.nombre}` });
+      eventos.push({ tipo: "logro", logro: L, fecha });
+    }
+    k.hitos.length = Math.min(k.hitos.length, 12);
+    if (p) evolucionar(p, e);
+    return eventos;
+  }
+  const textoEvento = (ev, p) => ev.tipo === "nivel"
+    ? `${p.corto} subió a nivel ${ev.nivel}: ahora es ${ev.rango}.`
+    : `${p.corto} desbloqueó el logro «${ev.logro.nombre}» ${ev.logro.icono}.`;
 
   /* Cambia emociones respetando la personalidad: a los nerviosos el estrés les pega más, a los optimistas lo malo menos */
   // cerca de los extremos cuesta más moverse (nadie vive en 100 de felicidad)
@@ -78,7 +146,7 @@ const Personal = (() => {
     for (const c of ["animo", "estres", "confianza"]) e[c] += (b[c] - e[c]) * k;
   }
   function humor(e, p) {
-    const o = p.g === "f" ? "a" : "o";
+    const o = (p.sexo || p.g) === "f" ? "a" : "o";
     if (e.estres > 78) return { txt: `Bajo mucha presión`, tono: "tenso" };
     if (e.animo < 28) return { txt: `De malas`, tono: "mal" };
     if (e.estres > 62 && e.animo < 45) return { txt: `Preocupad${o}`, tono: "tenso" };
@@ -150,7 +218,7 @@ const Personal = (() => {
     const m = ctx.mercado || {};
     const v = {
       B: b.corto, gustoA: a.gusto, gustoB: b.gusto.charAt(0).toUpperCase() + b.gusto.slice(1), equipoA: a.equipo, equipoB: b.equipo, fraseA: a.frase,
-      oB: b.g === "f" ? "a" : "o", emisora: m.emisora || "el IPC", movimiento: (m.cambio || 0) >= 0 ? "Subió" : "Bajó",
+      oB: (b.sexo || b.g) === "f" ? "a" : "o", emisora: m.emisora || "el IPC", movimiento: (m.cambio || 0) >= 0 ? "Subió" : "Bajó",
       cambio: m.cambio != null ? Math.abs(m.cambio * 100).toFixed(1) + "%" : "", humorMercado: (m.cambio || 0) >= 0 ? "de buenas" : "nervioso"
     };
     const lineas = [[a.id, llenar(t1, v)], [b.id, llenar(q >= 0 ? ok : mal, v)]];
@@ -160,11 +228,23 @@ const Personal = (() => {
       efecto: { rel: k, a: { animo: q * 3.5, estres: q < 0 ? -q * 6 : -q * 2.5 }, b: { animo: q * 3.5 + (tema === "apoyo" && q > 0 ? 3 : 0), estres: q < 0 ? -q * 6 : -q * 2.5 - (tema === "apoyo" && q > 0 ? 6 : 0) } }
     };
   }
-  function aplicarPlatica(est, a, b, res) {
+  /* Aplica la plática: emociones, amistad, experiencia y un poquito de personalidad. Devuelve los eventos de carrera. */
+  function aplicarPlatica(est, a, b, res, fecha = "") {
     const ea = est[a.id], eb = est[b.id];
     sentir(ea, a, res.efecto.a); sentir(eb, b, res.efecto.b);
     const v = Math.max(-100, Math.min(100, (ea.rel[b.id] || 0) + res.efecto.rel));
     ea.rel[b.id] = v; eb.rel[a.id] = v;
+    const q = res.calidad, buena = q > 0.25, mala = q < -0.25;
+    for (const e of [ea, eb]) {
+      if (buena) { derivar(e, "sociable", 0.003); derivar(e, "amable", 0.002); }
+      if (mala) { derivar(e, "amable", -0.002); derivar(e, "nervioso", 0.002); }
+    }
+    if (res.tema === "pleito") derivar(ea, "competitivo", 0.003);
+    const cuenta = { buenas: buena ? 1 : 0, malas: mala ? 1 : 0 };
+    return [
+      ...ganar(ea, a, buena ? 4 : 2, { ...cuenta, apoyos: res.tema === "apoyo" && q > 0 ? 1 : 0 }, fecha).map(x => ({ ...x, quien: a })),
+      ...ganar(eb, b, buena ? 4 : 2, cuenta, fecha).map(x => ({ ...x, quien: b }))
+    ];
   }
   const NOMBRE_TEMA = { saludo: "se saludaron", cafe: "fueron por café", trafico: "se quejaron del tráfico", futbolMismo: "platicaron de su equipo", futbolRival: "se picaron con el futbol", mercado: "comentaron el mercado", felicitar: "hubo felicitaciones", apoyo: "se echaron la mano", pleito: "discutieron", chisme: "chismearon", comida: "platicaron de la comida", horasExtra: "se quejaron de las horas extra", casa: "platicaron en casa", viernes: "hicieron planes de fin de semana", noche: "platicaron de noche", frase: "bromearon" };
   function resumen(a, b, res) {
@@ -172,6 +252,9 @@ const Personal = (() => {
     return `${a.corto} y ${b.corto} ${NOMBRE_TEMA[res.tema]}${como ? " " + como : ""}.`;
   }
 
-  return { LISTA, POR_ID, estadoInicial, sentir, volverABase, humor, conversar, aplicarPlatica, resumen, rng, semillaDe, base, sonRivales };
+  return {
+    LISTA, POR_ID, estadoInicial, sentir, volverABase, humor, conversar, aplicarPlatica, resumen, rng, semillaDe, base, sonRivales,
+    RANGOS, LOGROS, nivelDe, rangoDe, tierDe, carreraInicial, asegurar, derivar, evolucionar, ganar, textoEvento
+  };
 })();
 if (typeof module !== "undefined") module.exports = Personal;

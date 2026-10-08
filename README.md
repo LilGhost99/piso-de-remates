@@ -22,6 +22,26 @@ Todo es simulación educativa con dinero ficticio. No es recomendación de inver
 
 Listo. De ahí en adelante corre solo de lunes a viernes. Cuando entres, la sala te muestra lo que pasó **mientras no estabas**.
 
+## La sala en 3D
+
+La página abre la oficina en 3D: las salas, los escritorios, la pizarra de trading, la colonia donde viven los agentes, los autos sobre Reforma y los rascacielos al fondo. La luz sigue la hora real de la Ciudad de México (de noche se prenden los faroles, las ventanas y las salas donde hay gente).
+
+- Arrastra para girar, usa la rueda (o dos dedos) para acercar y clic derecho para mover la cámara.
+- Los botones **General**, **Oficina** y **Colonia** llevan la cámara a cada zona.
+- Toca a alguien para seguirlo y abrir su ficha; toca el piso para soltarlo.
+- **Plano** regresa al dibujo en 2D (también se usa solo si el navegador no puede mostrar 3D).
+
+## Los agentes evolucionan
+
+Cada agente junta experiencia (XP) revisando expedientes, consiguiendo estrategias aprobadas, operando y platicando, y sube de nivel: Novato, Aprendiz, Competente, Sólido, Senior, Experto, Mentor, Maestro y Leyenda.
+
+- **Al subir de nivel** se estresa menos y se tiene más confianza. En 3D se nota: corbata desde el nivel 3, saco desde el 5, anillo de oro desde el 7 y corona en el 9.
+- **Su personalidad cambia poco a poco** con lo que vive: las buenas pláticas lo hacen más sociable y amable, los pleitos menos, los días de mucha presión lo ponen más nervioso y las estrategias aprobadas lo vuelven más optimista. En su ficha, la rayita marca cómo llegó y la barra cómo es ahora.
+- **Logros**: primera estrategia, mano caliente, ojo clínico, alma de la oficina, uña y mugre, veterano y más.
+- El **Escalafón** muestra a quién le va mejor, y la bitácora avisa cada subida de nivel y cada logro.
+
+La carrera de cada quien se guarda en `sitio/datos/estado.json` junto con sus emociones, así que sigue creciendo día con día aunque nadie tenga la página abierta.
+
 ## Qué decide el piloto solo
 
 - **Jornada:** cada cierre revisa 160 combinaciones nuevas de estrategias sobre 16 emisoras (8 en pesos de la BMV y 8 empresas mexicanas que cotizan en EE.UU.).
